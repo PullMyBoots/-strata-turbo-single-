@@ -1,0 +1,52 @@
+{
+  "model": "GSQ-RCO IQ2_XS",
+  "measurement_device": "NVIDIA L40S physical GPU1",
+  "context": 262144,
+  "kv": "int8",
+  "concurrency": 1,
+  "short": {
+    "baseline_normal": 164.25005542001,
+    "optimized": [
+      203.14520091247024,
+      200.86001635854606
+    ],
+    "gain_percent": [
+      23.68044588660869,
+      22.289162000535924
+    ],
+    "method": "geometric mean of Chinese/English/code medians, 3 repeats each, 512 output tokens, cache_n=0",
+    "paired_request_equality": "9/9",
+    "paired_full_text_equality": "9/9"
+  },
+  "long": {
+    "prompt_tokens": 256013,
+    "output_tokens": 512,
+    "cache_n": 0,
+    "baseline_native_long": 114.5,
+    "optimized": [
+      162.3,
+      161.6
+    ],
+    "gain_percent": [
+      41.74672489082971,
+      41.135371179039296
+    ],
+    "paired_request_equal": true,
+    "paired_full_text_equal": false,
+    "retrieval": "all five checkpoints pass in baseline and optimized",
+    "prefill_seconds": [
+      130.962,
+      131.1122
+    ],
+    "limitation": "prefill batch changed from 2048 to 1024; long reply wording differs; no full intelligence benchmark"
+  },
+  "recovery_including_bad_preset": {
+    "misconfigured_baseline_short": 69.34740233684511,
+    "optimized_ratio": 2.929384433546933,
+    "scope": "includes restoring GPU expert residency; separate from 22-24% algorithm/runtime gain"
+  },
+  "native_primary_weights_changed": false,
+  "historical_engine_sha256": "f36733037335ff780b9622fea64bd6292e160cedb732b544f04d2007e6afcf5f",
+  "raw_evidence": "relative directories in evidence/",
+  "new_release_build_measurement": "runtime/build-validation-summary.json (if present); do not relabel GPU1 results as GPU0"
+}

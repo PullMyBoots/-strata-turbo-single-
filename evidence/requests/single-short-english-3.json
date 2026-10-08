@@ -1,0 +1,25 @@
+{
+  "request": {
+    "model": "qwen3.8-flash-next-ud-q3-k-xl",
+    "messages": [
+      {
+        "role": "system",
+        "content": "测速任务short-english，独立测量编号3。"
+      },
+      {
+        "role": "user",
+        "content": "Write at least 2000 words explaining how language models generate text, how memory bandwidth affects speed, and how speculative decoding verifies proposals. Continue in detailed paragraphs with examples."
+      }
+    ],
+    "max_tokens": 512,
+    "temperature": 0,
+    "seed": 20261004,
+    "reasoning_effort": "none",
+    "cache_prompt": false,
+    "stream": true,
+    "stream_options": {
+      "include_usage": true
+    }
+  },
+  "expected_text": "The generation of text by large language models (LLMs) is a complex computational process that bridges the gap between abstract mathematical representations and human-readable language. At its core, an LLM is a neural network trained on vast amounts of textual data, designed to predict the next token in a sequence based on the context provided by previous tokens. This process, often referred to as autoregressive generation, involves several distinct stages: tokenization, embedding, attention mechanism processing, and final output generation. Understanding these stages is crucial for grasping why modern AI systems are both powerful and computationally expensive.\n\nThe first step in text generation is tokenization. Language models do not process raw text as humans do; instead, they break text into smaller units called tokens. These tokens can be words, subwords, or characters, depending on the tokenizer used. For example, the word \"unhappiness\" might be split into \"un,\" \"happi,\" and \"ness.\" Each token is then mapped to a unique integer ID, which serves as an index into a lookup table known as an embedding matrix. This matrix converts discrete token IDs into dense vector representations, capturing semantic relationships between words. For instance, the vectors for \"king\" and \"queen\" are close in the embedding space, reflecting their semantic similarity. These embeddings form the initial input to the model, providing a numerical foundation for the subsequent neural network layers.\n\nOnce the tokens are embedded, they pass through multiple layers of the transformer architecture. The transformer relies heavily on the self-attention mechanism, which allows the model to weigh the importance of different tokens in the input sequence relative to each other. In a standard transformer, each token attends to every other token in the sequence, creating a dense matrix of attention scores. This mechanism enables the model to understand context, such as resolving pronouns or identifying syntactic structures. However, this dense attention computation is computationally intensive, scaling quadratically with the length of the input sequence. As the context window grows, the memory required to store attention scores and the computational power needed to calculate them increase significantly, leading to potential bottlenecks in performance.\n\nAfter the attention layers, the model processes the information through feed-forward networks, which apply non-linear transformations to the embeddings. These layers help the model capture complex patterns and relationships within the data. The output of the final layer is typically a probability distribution over the vocabulary, indicating the likelihood of each token being the next one in the sequence. The model then selects the most probable token, often using techniques like greedy"
+}

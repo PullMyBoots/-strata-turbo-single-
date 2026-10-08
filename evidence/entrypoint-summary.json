@@ -1,0 +1,55 @@
+{
+  "passed": true,
+  "test_gpu": 0,
+  "port": 18084,
+  "test_server_stopped": true,
+  "response": {
+    "id": "chatcmpl-62c839bcb3834a1899fc9915",
+    "object": "chat.completion",
+    "created": 1791461097,
+    "model": "qwen3.8 flash",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "391"
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 23,
+      "completion_tokens": 4,
+      "total_tokens": 27,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 23,
+      "prompt_ms": 158.3,
+      "prompt_per_token_ms": 6.883,
+      "prompt_per_second": 145.3,
+      "predicted_n": 4,
+      "predicted_ms": 31.2,
+      "predicted_per_token_ms": 7.8,
+      "predicted_per_second": 128.2,
+      "draft_n": 6,
+      "draft_n_accepted": 6
+    }
+  },
+  "health": {
+    "status": "ok",
+    "max_context": 262144,
+    "model": "qwen3.8-flash-next-ud-q3-k-xl",
+    "images": true,
+    "api_key": false,
+    "loaded": true,
+    "service": "strata",
+    "video_input": "native_llama_cpp_mtmd",
+    "audio_input": false
+  },
+  "executable": "/home/student_su/miniconda3/bin/python3.13"
+}

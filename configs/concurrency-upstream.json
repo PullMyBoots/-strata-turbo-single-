@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "context": 262144,
+  "profiles": {
+    "iq2_xs": {
+      "name": "native-shared-six-iq2_xs",
+      "engine": "strata-decode-concurrent",
+      "engine_sha256": "0d1ace6c3c3e11b1b7b61447e8b6297b400b8ee527f5cefa8499bfc8f81cc64f",
+      "gpu_mode": "single",
+      "worker_active_thread_pct": 50,
+      "device_max_connections": 2,
+      "prefill": 2048,
+      "ephemeral_prefill": true,
+      "validation_state": "passed",
+      "single_output_tps": 159.33295858800105,
+      "six_aggregate_e2e_tps": 197.2989189060554
+    }
+  },
+  "validation": {
+    "state": "passed",
+    "evidence": "historical local single-GPU pool; see docs/performance.md",
+    "speed_scope": "aggregate throughput differs from single-request output"
+  }
+}

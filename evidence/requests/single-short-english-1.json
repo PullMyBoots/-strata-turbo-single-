@@ -1,0 +1,25 @@
+{
+  "request": {
+    "model": "qwen3.8-flash-next-ud-q3-k-xl",
+    "messages": [
+      {
+        "role": "system",
+        "content": "测速任务short-english，独立测量编号1。"
+      },
+      {
+        "role": "user",
+        "content": "Write at least 2000 words explaining how language models generate text, how memory bandwidth affects speed, and how speculative decoding verifies proposals. Continue in detailed paragraphs with examples."
+      }
+    ],
+    "max_tokens": 512,
+    "temperature": 0,
+    "seed": 20261004,
+    "reasoning_effort": "none",
+    "cache_prompt": false,
+    "stream": true,
+    "stream_options": {
+      "include_usage": true
+    }
+  },
+  "expected_text": "Language models, particularly those based on the Transformer architecture, have revolutionized the field of natural language processing by enabling machines to generate coherent, context-aware text. However, the process by which these models generate text is not merely a simple lookup or pattern matching; it is a complex, iterative computational process that relies heavily on mathematical operations, memory management, and hardware constraints. To understand how these models work, one must delve into the mechanics of token generation, the critical role of memory bandwidth in determining inference speed, and the advanced techniques such as speculative decoding that aim to optimize this process. This explanation will explore these three pillars in detail, providing examples and technical insights to illustrate how modern language models operate under the hood.\n\n### The Mechanics of Text Generation\n\nAt the core of any large language model (LLM) is the concept of autoregressive generation. Unlike traditional programming, where a function might return a fixed output based on input, an LLM generates text one token at a time. A token is a unit of text, which can be a word, a sub-word, or a character, depending on the tokenizer used. The model does not generate an entire sentence at once; instead, it predicts the next token based on the sequence of tokens that have already been generated. This process is iterative: the model takes the current sequence of tokens, processes them through its neural network layers, and outputs a probability distribution over the vocabulary for the next token. The token with the highest probability, or a token selected based on sampling strategies, is then appended to the sequence, and the process repeats.\n\nThis iterative nature is governed by the Transformer architecture, which relies on self-attention mechanisms. Self-attention allows the model to weigh the importance of different tokens in the input sequence relative to each other. For example, when generating the word \"bank,\" the model must determine whether the context refers to a financial institution or the side of a river. The attention mechanism calculates attention scores for every token in the context window, allowing the model to focus on relevant parts of the input. This is computationally expensive, especially as the context window grows, because the complexity of self-attention scales quadratically with the sequence length. However, once the initial prompt is processed, the model enters a phase known as the \"decode\" phase, where it generates new tokens. During this phase, the model uses Key-Value (KV) caching to store the attention keys and values for the previously generated tokens. This cache prevents the model from recalculating attention for the entire sequence at"
+}

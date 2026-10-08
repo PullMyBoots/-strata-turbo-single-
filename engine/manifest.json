@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "binaries": {
+    "strata-single-validated": {
+      "sha256": "f36733037335ff780b9622fea64bd6292e160cedb732b544f04d2007e6afcf5f",
+      "bytes": 61175056,
+      "role": "historically benchmarked single-request engine"
+    },
+    "strata-concurrent-validated": {
+      "sha256": "0d1ace6c3c3e11b1b7b61447e8b6297b400b8ee527f5cefa8499bfc8f81cc64f",
+      "bytes": 52560336,
+      "role": "historically validated concurrency engine"
+    },
+    "strata-vision-native": {
+      "sha256": "65c63ee645a459996f9312691776f3bc89c606fb04dc97bd7d3d8cfa97a8b765",
+      "bytes": 209281024,
+      "role": "native image/video encoder"
+    },
+    "strata-single-built": {
+      "sha256": "b0ab599a7631e4cb5fa8d833e1069ffedfeec6a65cba71e02bded0405b479acf",
+      "bytes": 62094048,
+      "role": "fresh build of bundled source; benchmark separately",
+      "validation": {
+        "state": "passed",
+        "measurement_device": "L40S GPU0 NUMA0",
+        "short_tps": 202.22431637506287,
+        "cold_long_tps": 162.0,
+        "main_output_parity": "10/10 complete texts equal single-v2 reference",
+        "api_smoke": true
+      }
+    }
+  }
+}

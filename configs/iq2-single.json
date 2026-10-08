@@ -1,0 +1,55 @@
+{
+  "name": "iq2-single-native262144-r1",
+  "validation_state": "passed",
+  "context": 262144,
+  "args": {
+    "--prefill": "1024",
+    "--spec": "8",
+    "--spec-min-p": "0.3",
+    "--kv-resident": "32768",
+    "--mtp-window": "4096",
+    "--vram-reserve-mib": "700",
+    "--mtp": "{assets}/data/mtp/native-q5"
+  },
+  "env": {
+    "STRATA_SPLIT_ASYNC_COMMIT": "1",
+    "STRATA_RESIDENT_PLAN_PARALLEL": "1",
+    "STRATA_GR_DOWN_MAX4": "1",
+    "STRATA_VERIFY_DEVICE_ONLY": "1",
+    "STRATA_TOPK_PARALLEL": "1",
+    "STRATA_DECODE_TIMING": "1",
+    "STRATA_TOPK_COOPERATIVE": "1",
+    "STRATA_MTP_HNORM_STREAM": "1",
+    "STRATA_SH_OVERLAP": "1",
+    "STRATA_RESIDENT_COMBINE": "1",
+    "STRATA_MTP_ADAPTIVE": "1",
+    "STRATA_VERIFY_PRECAPTURE": "1",
+    "STRATA_MTP_HEAD_ROUTER": "{assets}/data/mtp/head-router-iq2-r128-k8192",
+    "STRATA_MTP_SPARSE": "1",
+    "STRATA_PLE_PREFETCH": "1",
+    "STRATA_GR_EXACT_T": "1",
+    "STRATA_GR_UP_MAX4": "1",
+    "STRATA_GR_UP_COLS": "8",
+    "STRATA_GDN_AB_WARPS": "2",
+    "STRATA_MTP_ROUTER_INDEXED": "1",
+    "STRATA_MTP_ROUTER_FUSED_QUERY": "1",
+    "STRATA_MTP_ROUTER_SORT_BEGIN_BIT": "16",
+    "STRATA_GR_EXACT_T8": "1",
+    "STRATA_GR_QFUSE": "1",
+    "STRATA_MTP_COST_ROBUST": "1"
+  },
+  "evidence": {
+    "bundled": "evidence/performance.json",
+    "measurement_gpu": "L40S physical GPU1",
+    "historical_short_tps": [
+      203.14520091247024,
+      200.86001635854606
+    ],
+    "historical_cold_long_tps": [
+      162.3,
+      161.6
+    ]
+  },
+  "historical_engine_sha256": "f36733037335ff780b9622fea64bd6292e160cedb732b544f04d2007e6afcf5f",
+  "binary_policy": "engine/manifest.json records chosen built or historical engine"
+}
