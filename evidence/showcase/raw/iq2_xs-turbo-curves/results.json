@@ -1,0 +1,1292 @@
+{
+  "protocol": "One fresh service per arm/model; identical 64-token warm-up; increasing input sizes; two 512-token outputs per family/size; temperature 0; thinking disabled; KV-prefix caching enabled; first request at each size is cold.",
+  "rows": [
+    {
+      "context_background_tokens": 0,
+      "family": "english",
+      "sample": 0,
+      "cold_prefill_sample": true,
+      "request_sha256": "5889a5c1ec6ff6d64029c4cde2f64f8f14e82ecd19752bab4870c681653db01f",
+      "result": {
+        "text": "# Detailed Numbered Guide to Organizing and Reviewing a Software Project\n\nThis guide provides a comprehensive, step-by-step methodology for organizing, maintaining, and reviewing software projects. It covers project setup, code structure, documentation, testing, review processes, and continuous improvement. Each item includes concrete examples to illustrate best practices.\n\n1. **Define the Project Scope Clearly**\n   Begin by writing a clear statement of what the project will and will not do. This prevents scope creep.\n   *Example:* \"The project will implement a REST API for user authentication. It will not include frontend UI development.\"\n\n2. **Choose a Project Management Tool**\n   Select a tool that fits your team's workflow, such as Jira, Trello, GitHub Projects, or Asana.\n   *Example:* Use GitHub Projects to track issues and pull requests directly within the repository.\n\n3. **Establish a Naming Convention for Repositories**\n   Use consistent, descriptive names for repositories to avoid confusion.\n   *Example:* `company-name/project-name` or `team-name/module-name`.\n\n4. **Create a Standard Directory Structure**\n   Define a clear folder hierarchy for source code, tests, documentation, and assets.\n   *Example:*\n   ```\n   /src\n   /tests\n   /docs\n   /assets\n   /scripts\n   ```\n\n5. **Set Up Version Control Properly**\n   Initialize a Git repository with a `.gitignore` file to exclude unnecessary files.\n   *Example:* Add `node_modules/`, `dist/`, and `.env` to `.gitignore`.\n\n6. **Choose a Branching Strategy**\n   Decide on a branching model, such as Git Flow, GitHub Flow, or Trunk-Based Development.\n   *Example:* Use `main` for production-ready code and `feature/` branches for new features.\n\n7. **Define Commit Message Standards**\n   Establish a format for commit messages to ensure clarity and traceability.\n   *Example:* Use Conventional Commits: `feat: add user login endpoint`.\n\n8. **Create a README File**\n   Write a comprehensive README that explains the project, setup instructions, and usage.\n   *Example:* Include sections for Installation, Usage, Contributing, and License.\n\n9. **Document Architecture Decisions**\n   Record significant architectural choices in an Architecture Decision Record (ADR).\n   *Example:* \"ADR-001: We chose",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 73,
+          "prompt_ms": 478.8,
+          "prompt_per_token_ms": 6.559,
+          "prompt_per_second": 152.5,
+          "predicted_n": 512,
+          "predicted_ms": 2455.7,
+          "predicted_per_token_ms": 4.796,
+          "predicted_per_second": 208.5,
+          "draft_n": 535,
+          "draft_n_accepted": 364
+        },
+        "usage": {
+          "prompt_tokens": 73,
+          "completion_tokens": 512,
+          "total_tokens": 585,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 2.9484318539034575,
+        "first_content_s": 0.49549412191845477
+      }
+    },
+    {
+      "context_background_tokens": 0,
+      "family": "english",
+      "sample": 1,
+      "cold_prefill_sample": false,
+      "request_sha256": "5889a5c1ec6ff6d64029c4cde2f64f8f14e82ecd19752bab4870c681653db01f",
+      "result": {
+        "text": "# Detailed Numbered Guide to Organizing and Reviewing a Software Project\n\nThis guide provides a comprehensive, step-by-step methodology for organizing, maintaining, and reviewing software projects. It covers project setup, code structure, documentation, testing, review processes, and continuous improvement. Each item includes concrete examples to illustrate best practices.\n\n1. **Define the Project Scope Clearly**\n   Begin by writing a clear statement of what the project will and will not do. This prevents scope creep.\n   *Example:* \"The project will implement a REST API for user authentication. It will not include frontend UI development.\"\n\n2. **Choose a Project Management Tool**\n   Select a tool that fits your team's workflow, such as Jira, Trello, GitHub Projects, or Asana.\n   *Example:* Use GitHub Projects to track issues and pull requests directly within the repository.\n\n3. **Establish a Naming Convention for Repositories**\n   Use consistent, descriptive names for repositories to avoid confusion.\n   *Example:* `company-name/project-name` or `team-name/module-name`.\n\n4. **Create a Standard Directory Structure**\n   Define a clear folder hierarchy for source code, tests, documentation, and assets.\n   *Example:*\n   ```\n   /src\n   /tests\n   /docs\n   /assets\n   /scripts\n   ```\n\n5. **Set Up Version Control Properly**\n   Initialize a Git repository with a `.gitignore` file to exclude unnecessary files.\n   *Example:* Add `node_modules/`, `dist/`, and `.env` to `.gitignore`.\n\n6. **Choose a Branching Strategy**\n   Decide on a branching model, such as Git Flow, GitHub Flow, or Trunk-Based Development.\n   *Example:* Use `main` for production-ready code and `feature/` branches for new features.\n\n7. **Define Commit Message Standards**\n   Establish a format for commit messages to ensure clarity and traceability.\n   *Example:* Use Conventional Commits: `feat: add user login endpoint`.\n\n8. **Create a README File**\n   Write a comprehensive README that explains the project, setup instructions, and usage.\n   *Example:* Include sections for Installation, Usage, Contributing, and License.\n\n9. **Document Architecture Decisions**\n   Record significant architectural choices in an Architecture Decision Record (ADR).\n   *Example:* \"ADR-001: We chose",
+        "timings": {
+          "cache_n": 66,
+          "prompt_n": 7,
+          "prompt_ms": 23.7,
+          "prompt_per_token_ms": 3.386,
+          "prompt_per_second": 295.4,
+          "predicted_n": 512,
+          "predicted_ms": 2471.9,
+          "predicted_per_token_ms": 4.828,
+          "predicted_per_second": 207.1,
+          "draft_n": 539,
+          "draft_n_accepted": 359
+        },
+        "usage": {
+          "prompt_tokens": 73,
+          "completion_tokens": 512,
+          "total_tokens": 585,
+          "prompt_tokens_details": {
+            "cached_tokens": 66
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 2.5093625159934163,
+        "first_content_s": 0.04080327693372965
+      }
+    },
+    {
+      "context_background_tokens": 0,
+      "family": "code",
+      "sample": 0,
+      "cold_prefill_sample": false,
+      "request_sha256": "435a804f8201d29640be67a33d24fd94f079394edb414be71e947d00bdd55f7e",
+      "result": {
+        "text": "```python\nimport asyncio\nimport logging\nimport random\nimport time\nfrom dataclasses import dataclass, field\nfrom enum import Enum\nfrom typing import Any, Callable, Dict, List, Optional\n\n# Configure structured logging\nlogging.basicConfig(\n    level=logging.INFO,\n    format=\"%(asctime)s [%(levelname)s] %(name)s: %(message)s\",\n    datefmt=\"%Y-%m-%d %H:%M:%S\",\n)\nlogger = logging.getLogger(\"TaskScheduler\")\n\n\nclass TaskStatus(Enum):\n    PENDING = \"pending\"\n    RUNNING = \"running\"\n    COMPLETED = \"completed\"\n    FAILED = \"failed\"\n    CANCELLED = \"cancelled\"\n\n\n@dataclass\nclass TaskResult:\n    task_id: str\n    status: TaskStatus\n    result: Optional[Any] = None\n    error: Optional[str] = None\n    attempts: int = 0\n    start_time: float = field(default_factory=time.time)\n    end_time: Optional[float] = None\n    duration: Optional[float] = None\n\n    def finalize(self, status: TaskStatus, result: Any = None, error: str = None):\n        self.status = status\n        self.result = result\n        self.error = error\n        self.end_time = time.time()\n        self.duration = self.end_time - self.start_time\n\n\n@dataclass\nclass Task:\n    task_id: str\n    func: Callable\n    args: tuple = ()\n    kwargs: Dict[str, Any] = field(default_factory=dict)\n    max_retries: int = 3\n    base_delay: float = 1.0\n    max_delay: float = 30.0\n    status: TaskStatus = TaskStatus.PENDING\n    result: Optional[TaskResult] = None\n    cancel_event: asyncio.Event = field(default_factory=asyncio.Event)\n\n    def should_cancel(self) -> bool:\n        return self.cancel_event.is_set()\n\n\nclass TaskScheduler:\n    def __init__(self, max_concurrency: int = 5):\n        self.max_concurrency = max_concurrency\n        self._semaphore = asyncio.Semaphore(max_concurrency)\n        self._tasks: Dict[str, Task] = {}\n        self._running_tasks: List[asyncio.Task] = []\n        self._completed_results: List[TaskResult] = []\n       ",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 89,
+          "prompt_ms": 306.5,
+          "prompt_per_token_ms": 3.444,
+          "prompt_per_second": 290.4,
+          "predicted_n": 512,
+          "predicted_ms": 1878.0,
+          "predicted_per_token_ms": 3.668,
+          "predicted_per_second": 272.6,
+          "draft_n": 492,
+          "draft_n_accepted": 414
+        },
+        "usage": {
+          "prompt_tokens": 89,
+          "completion_tokens": 512,
+          "total_tokens": 601,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 2.1979023329913616,
+        "first_content_s": 0.32338858186267316
+      }
+    },
+    {
+      "context_background_tokens": 0,
+      "family": "code",
+      "sample": 1,
+      "cold_prefill_sample": false,
+      "request_sha256": "435a804f8201d29640be67a33d24fd94f079394edb414be71e947d00bdd55f7e",
+      "result": {
+        "text": "```python\nimport asyncio\nimport logging\nimport random\nimport time\nfrom dataclasses import dataclass, field\nfrom enum import Enum\nfrom typing import Any, Callable, Dict, List, Optional\n\n# Configure structured logging\nlogging.basicConfig(\n    level=logging.INFO,\n    format=\"%(asctime)s [%(levelname)s] %(name)s: %(message)s\",\n    datefmt=\"%Y-%m-%d %H:%M:%S\",\n)\nlogger = logging.getLogger(\"TaskScheduler\")\n\n\nclass TaskStatus(Enum):\n    PENDING = \"pending\"\n    RUNNING = \"running\"\n    COMPLETED = \"completed\"\n    FAILED = \"failed\"\n    CANCELLED = \"cancelled\"\n\n\n@dataclass\nclass TaskResult:\n    task_id: str\n    status: TaskStatus\n    result: Optional[Any] = None\n    error: Optional[str] = None\n    attempts: int = 0\n    start_time: float = field(default_factory=time.time)\n    end_time: Optional[float] = None\n    duration: Optional[float] = None\n\n    def finalize(self, status: TaskStatus, result: Any = None, error: str = None):\n        self.status = status\n        self.result = result\n        self.error = error\n        self.end_time = time.time()\n        self.duration = self.end_time - self.start_time\n\n\n@dataclass\nclass Task:\n    task_id: str\n    func: Callable\n    args: tuple = ()\n    kwargs: Dict[str, Any] = field(default_factory=dict)\n    max_retries: int = 3\n    base_delay: float = 1.0\n    max_delay: float = 30.0\n    status: TaskStatus = TaskStatus.PENDING\n    result: Optional[TaskResult] = None\n    cancel_event: asyncio.Event = field(default_factory=asyncio.Event)\n\n    def should_cancel(self) -> bool:\n        return self.cancel_event.is_set()\n\n\nclass TaskScheduler:\n    def __init__(self, max_concurrency: int = 5):\n        self.max_concurrency = max_concurrency\n        self._semaphore = asyncio.Semaphore(max_concurrency)\n        self._tasks: Dict[str, Task] = {}\n        self._running_tasks: List[asyncio.Task] = []\n        self._completed_results: List[TaskResult] = []\n       ",
+        "timings": {
+          "cache_n": 82,
+          "prompt_n": 7,
+          "prompt_ms": 24.5,
+          "prompt_per_token_ms": 3.5,
+          "prompt_per_second": 285.7,
+          "predicted_n": 512,
+          "predicted_ms": 1829.8,
+          "predicted_per_token_ms": 3.574,
+          "predicted_per_second": 279.8,
+          "draft_n": 485,
+          "draft_n_accepted": 415
+        },
+        "usage": {
+          "prompt_tokens": 89,
+          "completion_tokens": 512,
+          "total_tokens": 601,
+          "prompt_tokens_details": {
+            "cached_tokens": 82
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 1.8674278550315648,
+        "first_content_s": 0.041018569143489
+      }
+    },
+    {
+      "context_background_tokens": 0,
+      "family": "chinese",
+      "sample": 0,
+      "cold_prefill_sample": false,
+      "request_sha256": "c7c4776d9b09db5a77b19b66fd4acf8bd055ddcef94ae4c940cced687c0550a9",
+      "result": {
+        "text": "大语言模型（LLM）的推理过程是一个极其复杂的计算与数据搬运过程，其性能瓶颈往往不在于纯粹的算术运算能力，而在于内存带宽、缓存层级结构以及数据访问模式。要深入理解这一机制，我们需要从硬件架构、算法流程以及实际计算案例三个维度进行剖析。\n\n首先，我们需要明确LLM推理的两个核心阶段：预填充（Prefill）和输出生成（Decode）。这两个阶段在计算特性上有着本质的区别，直接决定了内存带宽和缓存的使用效率。\n\n**1. 内存带宽与计算强度的矛盾**\n\n在LLM推理中，内存带宽（Memory Bandwidth）通常比计算能力（Compute Power）更成为瓶颈。这是因为Transformer架构中的矩阵乘法虽然理论上是计算密集型的，但在实际推理中，尤其是生成阶段，往往表现为“访存密集型”（Memory-bound）。\n\n以典型的Transformer层为例，其核心操作是注意力机制（Attention）和前馈神经网络（FFN）。在预填充阶段，模型处理整个输入提示（Prompt），此时输入序列长度较长，矩阵乘法的维度较大，计算强度（Arithmetic Intensity，即每字节数据对应的浮点运算次数）较高，GPU或TPU的计算单元利用率较高。然而，在输出生成阶段，模型逐token生成，每次只处理一个token，此时矩阵乘法的维度极小（例如1xN），导致计算强度极低。这意味着，计算单元大部分时间都在等待数据从显存（HBM）搬运到计算核心，或者从缓存（Cache）加载到寄存器。因此，内存带宽成为了限制推理速度的关键因素。\n\n**2. 缓存层级与数据局部性**\n\n现代加速器（如NVIDIA GPU）拥有多级缓存结构：寄存器、L1/L2缓存、以及高带宽显存（HBM）。LLM推理的性能优化很大程度上依赖于数据在缓存层级中的局部性。\n\n在预填充阶段，由于处理的是批量数据，数据访问模式较为规则，容易利用缓存预取（Prefetching）机制。然而，在生成阶段，KV Cache（Key-Value Cache）的访问模式变得随机且分散。KV Cache存储了之前所有token的Key和Value向量，用于计算注意力分数。随着生成token数量的增加，KV Cache的大小线性增长。如果KV Cache无法完全放入高速缓存（如L2 Cache），每次生成新token时，都需要从HBM中读取大量的KV数据，这直接消耗了宝贵的内存",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 83,
+          "prompt_ms": 308.2,
+          "prompt_per_token_ms": 3.713,
+          "prompt_per_second": 269.3,
+          "predicted_n": 512,
+          "predicted_ms": 3033.7,
+          "predicted_per_token_ms": 5.925,
+          "predicted_per_second": 168.8,
+          "draft_n": 499,
+          "draft_n_accepted": 296
+        },
+        "usage": {
+          "prompt_tokens": 83,
+          "completion_tokens": 512,
+          "total_tokens": 595,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 3.3572226481046528,
+        "first_content_s": 0.32640229002572596
+      }
+    },
+    {
+      "context_background_tokens": 0,
+      "family": "chinese",
+      "sample": 1,
+      "cold_prefill_sample": false,
+      "request_sha256": "c7c4776d9b09db5a77b19b66fd4acf8bd055ddcef94ae4c940cced687c0550a9",
+      "result": {
+        "text": "大语言模型（LLM）的推理过程是一个极其复杂的计算与数据搬运过程，其性能瓶颈往往不在于纯粹的算术运算能力，而在于内存带宽、缓存层级结构以及数据访问模式。要深入理解这一机制，我们需要从硬件架构、算法流程以及实际计算案例三个维度进行剖析。\n\n首先，我们需要明确LLM推理的两个核心阶段：预填充（Prefill）和输出生成（Decode）。这两个阶段在计算特性上有着本质的区别，直接决定了内存带宽和缓存的使用效率。\n\n**1. 内存带宽与计算强度的矛盾**\n\n在LLM推理中，内存带宽（Memory Bandwidth）通常比计算能力（Compute Power）更成为瓶颈。这是因为Transformer架构中的矩阵乘法虽然理论上是计算密集型的，但在实际推理中，尤其是生成阶段，往往表现为“访存密集型”（Memory-bound）。\n\n以典型的Transformer层为例，其核心操作是注意力机制（Attention）和前馈神经网络（FFN）。在预填充阶段，模型处理整个输入提示（Prompt），此时输入序列长度较长，矩阵乘法的维度较大，计算强度（Arithmetic Intensity，即每字节数据对应的浮点运算次数）较高，GPU或TPU的计算单元利用率较高。然而，在输出生成阶段，模型逐token生成，每次只处理一个token，此时矩阵乘法的维度极小（例如1xN），导致计算强度极低。这意味着，计算单元大部分时间都在等待数据从显存（HBM）搬运到计算核心，或者从缓存（Cache）加载到寄存器。因此，内存带宽成为了限制推理速度的关键因素。\n\n**2. 缓存层级与数据局部性**\n\n现代加速器（如NVIDIA GPU）拥有多级缓存结构：寄存器、L1/L2缓存、以及高带宽显存（HBM）。LLM推理的性能优化很大程度上依赖于数据在缓存层级中的局部性。\n\n在预填充阶段，由于处理的是批量数据，数据访问模式较为规则，容易利用缓存预取（Prefetching）机制。然而，在生成阶段，KV Cache（Key-Value Cache）的访问模式变得随机且分散。KV Cache存储了之前所有token的Key和Value向量，用于计算注意力分数。随着生成token数量的增加，KV Cache的大小线性增长。如果KV Cache无法完全放入高速缓存（如L2 Cache），每次生成新token时，都需要从HBM中读取大量的KV数据，这直接消耗了宝贵的内存",
+        "timings": {
+          "cache_n": 76,
+          "prompt_n": 7,
+          "prompt_ms": 26.6,
+          "prompt_per_token_ms": 3.8,
+          "prompt_per_second": 263.2,
+          "predicted_n": 512,
+          "predicted_ms": 2949.9,
+          "predicted_per_token_ms": 5.762,
+          "predicted_per_second": 173.6,
+          "draft_n": 481,
+          "draft_n_accepted": 296
+        },
+        "usage": {
+          "prompt_tokens": 83,
+          "completion_tokens": 512,
+          "total_tokens": 595,
+          "prompt_tokens_details": {
+            "cached_tokens": 76
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 2.9917888690251857,
+        "first_content_s": 0.044991674134507775
+      }
+    },
+    {
+      "context_background_tokens": 8192,
+      "family": "english",
+      "sample": 0,
+      "cold_prefill_sample": true,
+      "request_sha256": "6d2b25d41cb7ac1f1ea5cf8df5ea2610ad45ff7ab6917c50ed23f31f6cebadf0",
+      "result": {
+        "text": "# Detailed Guide to Organizing and Reviewing a Software Project\n\nThis guide provides a comprehensive, step-by-step methodology for organizing, reviewing, and maintaining software projects. It covers code structure, documentation, testing, performance monitoring, and long-term data integrity.\n\n1.  **Establish a Clear Project Structure**: Begin by defining the directory hierarchy. Use standard conventions (e.g., `src/`, `tests/`, `docs/`, `config/`) to ensure immediate clarity for new contributors.\n2.  **Define Coding Standards**: Create a `CONTRIBUTING.md` file that outlines style guides, naming conventions, and commit message formats.\n3.  **Implement Version Control Best Practices**: Use Git with a clear branching strategy (e.g., GitFlow or Trunk-Based Development). Ensure every commit is atomic and descriptive.\n4.  **Set Up Continuous Integration (CI)**: Configure CI pipelines to run tests and linting on every push. This prevents broken builds from entering the main branch.\n5.  **Automate Code Linting**: Integrate tools like ESLint, Pylint, or RuboCop to enforce code style automatically.\n6.  **Enforce Code Formatting**: Use tools like Prettier or Black to handle whitespace and formatting, reducing debate over style in code reviews.\n7.  **Create a Code Review Checklist**: Define specific criteria for reviewers, such as checking for security vulnerabilities, performance bottlenecks, and readability.\n8.  **Limit Pull Request Size**: Encourage small, focused pull requests (under 400 lines of code) to make reviews more effective and less error-prone.\n9.  **Require Peer Reviews**: Mandate at least one approval from a peer before merging any code to the main branch.\n10. **Use Static Analysis Tools**: Integrate tools like SonarQube or CodeQL to detect bugs, security issues, and code smells automatically.\n11. **Document Architecture Decisions**: Maintain an Architecture Decision Record (ADR) folder to log significant design choices and their rationale.\n12. **Maintain Up-to-Date Documentation**: Ensure README files, API documentation, and setup guides are current. Outdated docs cause confusion and errors.\n13. **Standardize Environment Setup**: Use Docker or `docker-compose` to ensure all developers have identical local environments.\n14. **Manage Dependencies Carefully**: Use lock files (e.g., `package-lock.json`, `po",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 8269,
+          "prompt_ms": 2287.1,
+          "prompt_per_token_ms": 0.277,
+          "prompt_per_second": 3615.5,
+          "predicted_n": 512,
+          "predicted_ms": 2753.6,
+          "predicted_per_token_ms": 5.378,
+          "predicted_per_second": 185.9,
+          "draft_n": 482,
+          "draft_n_accepted": 333
+        },
+        "usage": {
+          "prompt_tokens": 8269,
+          "completion_tokens": 512,
+          "total_tokens": 8781,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 5.07320666895248,
+        "first_content_s": 2.3234910159371793
+      }
+    },
+    {
+      "context_background_tokens": 8192,
+      "family": "english",
+      "sample": 1,
+      "cold_prefill_sample": false,
+      "request_sha256": "6d2b25d41cb7ac1f1ea5cf8df5ea2610ad45ff7ab6917c50ed23f31f6cebadf0",
+      "result": {
+        "text": "# Detailed Guide to Organizing and Reviewing a Software Project\n\nThis guide provides a comprehensive, step-by-step methodology for organizing, reviewing, and maintaining software projects. It covers code structure, documentation, testing, performance monitoring, and long-term data integrity.\n\n1.  **Establish a Clear Project Structure**: Begin by defining the directory hierarchy. Use standard conventions (e.g., `src/`, `tests/`, `docs/`, `config/`) to ensure immediate clarity for new contributors.\n2.  **Define Coding Standards**: Create a `CONTRIBUTING.md` file that outlines style guides, naming conventions, and commit message formats.\n3.  **Implement Version Control Best Practices**: Use Git with a clear branching strategy (e.g., GitFlow or Trunk-Based Development). Ensure every commit is atomic and descriptive.\n4.  **Set Up Continuous Integration (CI)**: Configure CI pipelines to run tests and linting on every push. This prevents broken builds from entering the main branch.\n5.  **Automate Code Linting**: Integrate tools like ESLint, Pylint, or RuboCop to enforce code style automatically.\n6.  **Enforce Code Formatting**: Use tools like Prettier or Black to handle whitespace and formatting, reducing debate over style in code reviews.\n7.  **Create a Code Review Checklist**: Define specific criteria for reviewers, such as checking for security vulnerabilities, performance bottlenecks, and readability.\n8.  **Limit Pull Request Size**: Encourage small, focused pull requests (under 400 lines of code) to make reviews more effective and less error-prone.\n9.  **Require Peer Reviews**: Mandate at least one approval from a peer before merging any code to the main branch.\n10. **Use Static Analysis Tools**: Integrate tools like SonarQube or CodeQL to detect bugs, security issues, and code smells automatically.\n11. **Document Architecture Decisions**: Maintain an Architecture Decision Record (ADR) folder to log significant design choices and their rationale.\n12. **Maintain Up-to-Date Documentation**: Ensure README files, API documentation, and setup guides are current. Outdated docs cause confusion and errors.\n13. **Standardize Environment Setup**: Use Docker or `docker-compose` to ensure all developers have identical local environments.\n14. **Manage Dependencies Carefully**: Use lock files (e.g., `package-lock.json`, `po",
+        "timings": {
+          "cache_n": 8262,
+          "prompt_n": 7,
+          "prompt_ms": 24.5,
+          "prompt_per_token_ms": 3.5,
+          "prompt_per_second": 285.7,
+          "predicted_n": 512,
+          "predicted_ms": 2712.5,
+          "predicted_per_token_ms": 5.298,
+          "predicted_per_second": 188.8,
+          "draft_n": 468,
+          "draft_n_accepted": 328
+        },
+        "usage": {
+          "prompt_tokens": 8269,
+          "completion_tokens": 512,
+          "total_tokens": 8781,
+          "prompt_tokens_details": {
+            "cached_tokens": 8262
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 2.7704602770972997,
+        "first_content_s": 0.06154417805373669
+      }
+    },
+    {
+      "context_background_tokens": 8192,
+      "family": "code",
+      "sample": 0,
+      "cold_prefill_sample": false,
+      "request_sha256": "4ca949b11334ac66972629143e44b9970ee6e68f6467a41fcec590d9dfccd058",
+      "result": {
+        "text": "```python\nimport asyncio\nimport logging\nimport random\nimport time\nfrom dataclasses import dataclass, field\nfrom enum import Enum\nfrom typing import Any, Callable, Dict, List, Optional\n\n# 1. 配置与常量\n# 注意：以下常量用于演示，实际生产环境应从配置加载\nMAX_CONCURRENCY = 5\nMAX_RETRIES = 3\nBASE_BACKOFF_SECONDS = 1.0\nBACKOFF_MULTIPLIER = 2.0\nMAX_BACKOFF_SECONDS = 30.0\nTASK_TIMEOUT_SECONDS = 10.0\n\n# 2. 日志配置\nlogging.basicConfig(\n    level=logging.INFO,\n    format=\"%(asctime)s [%(levelname)s] %(name)s: %(message)s\",\n    datefmt=\"%Y-%m-%d %H:%M:%S\",\n)\nlogger = logging.getLogger(\"AsyncTaskScheduler\")\n\n# 3. 状态枚举\nclass TaskStatus(Enum):\n    PENDING = \"pending\"\n    RUNNING = \"running\"\n    SUCCESS = \"success\"\n    FAILED = \"failed\"\n    CANCELLED = \"cancelled\"\n    RETRYING = \"retrying\"\n\n# 4. 任务数据类\n@dataclass\nclass Task:\n    task_id: str\n    func: Callable[..., Any]\n    args: tuple = ()\n    kwargs: Dict[str, Any] = field(default_factory=dict)\n    status: TaskStatus = TaskStatus.PENDING\n    retries: int = 0\n    max_retries: int = MAX_RETRIES\n    created_at: float = field(default_factory=time.time)\n    started_at: Optional[float] = None\n    finished_at: Optional[float] = None\n    result: Optional[Any] = None\n    error: Optional[str] = None\n    priority: int = 0\n\n    def __repr__(self) -> str:\n        return f\"Task(id={self.task_id}, status={self.status.value}, retries={self.retries})\"\n\n# 5. 异常定义\nclass TaskExecutionError(Exception):\n    \"\"\"任务执行过程中发生的错误\"\"\"\n    pass\n\nclass TaskTimeoutError(Exception):\n    \"\"\"任务执行超时\"\"\"\n    pass\n\nclass TaskCancelledError(Exception):\n    \"\"\"任务被取消\"\"\"\n    pass\n\n# 6. 核心调度器\nclass AsyncScheduler:\n    def __init__(self,",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 8285,
+          "prompt_ms": 2207.6,
+          "prompt_per_token_ms": 0.266,
+          "prompt_per_second": 3752.9,
+          "predicted_n": 512,
+          "predicted_ms": 2160.1,
+          "predicted_per_token_ms": 4.219,
+          "predicted_per_second": 237.0,
+          "draft_n": 458,
+          "draft_n_accepted": 386
+        },
+        "usage": {
+          "prompt_tokens": 8285,
+          "completion_tokens": 512,
+          "total_tokens": 8797,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 4.401514461031184,
+        "first_content_s": 2.2451145090162754
+      }
+    },
+    {
+      "context_background_tokens": 8192,
+      "family": "code",
+      "sample": 1,
+      "cold_prefill_sample": false,
+      "request_sha256": "4ca949b11334ac66972629143e44b9970ee6e68f6467a41fcec590d9dfccd058",
+      "result": {
+        "text": "```python\nimport asyncio\nimport logging\nimport random\nimport time\nfrom dataclasses import dataclass, field\nfrom enum import Enum\nfrom typing import Any, Callable, Dict, List, Optional\n\n# 1. 配置与常量\n# 注意：以下常量用于演示，实际生产环境应从配置加载\nMAX_CONCURRENCY = 5\nMAX_RETRIES = 3\nBASE_BACKOFF_SECONDS = 1.0\nBACKOFF_MULTIPLIER = 2.0\nMAX_BACKOFF_SECONDS = 30.0\nTASK_TIMEOUT_SECONDS = 10.0\n\n# 2. 日志配置\nlogging.basicConfig(\n    level=logging.INFO,\n    format=\"%(asctime)s [%(levelname)s] %(name)s: %(message)s\",\n    datefmt=\"%Y-%m-%d %H:%M:%S\",\n)\nlogger = logging.getLogger(\"AsyncTaskScheduler\")\n\n# 3. 状态枚举\nclass TaskStatus(Enum):\n    PENDING = \"pending\"\n    RUNNING = \"running\"\n    SUCCESS = \"success\"\n    FAILED = \"failed\"\n    CANCELLED = \"cancelled\"\n    RETRYING = \"retrying\"\n\n# 4. 任务数据类\n@dataclass\nclass Task:\n    task_id: str\n    func: Callable[..., Any]\n    args: tuple = ()\n    kwargs: Dict[str, Any] = field(default_factory=dict)\n    status: TaskStatus = TaskStatus.PENDING\n    retries: int = 0\n    max_retries: int = MAX_RETRIES\n    created_at: float = field(default_factory=time.time)\n    started_at: Optional[float] = None\n    finished_at: Optional[float] = None\n    result: Optional[Any] = None\n    error: Optional[str] = None\n    priority: int = 0\n\n    def __repr__(self) -> str:\n        return f\"Task(id={self.task_id}, status={self.status.value}, retries={self.retries})\"\n\n# 5. 异常定义\nclass TaskExecutionError(Exception):\n    \"\"\"任务执行过程中发生的错误\"\"\"\n    pass\n\nclass TaskTimeoutError(Exception):\n    \"\"\"任务执行超时\"\"\"\n    pass\n\nclass TaskCancelledError(Exception):\n    \"\"\"任务被取消\"\"\"\n    pass\n\n# 6. 核心调度器\nclass AsyncScheduler:\n    def __init__(self,",
+        "timings": {
+          "cache_n": 8278,
+          "prompt_n": 7,
+          "prompt_ms": 24.4,
+          "prompt_per_token_ms": 3.486,
+          "prompt_per_second": 286.9,
+          "predicted_n": 512,
+          "predicted_ms": 2055.5,
+          "predicted_per_token_ms": 4.015,
+          "predicted_per_second": 249.1,
+          "draft_n": 470,
+          "draft_n_accepted": 397
+        },
+        "usage": {
+          "prompt_tokens": 8285,
+          "completion_tokens": 512,
+          "total_tokens": 8797,
+          "prompt_tokens_details": {
+            "cached_tokens": 8278
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 2.1127140349708498,
+        "first_content_s": 0.06072411988861859
+      }
+    },
+    {
+      "context_background_tokens": 8192,
+      "family": "chinese",
+      "sample": 0,
+      "cold_prefill_sample": false,
+      "request_sha256": "24b22c23652bc940d6a9c848f1b41fb5cbe8f600a40518e25952e61df08ae635",
+      "result": {
+        "text": "大语言模型（LLM）的推理过程是一个高度依赖硬件资源，特别是内存带宽和计算能力的复杂过程。理解这一过程对于优化模型部署、降低延迟以及提高吞吐量至关重要。以下将详细解释LLM推理中的内存带宽、缓存机制、预填充（Prefill）和输出生成（Decode）机制，并结合计算例子与优化步骤进行深入分析。\n\n### 1. 内存带宽与计算强度的核心矛盾\n\nLLM推理的性能瓶颈通常不在于计算速度，而在于内存带宽。这是因为LLM的架构（主要是Transformer）在推理阶段，尤其是生成阶段，往往是“内存受限”（Memory-bound）而非“计算受限”（Compute-bound）。\n\n**内存带宽的定义**：内存带宽是指单位时间内从显存（VRAM）读取数据到计算单元（如GPU核心）的速度，通常以GB/s或TB/s衡量。\n\n**计算强度（Arithmetic Intensity）**：这是衡量每读取一个字节数据所执行的浮点运算次数（FLOPs/Byte）。如果计算强度低于硬件的“Roofline”模型中的拐点，则性能受限于内存带宽；反之则受限于计算能力。\n\n在LLM推理中，模型权重（Weights）是巨大的。例如，一个70B参数的模型，如果以FP16精度存储，其权重大小约为140GB。在生成每一个token时，模型需要读取这些权重。如果模型较小（如7B），权重为14GB，在单卡上可能受限于计算；但对于大模型，权重读取速度往往跟不上计算速度，导致GPU核心等待数据，这就是所谓的“内存墙”。\n\n### 2. 预填充（Prefill）与输出生成（Decode）机制\n\nLLM推理分为两个截然不同的阶段：预填充和输出生成。这两个阶段的特性不同，导致其瓶颈也不同。\n\n#### 2.1 预填充阶段（Prefill）\n\n预填充阶段处理输入提示（Prompt）。在这个阶段，模型并行处理所有输入token，计算它们的Key和Value向量，并生成第一个输出token。\n\n*   **特性**：预填充阶段是**计算受限**的。因为输入token数量通常较多（例如1000个token），模型可以并行处理这些token，利用矩阵乘法（GEMM）的高计算强度。此时，内存带宽的压力相对较小，因为数据读取与计算的比例较高。\n*   **延迟影响**：预填充时间",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 8279,
+          "prompt_ms": 2209.5,
+          "prompt_per_token_ms": 0.267,
+          "prompt_per_second": 3747.0,
+          "predicted_n": 512,
+          "predicted_ms": 2959.1,
+          "predicted_per_token_ms": 5.779,
+          "predicted_per_second": 173.0,
+          "draft_n": 496,
+          "draft_n_accepted": 310
+        },
+        "usage": {
+          "prompt_tokens": 8279,
+          "completion_tokens": 512,
+          "total_tokens": 8791,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 5.203735654009506,
+        "first_content_s": 2.246392982080579
+      }
+    },
+    {
+      "context_background_tokens": 8192,
+      "family": "chinese",
+      "sample": 1,
+      "cold_prefill_sample": false,
+      "request_sha256": "24b22c23652bc940d6a9c848f1b41fb5cbe8f600a40518e25952e61df08ae635",
+      "result": {
+        "text": "大语言模型（LLM）的推理过程是一个高度依赖硬件资源，特别是内存带宽和计算能力的复杂过程。理解这一过程对于优化模型部署、降低延迟以及提高吞吐量至关重要。以下将详细解释LLM推理中的内存带宽、缓存机制、预填充（Prefill）和输出生成（Decode）机制，并结合计算例子与优化步骤进行深入分析。\n\n### 1. 内存带宽与计算强度的核心矛盾\n\nLLM推理的性能瓶颈通常不在于计算速度，而在于内存带宽。这是因为LLM的架构（主要是Transformer）在推理阶段，尤其是生成阶段，往往是“内存受限”（Memory-bound）而非“计算受限”（Compute-bound）。\n\n**内存带宽的定义**：内存带宽是指单位时间内从显存（VRAM）读取数据到计算单元（如GPU核心）的速度，通常以GB/s或TB/s衡量。\n\n**计算强度（Arithmetic Intensity）**：这是衡量每读取一个字节数据所执行的浮点运算次数（FLOPs/Byte）。如果计算强度低于硬件的“Roofline”模型中的拐点，则性能受限于内存带宽；反之则受限于计算能力。\n\n在LLM推理中，模型权重（Weights）是巨大的。例如，一个70B参数的模型，如果以FP16精度存储，其权重大小约为140GB。在生成每一个token时，模型需要读取这些权重。如果模型较小（如7B），权重为14GB，在单卡上可能受限于计算；但对于大模型，权重读取速度往往跟不上计算速度，导致GPU核心等待数据，这就是所谓的“内存墙”。\n\n### 2. 预填充（Prefill）与输出生成（Decode）机制\n\nLLM推理分为两个截然不同的阶段：预填充和输出生成。这两个阶段的特性不同，导致其瓶颈也不同。\n\n#### 2.1 预填充阶段（Prefill）\n\n预填充阶段处理输入提示（Prompt）。在这个阶段，模型并行处理所有输入token，计算它们的Key和Value向量，并生成第一个输出token。\n\n*   **特性**：预填充阶段是**计算受限**的。因为输入token数量通常较多（例如1000个token），模型可以并行处理这些token，利用矩阵乘法（GEMM）的高计算强度。此时，内存带宽的压力相对较小，因为数据读取与计算的比例较高。\n*   **延迟影响**：预填充时间",
+        "timings": {
+          "cache_n": 8272,
+          "prompt_n": 7,
+          "prompt_ms": 23.2,
+          "prompt_per_token_ms": 3.314,
+          "prompt_per_second": 301.7,
+          "predicted_n": 512,
+          "predicted_ms": 2858.2,
+          "predicted_per_token_ms": 5.582,
+          "predicted_per_second": 179.1,
+          "draft_n": 480,
+          "draft_n_accepted": 312
+        },
+        "usage": {
+          "prompt_tokens": 8279,
+          "completion_tokens": 512,
+          "total_tokens": 8791,
+          "prompt_tokens_details": {
+            "cached_tokens": 8272
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 2.9160552870016545,
+        "first_content_s": 0.05946939601562917
+      }
+    },
+    {
+      "context_background_tokens": 65536,
+      "family": "english",
+      "sample": 0,
+      "cold_prefill_sample": true,
+      "request_sha256": "f8e7c30cebecfc4879a2d8484dab93ef72e5f1db0f7ec3283c00e65d4f747cd1",
+      "result": {
+        "text": "Based on the project records provided, here is a detailed numbered guide to organizing and reviewing a software project. This guide integrates the specific data points from the evidence logs, including the mandatory long-range checkpoints.\n\n1.  **Establish Data Integrity Checkpoints**: Begin by identifying immutable facts that must be preserved throughout the project lifecycle. For example, **LONG_RANGE_CHECKPOINT position=70 value=QF-1-C4E3871F0CDD** serves as a critical anchor for data verification.\n2.  **Define Tenant Scope**: Catalog all active tenants. In this project, tenants range from **T00** to **T96**, requiring systematic tracking for each entity.\n3.  **Monitor Latency Trends**: Track latency metrics for each tenant. For instance, **Evidence 000000** shows **tenant=T00** with a latency of **37ms**, which is a baseline for performance monitoring.\n4.  **Classify Error Types**: Assign error classes to incidents. **Evidence 000000** categorizes the incident as **error_class=E00**, helping in root cause analysis.\n5.  **Assign Decision Protocols**: Standardize decision outcomes. The decision for **Evidence 000000** was **retain**, indicating no immediate action was required.\n6.  **Review High-Latency Cases**: Identify tenants with elevated latency. **Evidence 000001** shows **tenant=T01** with **56ms** latency, triggering a **review** decision.\n7.  **Track Migration Candidates**: Flag tenants for migration based on performance. **Evidence 000002** indicates **tenant=T02** (75ms latency) is marked for **migrate**.\n8.  **Verify Retention Decisions**: Confirm tenants that remain stable. **Evidence 000003** shows **tenant=T03** (94ms latency) was decided to **retain**.\n9.  **Analyze Review Triggers**: Understand why specific tenants are reviewed. **Evidence 000004** shows **tenant=T04** (113ms latency) was sent for **review**.\n10. **Execute Migration Actions**: Process migrations for flagged tenants. **Evidence 000005** confirms **tenant=T05** (132ms latency) was **",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 65614,
+          "prompt_ms": 15412.9,
+          "prompt_per_token_ms": 0.235,
+          "prompt_per_second": 4257.1,
+          "predicted_n": 512,
+          "predicted_ms": 2680.3,
+          "predicted_per_token_ms": 5.235,
+          "predicted_per_second": 191.0,
+          "draft_n": 467,
+          "draft_n_accepted": 342
+        },
+        "usage": {
+          "prompt_tokens": 65614,
+          "completion_tokens": 512,
+          "total_tokens": 66126,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 18.2528279570397,
+        "first_content_s": 15.576126875123009
+      }
+    },
+    {
+      "context_background_tokens": 65536,
+      "family": "english",
+      "sample": 1,
+      "cold_prefill_sample": false,
+      "request_sha256": "f8e7c30cebecfc4879a2d8484dab93ef72e5f1db0f7ec3283c00e65d4f747cd1",
+      "result": {
+        "text": "Based on the project records provided, here is a detailed numbered guide to organizing and reviewing a software project. This guide integrates the specific data points from the evidence logs, including the mandatory long-range checkpoints.\n\n1.  **Establish Data Integrity Checkpoints**: Begin by identifying immutable facts that must be preserved throughout the project lifecycle. For example, **LONG_RANGE_CHECKPOINT position=70 value=QF-1-C4E3871F0CDD** serves as a critical anchor for data verification.\n2.  **Define Tenant Scope**: Catalog all active tenants. In this project, tenants range from **T00** to **T96**, requiring systematic tracking for each entity.\n3.  **Monitor Latency Trends**: Track latency metrics for each tenant. For instance, **Evidence 000000** shows **tenant=T00** with a latency of **37ms**, which is a baseline for performance monitoring.\n4.  **Classify Error Types**: Assign error classes to incidents. **Evidence 000000** categorizes the incident as **error_class=E00**, helping in root cause analysis.\n5.  **Assign Decision Protocols**: Standardize decision outcomes. The decision for **Evidence 000000** was **retain**, indicating no immediate action was required.\n6.  **Review High-Latency Cases**: Identify tenants with elevated latency. **Evidence 000001** shows **tenant=T01** with **56ms** latency, triggering a **review** decision.\n7.  **Track Migration Candidates**: Flag tenants for migration based on performance. **Evidence 000002** indicates **tenant=T02** (75ms latency) is marked for **migrate**.\n8.  **Verify Retention Decisions**: Confirm tenants that remain stable. **Evidence 000003** shows **tenant=T03** (94ms latency) was decided to **retain**.\n9.  **Analyze Review Triggers**: Understand why specific tenants are reviewed. **Evidence 000004** shows **tenant=T04** (113ms latency) was sent for **review**.\n10. **Execute Migration Actions**: Process migrations for flagged tenants. **Evidence 000005** confirms **tenant=T05** (132ms latency) was **",
+        "timings": {
+          "cache_n": 65607,
+          "prompt_n": 7,
+          "prompt_ms": 25.7,
+          "prompt_per_token_ms": 3.671,
+          "prompt_per_second": 272.4,
+          "predicted_n": 512,
+          "predicted_ms": 2641.5,
+          "predicted_per_token_ms": 5.159,
+          "predicted_per_second": 193.8,
+          "draft_n": 460,
+          "draft_n_accepted": 338
+        },
+        "usage": {
+          "prompt_tokens": 65614,
+          "completion_tokens": 512,
+          "total_tokens": 66126,
+          "prompt_tokens_details": {
+            "cached_tokens": 65607
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 2.8270992909092456,
+        "first_content_s": 0.1888592499308288
+      }
+    },
+    {
+      "context_background_tokens": 65536,
+      "family": "code",
+      "sample": 0,
+      "cold_prefill_sample": false,
+      "request_sha256": "678f6e61fb53868f944508db06ceab2f7ab45b6082a541d37fe189e599cd495e",
+      "result": {
+        "text": "```python\nimport asyncio\nimport logging\nimport random\nimport time\nfrom dataclasses import dataclass, field\nfrom enum import Enum\nfrom typing import Any, Callable, Dict, List, Optional\n\n# --- Configuration & Constants ---\n\n# LONG_RANGE_CHECKPOINT position=70 value=QF-1-C4E3871F0CDD\n# LONG_RANGE_CHECKPOINT position=1757 value=QF-2-875F591FF188\n\nlogging.basicConfig(\n    level=logging.INFO,\n    format=\"%(asctime)s [%(levelname)s] %(message)s\",\n    handlers=[logging.StreamHandler()]\n)\nlogger = logging.getLogger(\"AsyncScheduler\")\n\nclass TaskStatus(Enum):\n    PENDING = \"pending\"\n    RUNNING = \"running\"\n    SUCCESS = \"success\"\n    FAILED = \"failed\"\n    CANCELLED = \"cancelled\"\n\n@dataclass\nclass TaskResult:\n    task_id: str\n    status: TaskStatus\n    result: Any = None\n    error: Optional[Exception] = None\n    attempts: int = 0\n    start_time: float = field(default_factory=time.time)\n    end_time: Optional[float] = None\n\n    @property\n    def duration(self) -> float:\n        if self.end_time:\n            return self.end_time - self.start_time\n        return time.time() - self.start_time\n\nclass TaskScheduler:\n    def __init__(self, max_concurrency: int = 5, max_retries: int = 3, base_delay: float = 1.0):\n        self.max_concurrency = max_concurrency\n        self.max_retries = max_retries\n        self.base_delay = base_delay\n        self._semaphore = asyncio.Semaphore(max_concurrency)\n        self._results: Dict[str, TaskResult] = {}\n        self._running_tasks: Dict[str, asyncio.Task] = {}\n        self._cancelled_tasks: set = set()\n\n    async def execute_task(self, task_id: str, func: Callable, *args, **kwargs) -> TaskResult:\n        \"\"\"Execute a single task with retries and concurrency limits.\"\"\"\n        if task_id in self._cancelled_tasks:\n            return TaskResult(task_id, TaskStatus.CANCELLED)\n\n        result = TaskResult(task_id, TaskStatus.PENDING)\n        self._results[",
+        "timings": {
+          "cache_n": 65536,
+          "prompt_n": 94,
+          "prompt_ms": 390.9,
+          "prompt_per_token_ms": 4.159,
+          "prompt_per_second": 240.5,
+          "predicted_n": 512,
+          "predicted_ms": 1955.6,
+          "predicted_per_token_ms": 3.82,
+          "predicted_per_second": 261.8,
+          "draft_n": 490,
+          "draft_n_accepted": 419
+        },
+        "usage": {
+          "prompt_tokens": 65630,
+          "completion_tokens": 512,
+          "total_tokens": 66142,
+          "prompt_tokens_details": {
+            "cached_tokens": 65536
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 2.507519450969994,
+        "first_content_s": 0.5550371250137687
+      }
+    },
+    {
+      "context_background_tokens": 65536,
+      "family": "code",
+      "sample": 1,
+      "cold_prefill_sample": false,
+      "request_sha256": "678f6e61fb53868f944508db06ceab2f7ab45b6082a541d37fe189e599cd495e",
+      "result": {
+        "text": "```python\nimport asyncio\nimport logging\nimport random\nimport time\nfrom dataclasses import dataclass, field\nfrom enum import Enum\nfrom typing import Any, Callable, Dict, List, Optional\n\n# --- Configuration & Constants ---\n\n# LONG_RANGE_CHECKPOINT position=70 value=QF-1-C4E3871F0CDD\n# LONG_RANGE_CHECKPOINT position=1757 value=QF-2-875F591FF188\n\nlogging.basicConfig(\n    level=logging.INFO,\n    format=\"%(asctime)s [%(levelname)s] %(message)s\",\n    handlers=[logging.StreamHandler()]\n)\nlogger = logging.getLogger(\"AsyncScheduler\")\n\nclass TaskStatus(Enum):\n    PENDING = \"pending\"\n    RUNNING = \"running\"\n    SUCCESS = \"success\"\n    FAILED = \"failed\"\n    CANCELLED = \"cancelled\"\n\n@dataclass\nclass TaskResult:\n    task_id: str\n    status: TaskStatus\n    result: Any = None\n    error: Optional[Exception] = None\n    attempts: int = 0\n    start_time: float = field(default_factory=time.time)\n    end_time: Optional[float] = None\n\n    @property\n    def duration(self) -> float:\n        if self.end_time:\n            return self.end_time - self.start_time\n        return time.time() - self.start_time\n\nclass TaskScheduler:\n    def __init__(self, max_concurrency: int = 5, max_retries: int = 3, base_delay: float = 1.0):\n        self.max_concurrency = max_concurrency\n        self.max_retries = max_retries\n        self.base_delay = base_delay\n        self._semaphore = asyncio.Semaphore(max_concurrency)\n        self._results: Dict[str, TaskResult] = {}\n        self._running_tasks: Dict[str, asyncio.Task] = {}\n        self._cancelled_tasks: set = set()\n\n    async def execute_task(self, task_id: str, func: Callable, *args, **kwargs) -> TaskResult:\n        \"\"\"Execute a single task with retries and concurrency limits.\"\"\"\n        if task_id in self._cancelled_tasks:\n            return TaskResult(task_id, TaskStatus.CANCELLED)\n\n        result = TaskResult(task_id, TaskStatus.PENDING)\n        self._results[",
+        "timings": {
+          "cache_n": 65623,
+          "prompt_n": 7,
+          "prompt_ms": 24.5,
+          "prompt_per_token_ms": 3.5,
+          "prompt_per_second": 285.7,
+          "predicted_n": 512,
+          "predicted_ms": 1967.5,
+          "predicted_per_token_ms": 3.843,
+          "predicted_per_second": 260.2,
+          "draft_n": 504,
+          "draft_n_accepted": 417
+        },
+        "usage": {
+          "prompt_tokens": 65630,
+          "completion_tokens": 512,
+          "total_tokens": 66142,
+          "prompt_tokens_details": {
+            "cached_tokens": 65623
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 2.1534318139310926,
+        "first_content_s": 0.18898790795356035
+      }
+    },
+    {
+      "context_background_tokens": 65536,
+      "family": "chinese",
+      "sample": 0,
+      "cold_prefill_sample": false,
+      "request_sha256": "0bdae2d522b7412409912b0a8c528bf7ede0679c0aac5dda7805da659f2e27e7",
+      "result": {
+        "text": "大语言模型（LLM）的推理过程是一个高度依赖硬件资源，特别是内存带宽和计算能力的复杂过程。理解这一过程对于优化模型部署、降低延迟以及提高吞吐量至关重要。以下将详细解释LLM推理中的内存带宽、缓存机制、预填充（Prefill）和输出生成（Decode）机制，并结合计算例子与优化步骤进行阐述。\n\n### 1. 内存带宽与计算强度的核心矛盾\n\nLLM推理的性能瓶颈通常不在于计算速度（FLOPS），而在于内存带宽（Memory Bandwidth）。这是因为LLM的推理过程分为两个截然不同的阶段：预填充和输出生成，它们对硬件资源的需求模式完全不同。\n\n**计算强度（Arithmetic Intensity）** 是衡量计算性能的关键指标，定义为每字节内存访问所执行的浮点运算次数。如果计算强度低于硬件的“脊点”（Ridge Point），则性能受限于内存带宽；如果高于脊点，则受限于计算能力。\n\n以NVIDIA A100 GPU为例，其内存带宽约为2 TB/s，峰值计算能力约为312 TFLOPS（FP16）。其脊点约为156 FLOPs/Byte。这意味着，如果每个字节的数据需要执行超过156次浮点运算，GPU的计算单元将成为瓶颈；否则，数据加载速度将成为瓶颈。\n\n### 2. 预填充（Prefill）机制：计算密集型阶段\n\n预填充阶段处理输入提示（Prompt）。在这个阶段，模型并行处理所有输入Token，计算它们的Key和Value向量，并生成第一个输出Token。\n\n**机制特点：**\n- **并行度高：** 所有输入Token同时处理，矩阵乘法（GEMM）的维度较大。\n- **计算强度大：** 由于处理的是整个序列，每个权重参数被多次复用，计算强度通常高于脊点。因此，预填充阶段通常是**计算受限（Compute-bound）**的。\n\n**计算例子：**\n假设模型参数为70B（700亿），使用FP16精度，每个参数占2字节。\n- 权重大小：70B * 2 bytes = 140 GB。\n- 假设输入长度为1000 Token。\n- 在预填充阶段，每个Token都需要与所有权重进行矩阵乘法。虽然权重加载一次，但计算量巨大。\n- 如果GPU计算能力为312 TFLOPS，处理10",
+        "timings": {
+          "cache_n": 65536,
+          "prompt_n": 88,
+          "prompt_ms": 382.5,
+          "prompt_per_token_ms": 4.347,
+          "prompt_per_second": 230.1,
+          "predicted_n": 512,
+          "predicted_ms": 2896.4,
+          "predicted_per_token_ms": 5.657,
+          "predicted_per_second": 176.8,
+          "draft_n": 500,
+          "draft_n_accepted": 324
+        },
+        "usage": {
+          "prompt_tokens": 65624,
+          "completion_tokens": 512,
+          "total_tokens": 66136,
+          "prompt_tokens_details": {
+            "cached_tokens": 65536
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 3.4377759259659797,
+        "first_content_s": 0.544641591142863
+      }
+    },
+    {
+      "context_background_tokens": 65536,
+      "family": "chinese",
+      "sample": 1,
+      "cold_prefill_sample": false,
+      "request_sha256": "0bdae2d522b7412409912b0a8c528bf7ede0679c0aac5dda7805da659f2e27e7",
+      "result": {
+        "text": "大语言模型（LLM）的推理过程是一个高度依赖硬件资源，特别是内存带宽和计算能力的复杂过程。理解这一过程对于优化模型部署、降低延迟以及提高吞吐量至关重要。以下将详细解释LLM推理中的内存带宽、缓存机制、预填充（Prefill）和输出生成（Decode）机制，并结合计算例子与优化步骤进行阐述。\n\n### 1. 内存带宽与计算强度的核心矛盾\n\nLLM推理的性能瓶颈通常不在于计算速度（FLOPS），而在于内存带宽（Memory Bandwidth）。这是因为LLM的推理过程分为两个截然不同的阶段：预填充和输出生成，它们对硬件资源的需求模式完全不同。\n\n**计算强度（Arithmetic Intensity）** 是衡量计算性能的关键指标，定义为每字节内存访问所执行的浮点运算次数。如果计算强度低于硬件的“脊点”（Ridge Point），则性能受限于内存带宽；如果高于脊点，则受限于计算能力。\n\n以NVIDIA A100 GPU为例，其内存带宽约为2 TB/s，峰值计算能力约为312 TFLOPS（FP16）。其脊点约为156 FLOPs/Byte。这意味着，如果每个字节的数据需要执行超过156次浮点运算，GPU的计算单元将成为瓶颈；否则，数据加载速度将成为瓶颈。\n\n### 2. 预填充（Prefill）机制：计算密集型阶段\n\n预填充阶段处理输入提示（Prompt）。在这个阶段，模型并行处理所有输入Token，计算它们的Key和Value向量，并生成第一个输出Token。\n\n**机制特点：**\n- **并行度高：** 所有输入Token同时处理，矩阵乘法（GEMM）的维度较大。\n- **计算强度大：** 由于处理的是整个序列，每个权重参数被多次复用，计算强度通常高于脊点。因此，预填充阶段通常是**计算受限（Compute-bound）**的。\n\n**计算例子：**\n假设模型参数为70B（700亿），使用FP16精度，每个参数占2字节。\n- 权重大小：70B * 2 bytes = 140 GB。\n- 假设输入长度为1000 Token。\n- 在预填充阶段，每个Token都需要与所有权重进行矩阵乘法。虽然权重加载一次，但计算量巨大。\n- 如果GPU计算能力为312 TFLOPS，处理10",
+        "timings": {
+          "cache_n": 65617,
+          "prompt_n": 7,
+          "prompt_ms": 25.0,
+          "prompt_per_token_ms": 3.571,
+          "prompt_per_second": 280.0,
+          "predicted_n": 512,
+          "predicted_ms": 2861.8,
+          "predicted_per_token_ms": 5.589,
+          "predicted_per_second": 178.9,
+          "draft_n": 498,
+          "draft_n_accepted": 323
+        },
+        "usage": {
+          "prompt_tokens": 65624,
+          "completion_tokens": 512,
+          "total_tokens": 66136,
+          "prompt_tokens_details": {
+            "cached_tokens": 65617
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 3.044803655007854,
+        "first_content_s": 0.18613602896220982
+      }
+    },
+    {
+      "context_background_tokens": 253952,
+      "family": "english",
+      "sample": 0,
+      "cold_prefill_sample": true,
+      "request_sha256": "590a3bffb3c0763a6a44ec9265f1b197e98d1d2b7ca4d826bce71e560597ba08",
+      "result": {
+        "text": "Here is a detailed, numbered guide to organizing and reviewing a software project, incorporating the specific immutable facts (LONG_RANGE_CHECKPOINT values) that must be preserved exactly as they appear in the records.\n\n1.  **Establish Project Structure**: Begin by defining the directory structure. Use `src/` for source code, `tests/` for unit tests, and `docs/` for documentation.\n2.  **Version Control Initialization**: Initialize a Git repository. Ensure `.gitignore` is configured to exclude build artifacts and local environment variables.\n3.  **Dependency Management**: Use a package manager (e.g., `npm`, `pip`, `maven`) to manage dependencies. Lock files (e.g., `package-lock.json`) should be committed to ensure reproducibility.\n4.  **Code Style Enforcement**: Implement a linter (e.g., ESLint, Pylint) with a strict configuration. Enforce consistent formatting across all files.\n5.  **Testing Framework Setup**: Configure a testing framework (e.g., Jest, Pytest). Ensure tests are isolated and do not rely on external network calls unless mocked.\n6.  **Continuous Integration (CI) Pipeline**: Create a CI pipeline that runs tests and linters on every commit. This ensures code quality is maintained automatically.\n7.  **Documentation Standards**: Require that every public function has a docstring or comment explaining its purpose, parameters, and return values.\n8.  **Error Handling Strategy**: Define a global error handling strategy. Ensure exceptions are caught and logged appropriately, not just printed to the console.\n9.  **Logging Configuration**: Implement structured logging. Use JSON format for logs to facilitate parsing and analysis in monitoring tools.\n10. **Security Scanning**: Integrate security scanning tools (e.g., Snyk, Dependabot) to check for vulnerabilities in dependencies.\n11. **Performance Monitoring**: Set up performance monitoring tools to track latency and throughput. This is critical for identifying bottlenecks.\n12. **Data Integrity Checkpoints**: Establish immutable data checkpoints for critical audit trails. For example, at position 70, the fact `QF-1-C4E3871F0CDD` must be preserved exactly as recorded.\n13. **Tenant Isolation**: Ensure that data for different tenants (e.g., T00, T01) is isolated. Use row-level security or separate databases if necessary.\n14.",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 254030,
+          "prompt_ms": 63703.9,
+          "prompt_per_token_ms": 0.251,
+          "prompt_per_second": 3987.7,
+          "predicted_n": 512,
+          "predicted_ms": 2918.2,
+          "predicted_per_token_ms": 5.7,
+          "predicted_per_second": 175.5,
+          "draft_n": 483,
+          "draft_n_accepted": 334
+        },
+        "usage": {
+          "prompt_tokens": 254030,
+          "completion_tokens": 512,
+          "total_tokens": 254542,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 67.21266721514985,
+        "first_content_s": 64.28999432804994
+      }
+    },
+    {
+      "context_background_tokens": 253952,
+      "family": "english",
+      "sample": 1,
+      "cold_prefill_sample": false,
+      "request_sha256": "590a3bffb3c0763a6a44ec9265f1b197e98d1d2b7ca4d826bce71e560597ba08",
+      "result": {
+        "text": "Here is a detailed, numbered guide to organizing and reviewing a software project, incorporating the specific immutable facts (LONG_RANGE_CHECKPOINT values) that must be preserved exactly as they appear in the records.\n\n1.  **Establish Project Structure**: Begin by defining the directory structure. Use `src/` for source code, `tests/` for unit tests, and `docs/` for documentation.\n2.  **Version Control Initialization**: Initialize a Git repository. Ensure `.gitignore` is configured to exclude build artifacts and local environment variables.\n3.  **Dependency Management**: Use a package manager (e.g., `npm`, `pip`, `maven`) to manage dependencies. Lock files (e.g., `package-lock.json`) should be committed to ensure reproducibility.\n4.  **Code Style Enforcement**: Implement a linter (e.g., ESLint, Pylint) with a strict configuration. Enforce consistent formatting across all files.\n5.  **Testing Framework Setup**: Configure a testing framework (e.g., Jest, Pytest). Ensure tests are isolated and do not rely on external network calls unless mocked.\n6.  **Continuous Integration (CI) Pipeline**: Create a CI pipeline that runs tests and linters on every commit. This ensures code quality is maintained automatically.\n7.  **Documentation Standards**: Require that every public function has a docstring or comment explaining its purpose, parameters, and return values.\n8.  **Error Handling Strategy**: Define a global error handling strategy. Ensure exceptions are caught and logged appropriately, not just printed to the console.\n9.  **Logging Configuration**: Implement structured logging. Use JSON format for logs to facilitate parsing and analysis in monitoring tools.\n10. **Security Scanning**: Integrate security scanning tools (e.g., Snyk, Dependabot) to check for vulnerabilities in dependencies.\n11. **Performance Monitoring**: Set up performance monitoring tools to track latency and throughput. This is critical for identifying bottlenecks.\n12. **Data Integrity Checkpoints**: Establish immutable data checkpoints for critical audit trails. For example, at position 70, the fact `QF-1-C4E3871F0CDD` must be preserved exactly as recorded.\n13. **Tenant Isolation**: Ensure that data for different tenants (e.g., T00, T01) is isolated. Use row-level security or separate databases if necessary.\n14.",
+        "timings": {
+          "cache_n": 254023,
+          "prompt_n": 7,
+          "prompt_ms": 27.9,
+          "prompt_per_token_ms": 3.986,
+          "prompt_per_second": 250.9,
+          "predicted_n": 512,
+          "predicted_ms": 2864.9,
+          "predicted_per_token_ms": 5.596,
+          "predicted_per_second": 178.7,
+          "draft_n": 475,
+          "draft_n_accepted": 333
+        },
+        "usage": {
+          "prompt_tokens": 254030,
+          "completion_tokens": 512,
+          "total_tokens": 254542,
+          "prompt_tokens_details": {
+            "cached_tokens": 254023
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 3.47606741101481,
+        "first_content_s": 0.6067069119308144
+      }
+    },
+    {
+      "context_background_tokens": 253952,
+      "family": "code",
+      "sample": 0,
+      "cold_prefill_sample": false,
+      "request_sha256": "b0a768126b77445464bc5a75690736b80e628b7ac031ad5f97e6f336e05db2e8",
+      "result": {
+        "text": "```python\nimport asyncio\nimport logging\nimport random\nimport time\nfrom dataclasses import dataclass, field\nfrom enum import Enum\nfrom typing import Any, Callable, Dict, List, Optional\n\n# Configure structured logging\nlogging.basicConfig(\n    level=logging.INFO,\n    format=\"%(asctime)s [%(levelname)s] %(message)s\",\n    datefmt=\"%Y-%m-%d %H:%M:%S\",\n)\nlogger = logging.getLogger(\"TaskScheduler\")\n\n# Retrieve the long-range checkpoint values from the context\nCHECKPOINT_1 = \"QF-1-C4E3871F0CDD\"\nCHECKPOINT_2 = \"QF-2-875F591FF188\"\nCHECKPOINT_3 = \"QF-3-E1A43FF7DA82\"\nCHECKPOINT_4 = \"QF-4-F46BD1822D45\"\nCHECKPOINT_5 = \"QF-5-02D043FED0CB\"\n\nclass TaskStatus(Enum):\n    PENDING = \"pending\"\n    RUNNING = \"running\"\n    SUCCESS = \"success\"\n    FAILED = \"failed\"\n    CANCELLED = \"cancelled\"\n\n@dataclass\nclass Task:\n    task_id: str\n    func: Callable\n    args: tuple = ()\n    kwargs: dict = field(default_factory=dict)\n    status: TaskStatus = TaskStatus.PENDING\n    retries: int = 0\n    max_retries: int = 3\n    backoff_base: float = 1.0\n    backoff_factor: float = 2.0\n    result: Optional[Any] = None\n    error: Optional[Exception] = None\n    start_time: Optional[float] = None\n    end_time: Optional[float] = None\n    cancel_event: asyncio.Event = field(default_factory=asyncio.Event)\n\n    def log(self, message: str):\n        logger.info(f\"[Task {self.task_id}] {message}\")\n\n    async def execute(self):\n        self.status = TaskStatus.RUNNING\n        self.start_time = time.time()\n        self.log(f\"Starting execution (Attempt {self.retries + 1})\")\n        \n        try:\n            # Check for cancellation before execution\n            if self.cancel_event.is_set():\n                self.status = Task",
+        "timings": {
+          "cache_n": 245760,
+          "prompt_n": 8286,
+          "prompt_ms": 2805.0,
+          "prompt_per_token_ms": 0.339,
+          "prompt_per_second": 2954.0,
+          "predicted_n": 512,
+          "predicted_ms": 2151.9,
+          "predicted_per_token_ms": 4.203,
+          "predicted_per_second": 237.9,
+          "draft_n": 476,
+          "draft_n_accepted": 405
+        },
+        "usage": {
+          "prompt_tokens": 254046,
+          "completion_tokens": 512,
+          "total_tokens": 254558,
+          "prompt_tokens_details": {
+            "cached_tokens": 245760
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 5.528095202986151,
+        "first_content_s": 3.3777822060510516
+      }
+    },
+    {
+      "context_background_tokens": 253952,
+      "family": "code",
+      "sample": 1,
+      "cold_prefill_sample": false,
+      "request_sha256": "b0a768126b77445464bc5a75690736b80e628b7ac031ad5f97e6f336e05db2e8",
+      "result": {
+        "text": "```python\nimport asyncio\nimport logging\nimport random\nimport time\nfrom dataclasses import dataclass, field\nfrom enum import Enum\nfrom typing import Any, Callable, Dict, List, Optional\n\n# Configure structured logging\nlogging.basicConfig(\n    level=logging.INFO,\n    format=\"%(asctime)s [%(levelname)s] %(message)s\",\n    datefmt=\"%Y-%m-%d %H:%M:%S\",\n)\nlogger = logging.getLogger(\"TaskScheduler\")\n\n# Retrieve the long-range checkpoint values from the context\nCHECKPOINT_1 = \"QF-1-C4E3871F0CDD\"\nCHECKPOINT_2 = \"QF-2-875F591FF188\"\nCHECKPOINT_3 = \"QF-3-E1A43FF7DA82\"\nCHECKPOINT_4 = \"QF-4-F46BD1822D45\"\nCHECKPOINT_5 = \"QF-5-02D043FED0CB\"\n\nclass TaskStatus(Enum):\n    PENDING = \"pending\"\n    RUNNING = \"running\"\n    SUCCESS = \"success\"\n    FAILED = \"failed\"\n    CANCELLED = \"cancelled\"\n\n@dataclass\nclass Task:\n    task_id: str\n    func: Callable\n    args: tuple = ()\n    kwargs: dict = field(default_factory=dict)\n    status: TaskStatus = TaskStatus.PENDING\n    retries: int = 0\n    max_retries: int = 3\n    backoff_base: float = 1.0\n    backoff_factor: float = 2.0\n    result: Optional[Any] = None\n    error: Optional[Exception] = None\n    start_time: Optional[float] = None\n    end_time: Optional[float] = None\n    cancel_event: asyncio.Event = field(default_factory=asyncio.Event)\n\n    def log(self, message: str):\n        logger.info(f\"[Task {self.task_id}] {message}\")\n\n    async def execute(self):\n        self.status = TaskStatus.RUNNING\n        self.start_time = time.time()\n        self.log(f\"Starting execution (Attempt {self.retries + 1})\")\n        \n        try:\n            # Check for cancellation before execution\n            if self.cancel_event.is_set():\n                self.status = Task",
+        "timings": {
+          "cache_n": 254039,
+          "prompt_n": 7,
+          "prompt_ms": 26.7,
+          "prompt_per_token_ms": 3.814,
+          "prompt_per_second": 262.2,
+          "predicted_n": 512,
+          "predicted_ms": 2143.9,
+          "predicted_per_token_ms": 4.187,
+          "predicted_per_second": 238.8,
+          "draft_n": 472,
+          "draft_n_accepted": 403
+        },
+        "usage": {
+          "prompt_tokens": 254046,
+          "completion_tokens": 512,
+          "total_tokens": 254558,
+          "prompt_tokens_details": {
+            "cached_tokens": 254039
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 2.741502856835723,
+        "first_content_s": 0.5972614039201289
+      }
+    },
+    {
+      "context_background_tokens": 253952,
+      "family": "chinese",
+      "sample": 0,
+      "cold_prefill_sample": false,
+      "request_sha256": "eb2990262ab5fa052ea36728cfc484603c3fdf5c80a5ddda14180d56ac74cd38",
+      "result": {
+        "text": "大语言模型（LLM）的推理过程在本质上是一个高度依赖内存带宽（Memory Bandwidth）的计算密集型任务，而非单纯的算力密集型任务。理解这一机制的关键在于区分两个截然不同的阶段：**预填充（Prefill）**和**输出生成（Generation）**。这两个阶段对硬件资源的需求模式完全不同，导致了不同的性能瓶颈和优化策略。\n\n### 1. 内存带宽与缓存机制的基础\n\n在LLM推理中，模型参数（Weights）通常存储在显存（VRAM）中，而激活值（Activations）和键值缓存（KV Cache）则随着推理过程动态生成。\n\n**内存带宽瓶颈**：现代GPU的算力（FLOPS）增长速度快于内存带宽（GB/s）。当模型参数无法完全放入高速缓存（如L2 Cache或寄存器）时，计算单元必须频繁从显存读取数据。如果计算速度超过了数据读取速度，GPU就会处于“等待数据”的空闲状态，这就是所谓的“内存墙”（Memory Wall）。\n\n**缓存层级**：\n*   **L2 Cache**：用于存储部分模型权重或频繁访问的激活值。如果模型太大，L2 Cache命中率低，导致大量显存访问。\n*   **KV Cache**：这是推理中特有的缓存结构。在自回归生成过程中，为了避免重复计算历史Token的注意力机制，系统会将每个Token的Key和Value向量存储在显存中。随着上下文长度增加，KV Cache会占用大量显存，并增加内存访问延迟。\n\n### 2. 预填充（Prefill）阶段：算力密集型\n\n预填充阶段处理的是输入Prompt（提示词）。在这个阶段，所有输入Token是并行处理的。\n\n**机制特点**：\n*   **并行计算**：输入序列中的所有Token同时进入模型，矩阵乘法（MatMul）操作可以充分利用GPU的并行架构。\n*   **高算术强度（Arithmetic Intensity）**：每个权重参数被多次使用（对应多个Token），因此计算量相对于数据读取量较大。\n*   **瓶颈**：主要受限于GPU的算力（FLOPS）和显存容量（用于存储KV Cache）。\n\n**计算例子**：\n假设一个7B参数的模型，输入长度为1000 Token。\n*   模型权重大小：7B * 2 bytes (FP16) = 14 GB。\n*   计算量：对于每个Token，",
+        "timings": {
+          "cache_n": 245760,
+          "prompt_n": 8280,
+          "prompt_ms": 2799.6,
+          "prompt_per_token_ms": 0.338,
+          "prompt_per_second": 2957.6,
+          "predicted_n": 512,
+          "predicted_ms": 3156.5,
+          "predicted_per_token_ms": 6.165,
+          "predicted_per_second": 162.2,
+          "draft_n": 490,
+          "draft_n_accepted": 312
+        },
+        "usage": {
+          "prompt_tokens": 254040,
+          "completion_tokens": 512,
+          "total_tokens": 254552,
+          "prompt_tokens_details": {
+            "cached_tokens": 245760
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 6.533783431863412,
+        "first_content_s": 3.3767470428720117
+      }
+    },
+    {
+      "context_background_tokens": 253952,
+      "family": "chinese",
+      "sample": 1,
+      "cold_prefill_sample": false,
+      "request_sha256": "eb2990262ab5fa052ea36728cfc484603c3fdf5c80a5ddda14180d56ac74cd38",
+      "result": {
+        "text": "大语言模型（LLM）的推理过程在本质上是一个高度依赖内存带宽（Memory Bandwidth）的计算密集型任务，而非单纯的算力密集型任务。理解这一机制的关键在于区分两个截然不同的阶段：**预填充（Prefill）**和**输出生成（Generation）**。这两个阶段对硬件资源的需求模式完全不同，导致了不同的性能瓶颈和优化策略。\n\n### 1. 内存带宽与缓存机制的基础\n\n在LLM推理中，模型参数（Weights）通常存储在显存（VRAM）中，而激活值（Activations）和键值缓存（KV Cache）则随着推理过程动态生成。\n\n**内存带宽瓶颈**：现代GPU的算力（FLOPS）增长速度快于内存带宽（GB/s）。当模型参数无法完全放入高速缓存（如L2 Cache或寄存器）时，计算单元必须频繁从显存读取数据。如果计算速度超过了数据读取速度，GPU就会处于“等待数据”的空闲状态，这就是所谓的“内存墙”（Memory Wall）。\n\n**缓存层级**：\n*   **L2 Cache**：用于存储部分模型权重或频繁访问的激活值。如果模型太大，L2 Cache命中率低，导致大量显存访问。\n*   **KV Cache**：这是推理中特有的缓存结构。在自回归生成过程中，为了避免重复计算历史Token的注意力机制，系统会将每个Token的Key和Value向量存储在显存中。随着上下文长度增加，KV Cache会占用大量显存，并增加内存访问延迟。\n\n### 2. 预填充（Prefill）阶段：算力密集型\n\n预填充阶段处理的是输入Prompt（提示词）。在这个阶段，所有输入Token是并行处理的。\n\n**机制特点**：\n*   **并行计算**：输入序列中的所有Token同时进入模型，矩阵乘法（MatMul）操作可以充分利用GPU的并行架构。\n*   **高算术强度（Arithmetic Intensity）**：每个权重参数被多次使用（对应多个Token），因此计算量相对于数据读取量较大。\n*   **瓶颈**：主要受限于GPU的算力（FLOPS）和显存容量（用于存储KV Cache）。\n\n**计算例子**：\n假设一个7B参数的模型，输入长度为1000 Token。\n*   模型权重大小：7B * 2 bytes (FP16) = 14 GB。\n*   计算量：对于每个Token，",
+        "timings": {
+          "cache_n": 254033,
+          "prompt_n": 7,
+          "prompt_ms": 26.9,
+          "prompt_per_token_ms": 3.843,
+          "prompt_per_second": 260.2,
+          "predicted_n": 512,
+          "predicted_ms": 3112.5,
+          "predicted_per_token_ms": 6.079,
+          "predicted_per_second": 164.5,
+          "draft_n": 486,
+          "draft_n_accepted": 311
+        },
+        "usage": {
+          "prompt_tokens": 254040,
+          "completion_tokens": 512,
+          "total_tokens": 254552,
+          "prompt_tokens_details": {
+            "cached_tokens": 254033
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 3.7083608510438353,
+        "first_content_s": 0.5942363489884883
+      }
+    }
+  ],
+  "binary_sha256": "a7a467411ecdd0e39c489b1c8897fe4d12fde9fcc9750bc766536c68c448cbf9",
+  "configuration": {
+    "exe": "/home/student_su/qwen/release/strata-single-GPU/engine/distribution/strata-turbo",
+    "cwd": "/home/student_su/qwen/release/strata-single-GPU",
+    "gpu": [
+      0
+    ],
+    "gpus_asked": true,
+    "layer_split": "auto",
+    "backend": "cuda",
+    "host": "127.0.0.1",
+    "port": 33507,
+    "model_name": "qwen3.8-flash-iq2-xs",
+    "aliases": [
+      "qwen3.8 flash",
+      "Qwen3.8-Flash-Next",
+      "Qwen3.8-Flash-Next-GSQ-RCO-IQ2_XS",
+      "qwen3.8-flash-next-ud-q3-k-xl"
+    ],
+    "draft_vocab": "full",
+    "sampling": {
+      "temperature": 0.3,
+      "top_p": 0.95,
+      "top_k": 20,
+      "min_p": 0.0,
+      "presence_penalty": 0.0,
+      "repetition_penalty": 1.0
+    },
+    "tokenizer": "/home/student_su/qwen/release/strata-single-GPU/assets/data/packs/iq2_xs/tokenizer",
+    "log": "/home/student_su/qwen/release/strata-single-GPU/runtime/readme-benchmark-isolated-20261010/iq2_xs-turbo-curves/engine.log",
+    "lib_dirs": [
+      "/usr/local/cuda/lib64"
+    ],
+    "parallel_workers": 1,
+    "env": {
+      "STRATA_SPLIT_ASYNC_COMMIT": "1",
+      "STRATA_RESIDENT_PLAN_PARALLEL": "1",
+      "STRATA_GR_DOWN_MAX4": "1",
+      "STRATA_VERIFY_DEVICE_ONLY": "1",
+      "STRATA_TOPK_PARALLEL": "1",
+      "STRATA_DECODE_TIMING": "1",
+      "STRATA_TOPK_COOPERATIVE": "1",
+      "STRATA_MTP_HNORM_STREAM": "1",
+      "STRATA_SH_OVERLAP": "1",
+      "STRATA_RESIDENT_COMBINE": "1",
+      "STRATA_MTP_ADAPTIVE": "1",
+      "STRATA_VERIFY_PRECAPTURE": "1",
+      "STRATA_MTP_HEAD_ROUTER": "/home/student_su/qwen/release/strata-single-GPU/assets/data/mtp/head-router-full-r128-k8192",
+      "STRATA_MTP_SPARSE": "1",
+      "STRATA_PLE_PREFETCH": "1",
+      "STRATA_GR_EXACT_T": "1",
+      "STRATA_GR_UP_MAX4": "1",
+      "STRATA_GR_UP_COLS": "8",
+      "STRATA_GDN_AB_WARPS": "2",
+      "STRATA_MTP_ROUTER_INDEXED": "1",
+      "STRATA_MTP_ROUTER_FUSED_QUERY": "1",
+      "STRATA_MTP_ROUTER_SORT_BEGIN_BIT": "16",
+      "STRATA_GR_EXACT_T8": "1",
+      "STRATA_GR_QFUSE": "1",
+      "STRATA_MTP_COST_ROBUST": "1",
+      "STRATA_CUDA_EXPERT_FUSED": "1",
+      "STRATA_MMVQ_ROWS": "2",
+      "CUDA_VISIBLE_DEVICES": "GPU-c9ae835b-bc1e-8d6c-f85f-e415defc30bc",
+      "STRATA_VERIFY_PREFILL_RESTORE": "1"
+    },
+    "args": [
+      "--pack",
+      "/home/student_su/qwen/release/strata-single-GPU/assets/data/packs/iq2_xs",
+      "--native",
+      "/home/student_su/qwen/release/strata-single-GPU/assets/models/IQ2_XS/Qwen3.8-Flash-Next-GSQ-RCO-IQ2_XS-00001-of-00002.gguf",
+      "--ple-gguf",
+      "/home/student_su/qwen/release/strata-single-GPU/assets/models/IQ2_XS/Qwen3.8-Flash-Next-GSQ-RCO-IQ2_XS-00002-of-00002.gguf",
+      "--expert-profile",
+      "/home/student_su/qwen/release/strata-single-GPU/assets/data/expert-profile.bin",
+      "--expert-cache",
+      "auto",
+      "--max-context",
+      "262144",
+      "--kv",
+      "int8",
+      "--vision",
+      "--rope-scaling",
+      "none",
+      "--adapt-swaps",
+      "0",
+      "--spec",
+      "8",
+      "--spec-min-p",
+      "0.3",
+      "--mtp-window",
+      "4096",
+      "--mtp",
+      "/home/student_su/qwen/release/strata-single-GPU/assets/data/mtp/native-q5-full",
+      "--prefill",
+      "auto:16384",
+      "--pool-workers",
+      "32",
+      "--kv-resident",
+      "32768",
+      "--vram-reserve-mib",
+      "700"
+    ],
+    "vision": {
+      "exe": "/home/student_su/qwen/release/strata-single-GPU/engine/distribution/strata-vision",
+      "mmproj": "/home/student_su/qwen/release/strata-single-GPU/assets/models/IQ2_XS/mmproj-Qwen3.8-Flash-Next-BF16.gguf",
+      "model": "/home/student_su/qwen/release/strata-single-GPU/assets/models/IQ2_XS/Qwen3.8-Flash-Next-GSQ-RCO-IQ2_XS-00001-of-00002.gguf",
+      "gpu": true,
+      "cuda_device": "GPU-c9ae835b-bc1e-8d6c-f85f-e415defc30bc",
+      "threads": 32,
+      "max_tokens": 0,
+      "flash_attn": "on",
+      "native_video": {
+        "fps": 8.0,
+        "timestamp_interval_ms": 5000
+      }
+    },
+    "deployment": {
+      "project": "strata-turbo-single",
+      "weights": "iq2_xs",
+      "context": 262144,
+      "physical_gpus": [
+        0
+      ],
+      "gpu_uuids": [
+        "GPU-c9ae835b-bc1e-8d6c-f85f-e415defc30bc"
+      ],
+      "max_concurrent_requests": 1,
+      "main_weights_changed": false,
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "audio_input": false,
+      "engine_selection": "turbo",
+      "numa_node": 0,
+      "resource_plan": {
+        "context": 262144,
+        "kv": "int8",
+        "workers": 32,
+        "vision_gpu": true,
+        "low_ram": false,
+        "kv_streaming": true,
+        "kv_resident": 32768,
+        "reserve_mib": 700,
+        "large_gpu_turbo": true,
+        "concurrency": 1,
+        "full_experts": true,
+        "input_modalities": [
+          "text",
+          "image",
+          "video"
+        ],
+        "audio_input": false
+      },
+      "cpu_affinity": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        256,
+        257,
+        258,
+        259,
+        260,
+        261,
+        262,
+        263,
+        264,
+        265,
+        266,
+        267,
+        268,
+        269,
+        270,
+        271,
+        272,
+        273,
+        274,
+        275,
+        276,
+        277,
+        278,
+        279,
+        280,
+        281,
+        282,
+        283,
+        284,
+        285,
+        286,
+        287,
+        288,
+        289,
+        290,
+        291,
+        292,
+        293,
+        294,
+        295,
+        296,
+        297,
+        298,
+        299,
+        300,
+        301,
+        302,
+        303,
+        304,
+        305,
+        306,
+        307,
+        308,
+        309,
+        310,
+        311,
+        312,
+        313,
+        314,
+        315,
+        316,
+        317,
+        318,
+        319,
+        320,
+        321,
+        322,
+        323,
+        324,
+        325,
+        326,
+        327,
+        328,
+        329,
+        330,
+        331,
+        332,
+        333,
+        334,
+        335,
+        336,
+        337,
+        338,
+        339,
+        340,
+        341,
+        342,
+        343,
+        344,
+        345,
+        346,
+        347,
+        348,
+        349,
+        350,
+        351,
+        352,
+        353,
+        354,
+        355,
+        356,
+        357,
+        358,
+        359,
+        360,
+        361,
+        362,
+        363,
+        364,
+        365,
+        366,
+        367,
+        368,
+        369,
+        370,
+        371,
+        372,
+        373,
+        374,
+        375,
+        376,
+        377,
+        378,
+        379,
+        380,
+        381,
+        382,
+        383
+      ]
+    },
+    "server_module": "serve.local_api"
+  },
+  "status": {
+    "service": "strata",
+    "model": "qwen3.8-flash-iq2-xs",
+    "loaded": true,
+    "auto_load": true,
+    "structured_output": {
+      "formats": [
+        "json_object",
+        "json_schema"
+      ],
+      "method": "prompt_and_validate",
+      "constrained_decoding": false,
+      "stream_buffered": true
+    },
+    "engine": "0.1.38",
+    "started": 1791650423,
+    "uptime_s": 0,
+    "cache_max_tokens": 262144,
+    "context": {
+      "native": 262144,
+      "max_positions": 262144
+    },
+    "concurrency": {
+      "serving": 1,
+      "requested": 1,
+      "active": 0,
+      "queued": 0,
+      "mode": "single_session",
+      "prefill": "single_workspace"
+    },
+    "dialects": [
+      "/v1/chat/completions",
+      "/v1/messages"
+    ],
+    "vision": {
+      "enabled": true,
+      "available": true,
+      "error": null
+    },
+    "activity": {
+      "requests": 0,
+      "in_flight": 0,
+      "last_request_at": null
+    },
+    "last_timings": null,
+    "machine": {
+      "at": 1791650423,
+      "gpu": null,
+      "ram": {
+        "used_gib": 72.2,
+        "total_gib": 1007.3
+      }
+    }
+  },
+  "measurement_only": true
+}

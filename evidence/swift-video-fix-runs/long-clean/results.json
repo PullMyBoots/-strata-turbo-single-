@@ -1,0 +1,83 @@
+{
+  "binary_sha256": "6bb10392933ddfed8739b3c11d9729062440dd79af171a630ff02cf693ce7b36",
+  "cases": [
+    {
+      "case": "video-first",
+      "passed": false,
+      "error": "Video smoke failed: expected red frames; received '0:00'"
+    },
+    {
+      "case": "image",
+      "passed": true,
+      "result": {
+        "passed": true,
+        "answer": "Based on the visual information provided in the image, here is a logical analysis to determine the dominant color:\n\n1.  **Visual Inspection**: The image consists of a single, uniform square. There are no gradients, patterns, text, or other objects present.\n2.  **Color Identification**: The entire area of the square is filled with a bright, saturated hue. This hue corresponds to the primary color red.\n3.  **Dominance Calculation**: Since 100% of the pixels in the image are this specific color, it is overwhelmingly the dominant color.\n\n**Conclusion:**\n\nThe dominant color is **Red**."
+      }
+    },
+    {
+      "case": "video-after-image",
+      "passed": false,
+      "error": "Video smoke failed: expected red frames; received '0:00'"
+    },
+    {
+      "case": "video-repeat",
+      "passed": false,
+      "error": "Video smoke failed: expected red frames; received '0:00'"
+    }
+  ],
+  "long_prefix": {
+    "text": "### The Five Secret Codes\n\n1.  **CEDAR-712**\n2.  **ORBIT-935**\n3.  **MANGO-246**\n4.  **RIVER-508**\n5.  **TULIP-163**\n\n***\n\n### Detailed Explanation of Indexing Rules\n\nBased on the provided records, the indexing system follows a **two-dimensional coordinate structure** (Row:Column) with specific rules for data storage and checkpoint placement.\n\n#### 1. The Coordinate System (Row:Column)\nThe records are organized using a `Row:Index` format (e.g., `Record 0:15`).\n*   **The First Number (Row):** Represents the \"Block\" or \"Group\" of data.\n    *   There are 5 distinct rows (0 through 4).\n    *   Each row contains a sequential list of records.\n*   **The Second Number (Index):** Represents the specific position within that row.\n    *   **Row 0** contains indices 0 through 400.\n    *   **Rows 1, 2, 3, and 4** contain indices",
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 31566,
+      "prompt_ms": 7414.0,
+      "prompt_per_token_ms": 0.235,
+      "prompt_per_second": 4257.6,
+      "predicted_n": 256,
+      "predicted_ms": 2217.6,
+      "predicted_per_token_ms": 8.662,
+      "predicted_per_second": 115.4,
+      "draft_n": 206,
+      "draft_n_accepted": 172
+    },
+    "usage": {
+      "prompt_tokens": 31566,
+      "completion_tokens": 256,
+      "total_tokens": 31822,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "finish_reason": "length",
+    "wall_s": 9.731423104181886,
+    "first_content_s": 7.539092543069273
+  },
+  "post_media_text": {
+    "text": "4",
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 26,
+      "prompt_ms": 126.3,
+      "prompt_per_token_ms": 4.858,
+      "prompt_per_second": 205.9,
+      "predicted_n": 2,
+      "predicted_ms": 40.7,
+      "predicted_per_token_ms": 20.35,
+      "predicted_per_second": 49.1,
+      "draft_n": 4,
+      "draft_n_accepted": 4
+    },
+    "usage": {
+      "prompt_tokens": 26,
+      "completion_tokens": 2,
+      "total_tokens": 28,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "finish_reason": "stop",
+    "wall_s": 0.17763911793008447,
+    "first_content_s": 0.14373838482424617
+  },
+  "stopped": true
+}

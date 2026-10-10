@@ -1,0 +1,90 @@
+{
+  "request": {
+    "model": "qwen3.8 flash",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Use lookup_weather to get the weather in Beijing."
+      }
+    ],
+    "max_tokens": 256,
+    "temperature": 0,
+    "reasoning_effort": "none",
+    "cache_prompt": false,
+    "seed": 20261008,
+    "tools": [
+      {
+        "type": "function",
+        "function": {
+          "name": "lookup_weather",
+          "description": "Get weather for a city.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "city": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "city"
+            ]
+          }
+        }
+      }
+    ],
+    "tool_choice": {
+      "type": "function",
+      "function": {
+        "name": "lookup_weather"
+      }
+    }
+  },
+  "response": {
+    "id": "chatcmpl-bd27e233a5b949c186e45cbb",
+    "object": "chat.completion",
+    "created": 1791488266,
+    "model": "qwen3.8 flash",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": null,
+          "tool_calls": [
+            {
+              "id": "call_be06a80d88484642b678f93b",
+              "type": "function",
+              "function": {
+                "name": "lookup_weather",
+                "arguments": "{\"city\":\"Beijing\"}"
+              }
+            }
+          ]
+        },
+        "finish_reason": "tool_calls"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 270,
+      "completion_tokens": 28,
+      "total_tokens": 298,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 270,
+      "prompt_ms": 610.2,
+      "prompt_per_token_ms": 2.26,
+      "prompt_per_second": 442.5,
+      "predicted_n": 28,
+      "predicted_ms": 102.6,
+      "predicted_per_token_ms": 3.664,
+      "predicted_per_second": 272.9,
+      "draft_n": 28,
+      "draft_n_accepted": 23
+    }
+  },
+  "http_status": 200
+}

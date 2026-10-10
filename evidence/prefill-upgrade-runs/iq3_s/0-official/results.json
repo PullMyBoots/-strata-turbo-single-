@@ -1,0 +1,762 @@
+{
+  "configuration": {
+    "exe": "/home/student_su/qwen/release/strata-single-GPU/engine/distribution/strata-upstream-media",
+    "cwd": "/home/student_su/qwen/release/strata-single-GPU",
+    "gpu": [
+      1
+    ],
+    "gpus_asked": true,
+    "layer_split": "auto",
+    "backend": "cuda",
+    "host": "127.0.0.1",
+    "port": 56269,
+    "model_name": "qwen3.8-flash-iq3-s",
+    "aliases": [
+      "qwen3.8 flash",
+      "Qwen3.8-Flash-Next",
+      "Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S",
+      "qwen3.8-flash-next-ud-q3-k-xl"
+    ],
+    "draft_vocab": "full",
+    "sampling": {
+      "temperature": 0.3,
+      "top_p": 0.95,
+      "top_k": 20,
+      "min_p": 0.0,
+      "presence_penalty": 0.0,
+      "repetition_penalty": 1.0
+    },
+    "tokenizer": "/home/student_su/qwen/release/strata-single-GPU/assets/data/packs/iq3_s/tokenizer",
+    "log": "/home/student_su/qwen/release/strata-single-GPU/runtime/qualification-runs/20261010-152607-2c7251230734/0-official/engine.log",
+    "lib_dirs": [
+      "/usr/local/cuda/lib64"
+    ],
+    "parallel_workers": 1,
+    "env": {
+      "CUDA_VISIBLE_DEVICES": "GPU-d198f84d-7195-2312-a5c8-39263b88d546"
+    },
+    "args": [
+      "--pack",
+      "/home/student_su/qwen/release/strata-single-GPU/assets/data/packs/iq3_s",
+      "--native",
+      "/home/student_su/qwen/release/strata-single-GPU/assets/models/IQ3_S/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00001-of-00002.gguf",
+      "--ple-gguf",
+      "/home/student_su/qwen/release/strata-single-GPU/assets/models/IQ3_S/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00002-of-00002.gguf",
+      "--expert-profile",
+      "/home/student_su/qwen/release/strata-single-GPU/assets/data/expert-profile.bin",
+      "--expert-cache",
+      "auto",
+      "--max-context",
+      "262144",
+      "--kv",
+      "int8",
+      "--rope-scaling",
+      "none",
+      "--vision",
+      "--prefill",
+      "auto",
+      "--spec",
+      "4",
+      "--spec-min-p",
+      "0.5",
+      "--mtp",
+      "/home/student_su/qwen/release/strata-single-GPU/assets/data/mtp/rt",
+      "--pool-workers",
+      "32",
+      "--kv-resident",
+      "32768",
+      "--vram-reserve-mib",
+      "700",
+      "--prompt-cache",
+      "0"
+    ],
+    "vision": {
+      "exe": "/home/student_su/qwen/release/strata-single-GPU/engine/distribution/strata-vision",
+      "mmproj": "/home/student_su/qwen/release/strata-single-GPU/assets/models/Vision/mmproj-F16.gguf",
+      "model": "/home/student_su/qwen/release/strata-single-GPU/assets/models/IQ3_S/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00001-of-00002.gguf",
+      "gpu": true,
+      "cuda_device": "GPU-d198f84d-7195-2312-a5c8-39263b88d546",
+      "threads": 32,
+      "max_tokens": 0,
+      "flash_attn": "on",
+      "native_video": {
+        "fps": 8.0,
+        "timestamp_interval_ms": 5000
+      }
+    },
+    "deployment": {
+      "project": "strata-turbo-single",
+      "weights": "iq3_s",
+      "context": 262144,
+      "physical_gpus": [
+        1
+      ],
+      "gpu_uuids": [
+        "GPU-d198f84d-7195-2312-a5c8-39263b88d546"
+      ],
+      "max_concurrent_requests": 1,
+      "main_weights_changed": false,
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "audio_input": false,
+      "engine_selection": "official",
+      "numa_node": 1,
+      "resource_plan": {
+        "context": 262144,
+        "kv": "int8",
+        "workers": 32,
+        "vision_gpu": true,
+        "low_ram": false,
+        "kv_streaming": true,
+        "kv_resident": 32768,
+        "reserve_mib": 700,
+        "large_gpu_turbo": true,
+        "concurrency": 1,
+        "full_experts": true,
+        "input_modalities": [
+          "text",
+          "image",
+          "video"
+        ],
+        "audio_input": false
+      },
+      "cpu_affinity": [
+        128,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136,
+        137,
+        138,
+        139,
+        140,
+        141,
+        142,
+        143,
+        144,
+        145,
+        146,
+        147,
+        148,
+        149,
+        150,
+        151,
+        152,
+        153,
+        154,
+        155,
+        156,
+        157,
+        158,
+        159,
+        160,
+        161,
+        162,
+        163,
+        164,
+        165,
+        166,
+        167,
+        168,
+        169,
+        170,
+        171,
+        172,
+        173,
+        174,
+        175,
+        176,
+        177,
+        178,
+        179,
+        180,
+        181,
+        182,
+        183,
+        184,
+        185,
+        186,
+        187,
+        188,
+        189,
+        190,
+        191,
+        192,
+        193,
+        194,
+        195,
+        196,
+        197,
+        198,
+        199,
+        200,
+        201,
+        202,
+        203,
+        204,
+        205,
+        206,
+        207,
+        208,
+        209,
+        210,
+        211,
+        212,
+        213,
+        214,
+        215,
+        216,
+        217,
+        218,
+        219,
+        220,
+        221,
+        222,
+        223,
+        224,
+        225,
+        226,
+        227,
+        228,
+        229,
+        230,
+        231,
+        232,
+        233,
+        234,
+        235,
+        236,
+        237,
+        238,
+        239,
+        240,
+        241,
+        242,
+        243,
+        244,
+        245,
+        246,
+        247,
+        248,
+        249,
+        250,
+        251,
+        252,
+        253,
+        254,
+        255,
+        384,
+        385,
+        386,
+        387,
+        388,
+        389,
+        390,
+        391,
+        392,
+        393,
+        394,
+        395,
+        396,
+        397,
+        398,
+        399,
+        400,
+        401,
+        402,
+        403,
+        404,
+        405,
+        406,
+        407,
+        408,
+        409,
+        410,
+        411,
+        412,
+        413,
+        414,
+        415,
+        416,
+        417,
+        418,
+        419,
+        420,
+        421,
+        422,
+        423,
+        424,
+        425,
+        426,
+        427,
+        428,
+        429,
+        430,
+        431,
+        432,
+        433,
+        434,
+        435,
+        436,
+        437,
+        438,
+        439,
+        440,
+        441,
+        442,
+        443,
+        444,
+        445,
+        446,
+        447,
+        448,
+        449,
+        450,
+        451,
+        452,
+        453,
+        454,
+        455,
+        456,
+        457,
+        458,
+        459,
+        460,
+        461,
+        462,
+        463,
+        464,
+        465,
+        466,
+        467,
+        468,
+        469,
+        470,
+        471,
+        472,
+        473,
+        474,
+        475,
+        476,
+        477,
+        478,
+        479,
+        480,
+        481,
+        482,
+        483,
+        484,
+        485,
+        486,
+        487,
+        488,
+        489,
+        490,
+        491,
+        492,
+        493,
+        494,
+        495,
+        496,
+        497,
+        498,
+        499,
+        500,
+        501,
+        502,
+        503,
+        504,
+        505,
+        506,
+        507,
+        508,
+        509,
+        510,
+        511
+      ]
+    },
+    "server_module": "experimental-native-api"
+  },
+  "short": {
+    "english": [
+      {
+        "text": "# Comprehensive Guide to Organizing and Reviewing a Software Project\n\nThis guide provides a step-by-step, exhaustive checklist for organizing, maintaining, and reviewing a software project. It covers everything from initial setup and repository hygiene to code quality, documentation, testing, security, and long-term maintenance. Follow these 100+ items to ensure your project is robust, maintainable, and scalable.\n\n## Phase 1: Repository Structure and Hygiene\n\n1. **Initialize a Version Control System (VCS):** Ensure the project is initialized with Git (or another VCS) from day one.\n2. **Create a `.gitignore` file:** Exclude build artifacts, dependencies, IDE settings, and OS-specific files from version control.\n3. **Define a clear directory structure:** Organize code into logical folders (e.g., `src`, `tests`, `docs`, `scripts`, `assets`).\n4. **Separate configuration from code:** Keep environment-specific settings in separate files (e.g., `.env`, `config/`) and never commit secrets.\n5. **Use a consistent naming convention:** Apply camelCase, snake_case, or PascalCase consistently across files, variables, and functions.\n6. **Avoid deep nesting:** Keep directory structures flat where possible to improve navigability.\n7. **Group related modules:** Use namespaces or packages to group logically related code components.\n8. **Isolate third-party dependencies:** Keep vendor libraries in a dedicated folder if not managed by a package manager.\n9. **Create a `README.md` at the root:** Provide a high-level overview of the project, its purpose, and quick-start instructions.\n10. **Add a `LICENSE` file:** Clearly define the legal terms under which the software can be used, modified, and distributed.\n11. **Include a `CHANGELOG.md`:** Maintain a chronological record of notable changes, features, and bug fixes.\n12. **Add a `CONTRIBUTING.md`:** Outline guidelines for contributors, including how to submit pull requests and report issues.\n13. **Create a `CODE_OF_CONDUCT.md`:** Establish community standards for behavior and interaction.\n14. **Define issue templates:** Provide standardized templates for bug reports and feature requests in your issue tracker.\n15. **Define pull request templates:** Standardize the information required when submitting code changes.\n16. **Set up a `.editorconfig` file:** Enforce consistent coding styles",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 53,
+          "prompt_ms": 293.2,
+          "prompt_per_token_ms": 5.532,
+          "prompt_per_second": 180.8,
+          "predicted_n": 512,
+          "predicted_ms": 5557.2,
+          "predicted_per_token_ms": 10.854,
+          "predicted_per_second": 92.1,
+          "draft_n": 445,
+          "draft_n_accepted": 298
+        },
+        "usage": {
+          "prompt_tokens": 53,
+          "completion_tokens": 512,
+          "total_tokens": 565,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 5.863528311951086,
+        "first_content_s": 0.322655115975067
+      },
+      {
+        "text": "# Comprehensive Guide to Organizing and Reviewing a Software Project\n\nThis guide provides a rigorous, step-by-step framework for organizing, maintaining, and reviewing software projects. It is designed for engineering managers, tech leads, senior developers, and project managers. The process is divided into logical phases, from initial setup to long-term maintenance and retirement.\n\n### Phase 1: Project Initialization and Governance\n\n1.  **Define the Project Charter**: Clearly articulate the project\u2019s purpose, scope, objectives, and success criteria in a single document.\n2.  **Identify Stakeholders**: List all individuals and groups affected by the project, including end-users, developers, QA, product owners, and external partners.\n3.  **Assign Roles and Responsibilities**: Define clear roles (e.g., Product Owner, Scrum Master, Tech Lead, Developers, QA Engineers) using a RACI matrix (Responsible, Accountable, Consulted, Informed).\n4.  **Establish Communication Channels**: Set up dedicated channels for different types of communication (e.g., Slack for quick questions, Jira for task tracking, Email for formal decisions).\n5.  **Set Up Version Control System (VCS)**: Initialize a Git repository with a clear branching strategy (e.g., GitFlow, Trunk-Based Development).\n6.  **Configure Repository Permissions**: Set up appropriate access controls to ensure only authorized personnel can push to protected branches.\n7.  **Create a `.gitignore` File**: Ensure that build artifacts, local configuration files, and sensitive data are excluded from version control.\n8.  **Initialize a README.md**: Create a comprehensive README file that explains what the project is, how to install it, and how to run it.\n9.  **Define Coding Standards**: Establish a style guide for the programming language(s) used (e.g., PEP8 for Python, ESLint for JavaScript).\n10. **Set Up Linters and Formatters**: Integrate automated tools to enforce coding standards consistently across the team.\n11. **Choose a Project Management Tool**: Select a tool (e.g., Jira, Trello, Asana) to track tasks, bugs, and features.\n12. **Define Workflow States**: Create a clear workflow for issues (e.g., Backlog, In Progress, Code Review, Testing, Done).\n13. **Establish Definition of Ready (DoR)**: Define the criteria a user story must meet before it can be started",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 53,
+          "prompt_ms": 280.8,
+          "prompt_per_token_ms": 5.298,
+          "prompt_per_second": 188.7,
+          "predicted_n": 512,
+          "predicted_ms": 5513.3,
+          "predicted_per_token_ms": 10.768,
+          "predicted_per_second": 92.9,
+          "draft_n": 465,
+          "draft_n_accepted": 297
+        },
+        "usage": {
+          "prompt_tokens": 53,
+          "completion_tokens": 512,
+          "total_tokens": 565,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 5.807713452028111,
+        "first_content_s": 0.3082826631143689
+      },
+      {
+        "text": "# Comprehensive Guide to Organizing and Reviewing a Software Project\n\nThis guide provides a rigorous, step-by-step framework for organizing, maintaining, and reviewing software projects. It is designed for engineering managers, tech leads, senior developers, and project managers. The process is divided into logical phases, from initial setup to long-term maintenance and retirement.\n\n### Phase 1: Project Initialization and Governance\n\n1.  **Define the Project Charter**: Clearly articulate the project\u2019s purpose, scope, objectives, and success criteria. Ensure all stakeholders agree on what constitutes \"done.\"\n2.  **Identify Stakeholders**: List all individuals and groups affected by the project, including end-users, developers, QA, product owners, and external partners.\n3.  **Establish Roles and Responsibilities**: Define who is responsible for code, who reviews it, who manages the backlog, and who makes architectural decisions. Use a RACI matrix (Responsible, Accountable, Consulted, Informed) if necessary.\n4.  **Choose the Project Management Methodology**: Decide whether to use Agile (Scrum, Kanban), Waterfall, or a hybrid approach based on the project\u2019s nature and team size.\n5.  **Set Up the Version Control System (VCS)**: Initialize a Git repository (or equivalent) with a clear branching strategy (e.g., GitFlow, Trunk-Based Development).\n6.  **Configure Repository Permissions**: Set up access controls to ensure only authorized personnel can push to protected branches like `main` or `master`.\n7.  **Create a `.gitignore` File**: Ensure that build artifacts, local configuration files, IDE settings, and sensitive keys are excluded from version control.\n8.  **Initialize a README.md**: Create a comprehensive README file that explains what the project is, how to install it, how to run it, and how to contribute.\n9.  **Define Coding Standards**: Establish a style guide for the programming language(s) used (e.g., PEP8 for Python, ESLint for JavaScript).\n10. **Select a Code Formatter**: Integrate an automatic code formatter (e.g., Prettier, Black, gofmt) to ensure consistent formatting across the team.\n11. **Set Up a Linter**: Configure a linter to catch syntax errors, potential bugs, and style violations automatically.\n12. **Choose a Dependency Manager**: Select the appropriate package manager for the language (e.g., npm, pip,",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 53,
+          "prompt_ms": 275.6,
+          "prompt_per_token_ms": 5.2,
+          "prompt_per_second": 192.3,
+          "predicted_n": 512,
+          "predicted_ms": 5357.7,
+          "predicted_per_token_ms": 10.464,
+          "predicted_per_second": 95.6,
+          "draft_n": 458,
+          "draft_n_accepted": 295
+        },
+        "usage": {
+          "prompt_tokens": 53,
+          "completion_tokens": 512,
+          "total_tokens": 565,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 5.649834469892085,
+        "first_content_s": 0.2975966059602797
+      }
+    ],
+    "code": [
+      {
+        "text": "```python\n\"\"\"\nPersistent Key-Value Database with Transactions and Recovery\n\nFeatures:\n- Persistent storage using a write-ahead log (WAL)\n- ACID transactions (Atomicity, Consistency, Isolation, Durability)\n- Crash recovery via WAL replay\n- Simple in-memory index for fast lookups\n- Thread-safe operations\n\nUsage:\n    db = PersistentKVDB(\"mydb\")\n    db.put(\"key1\", \"value1\")\n    with db.transaction() as txn:\n        txn.put(\"key2\", \"value2\")\n        txn.put(\"key3\", \"value3\")\n    print(db.get(\"key2\"))\n\"\"\"\n\nimport os\nimport json\nimport threading\nimport time\nimport hashlib\nimport struct\nimport tempfile\nimport shutil\nfrom typing import Optional, Dict, Any, List, Tuple\nfrom contextlib import contextmanager\nfrom enum import Enum\n\n\nclass LogRecordType(Enum):\n    BEGIN = 1\n    PUT = 2\n    DELETE = 3\n    COMMIT = 4\n    ROLLBACK = 5\n    CHECKPOINT = 6\n\n\nclass LogRecord:\n    \"\"\"Represents a single log record in the WAL.\"\"\"\n    \n    def __init__(self, txn_id: int, record_type: LogRecordType, key: Optional[str] = None, value: Optional[str] = None):\n        self.txn_id = txn_id\n        self.record_type = record_type\n        self.key = key\n        self.value = value\n    \n    def serialize(self) -> bytes:\n        \"\"\"Serialize the log record to bytes.\"\"\"\n        # Format: [txn_id (8 bytes)][record_type (1 byte)][key_len (4 bytes)][key][value_len (4 bytes)][value]\n        txn_id_bytes = struct.pack('>Q', self.txn_id)\n        record_type_byte = struct.pack('>B', self.record_type.value)\n        \n        if self.key is not None:\n            key_bytes = self.key.encode('utf-8')\n            key_len = len(key_bytes)\n            key_len_bytes = struct.pack('>I', key_len)\n        else:\n            key_bytes = b''\n            key_len_bytes = struct.pack('>I', 0)\n        \n        if self.value is not None:\n            value_bytes = self.value.encode('utf-8')\n            value_len = len(value_bytes)\n            value_len_bytes",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 52,
+          "prompt_ms": 269.3,
+          "prompt_per_token_ms": 5.179,
+          "prompt_per_second": 193.1,
+          "predicted_n": 512,
+          "predicted_ms": 5132.3,
+          "predicted_per_token_ms": 10.024,
+          "predicted_per_second": 99.8,
+          "draft_n": 439,
+          "draft_n_accepted": 336
+        },
+        "usage": {
+          "prompt_tokens": 52,
+          "completion_tokens": 512,
+          "total_tokens": 564,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 5.422130873892456,
+        "first_content_s": 0.30046687880530953
+      },
+      {
+        "text": "```python\n\"\"\"\nPersistent Key-Value Database with Transactions, Recovery, Examples and Tests.\n\nFeatures:\n- Persistent storage using a write-ahead log (WAL)\n- ACID transactions (Atomicity, Consistency, Isolation, Durability)\n- Crash recovery via WAL replay\n- Simple in-memory index for fast lookups\n- Thread-safe operations\n\nUsage:\n    db = PersistentKVStore(\"mydb.log\")\n    db.put(\"key1\", \"value1\")\n    with db.transaction() as txn:\n        txn.put(\"key2\", \"value2\")\n        txn.delete(\"key1\")\n    print(db.get(\"key2\"))\n\"\"\"\n\nimport os\nimport json\nimport threading\nimport time\nimport uuid\nfrom typing import Optional, Dict, Any, List, Tuple\nfrom contextlib import contextmanager\n\n\nclass TransactionError(Exception):\n    \"\"\"Raised when a transaction fails.\"\"\"\n    pass\n\n\nclass PersistentKVStore:\n    \"\"\"\n    A persistent key-value store with transaction support and crash recovery.\n    \n    The store uses a Write-Ahead Log (WAL) for durability. Each operation is\n    logged before being applied to the in-memory state. Transactions are\n    atomic: either all operations in a transaction are committed, or none are.\n    \n    WAL Format (JSON lines):\n    - {\"type\": \"BEGIN\", \"txn_id\": \"...\", \"timestamp\": ...}\n    - {\"type\": \"PUT\", \"txn_id\": \"...\", \"key\": \"...\", \"value\": ...}\n    - {\"type\": \"DELETE\", \"txn_id\": \"...\", \"key\": \"...\"}\n    - {\"type\": \"COMMIT\", \"txn_id\": \"...\", \"timestamp\": ...}\n    - {\"type\": \"ROLLBACK\", \"txn_id\": \"...\", \"timestamp\": ...}\n    - {\"type\": \"CHECKPOINT\", \"data\": {...}, \"timestamp\": ...}\n    \"\"\"\n    \n    def __init__(self, filepath: str):\n        \"\"\"\n        Initialize the persistent KV store.\n        \n        Args:\n            filepath: Path to the WAL file.\n        \"\"\"\n        self.filepath = filepath\n        self.lock = threading.RLock()\n        self.data: Dict[str, Any] = {}\n        self.txn_counter = 0\n        self._load_from_wal()\n    \n    def _load_from_wal(self):\n        \"\"\"Load",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 52,
+          "prompt_ms": 261.5,
+          "prompt_per_token_ms": 5.029,
+          "prompt_per_second": 198.9,
+          "predicted_n": 512,
+          "predicted_ms": 4679.8,
+          "predicted_per_token_ms": 9.14,
+          "predicted_per_second": 109.4,
+          "draft_n": 428,
+          "draft_n_accepted": 328
+        },
+        "usage": {
+          "prompt_tokens": 52,
+          "completion_tokens": 512,
+          "total_tokens": 564,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 4.9627998881042,
+        "first_content_s": 0.2857210689689964
+      },
+      {
+        "text": "```python\n\"\"\"\nPersistent Key-Value Database with Transactions and Recovery\n\nThis module implements a simple persistent key-value store with:\n- ACID transactions (Atomicity, Consistency, Isolation, Durability)\n- Write-Ahead Logging (WAL) for crash recovery\n- In-memory cache with disk persistence\n- Support for basic operations: get, set, delete, exists\n- Transaction support with commit/rollback\n- Recovery from crashes using WAL\n\nExample usage:\n    db = PersistentKVStore(\"mydb\")\n    db.set(\"name\", \"Alice\")\n    db.set(\"age\", 30)\n    \n    with db.transaction() as txn:\n        txn.set(\"name\", \"Bob\")\n        txn.set(\"age\", 25)\n        # If an exception occurs, changes are rolled back\n    \n    print(db.get(\"name\"))  # \"Bob\"\n\"\"\"\n\nimport os\nimport json\nimport threading\nimport time\nimport hashlib\nimport struct\nimport tempfile\nfrom typing import Any, Optional, Dict, List, Tuple, Callable\nfrom contextlib import contextmanager\nfrom enum import Enum\nimport logging\n\n# Configure logging\nlogging.basicConfig(level=logging.INFO)\nlogger = logging.getLogger(__name__)\n\n\nclass TransactionState(Enum):\n    \"\"\"States of a transaction.\"\"\"\n    ACTIVE = \"active\"\n    COMMITTED = \"committed\"\n    ABORTED = \"aborted\"\n\n\nclass WALRecordType(Enum):\n    \"\"\"Types of WAL records.\"\"\"\n    BEGIN = \"BEGIN\"\n    SET = \"SET\"\n    DELETE = \"DELETE\"\n    COMMIT = \"COMMIT\"\n    ROLLBACK = \"ROLLBACK\"\n    CHECKPOINT = \"CHECKPOINT\"\n\n\nclass WALRecord:\n    \"\"\"Represents a single WAL record.\"\"\"\n    \n    def __init__(self, txn_id: int, record_type: WALRecordType, key: Optional[str] = None, \n                 value: Optional[Any] = None, timestamp: Optional[float] = None):\n        self.txn_id = txn_id\n        self.record_type = record_type\n        self.key = key\n        self.value = value\n        self.timestamp = timestamp or time.time()\n    \n    def to_dict(self) -> Dict:\n        return {\n            \"txn_id\": self.txn_id,\n            \"record_type\": self.record_type.value,\n            \"key\": self.key,\n            \"value\": self",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 52,
+          "prompt_ms": 253.6,
+          "prompt_per_token_ms": 4.877,
+          "prompt_per_second": 205.0,
+          "predicted_n": 512,
+          "predicted_ms": 4602.5,
+          "predicted_per_token_ms": 8.989,
+          "predicted_per_second": 111.2,
+          "draft_n": 432,
+          "draft_n_accepted": 332
+        },
+        "usage": {
+          "prompt_tokens": 52,
+          "completion_tokens": 512,
+          "total_tokens": 564,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 4.875570986885577,
+        "first_content_s": 0.2792879028711468
+      }
+    ],
+    "chinese": [
+      {
+        "text": "\u8bbe\u8ba1\u4e00\u4e2a\u53ef\u9760\u7684\u8f6f\u4ef6\u9879\u76ee\u662f\u4e00\u4e2a\u7cfb\u7edf\u5de5\u7a0b\uff0c\u6db5\u76d6\u4e86\u4ece\u9700\u6c42\u5206\u6790\u3001\u67b6\u6784\u8bbe\u8ba1\u3001\u7f16\u7801\u89c4\u8303\u3001\u6d4b\u8bd5\u7b56\u7565\u5230\u90e8\u7f72\u8fd0\u7ef4\u7684\u5168\u751f\u547d\u5468\u671f\u3002\u4e3a\u4e86\u786e\u4fdd\u5168\u9762\u6027\u548c\u6df1\u5ea6\uff0c\u4ee5\u4e0b\u5c06\u5206\u4e3a **10 \u4e2a\u6838\u5fc3\u9636\u6bb5**\uff0c\u6bcf\u4e2a\u9636\u6bb5\u5217\u4e3e **10 \u9879** \u5177\u4f53\u6b65\u9aa4\u3001\u65b9\u6cd5\u6216\u5efa\u8bae\uff0c\u5171\u8ba1 **100 \u9879**\u3002\n\n---\n\n### \u7b2c\u4e00\u9636\u6bb5\uff1a\u9700\u6c42\u5206\u6790\u4e0e\u89c4\u5212 (Requirements & Planning)\n*\u76ee\u6807\uff1a\u660e\u786e\u201c\u505a\u4ec0\u4e48\u201d\u548c\u201c\u4e3a\u4ec0\u4e48\u505a\u201d\uff0c\u907f\u514d\u8303\u56f4\u8513\u5ef6\u3002*\n\n1. **\u660e\u786e\u4e1a\u52a1\u76ee\u6807**\uff1a\u5b9a\u4e49\u8f6f\u4ef6\u8981\u89e3\u51b3\u7684\u6838\u5fc3\u75db\u70b9\uff0c\u786e\u4fdd\u6280\u672f\u5b9e\u73b0\u670d\u52a1\u4e8e\u4e1a\u52a1\u4ef7\u503c\u3002\n2. **\u8bc6\u522b\u5229\u76ca\u76f8\u5173\u8005**\uff1a\u5217\u51fa\u6240\u6709\u53d7\u5f71\u54cd\u7684\u7528\u6237\u3001\u7ba1\u7406\u5c42\u3001\u8fd0\u7ef4\u56e2\u961f\u53ca\u7b2c\u4e09\u65b9\u5408\u4f5c\u4f19\u4f34\u3002\n3. **\u7f16\u5199\u7528\u6237\u6545\u4e8b (User Stories)**\uff1a\u4f7f\u7528\u201c\u4f5c\u4e3a[\u89d2\u8272]\uff0c\u6211\u5e0c\u671b[\u529f\u80fd]\uff0c\u4ee5\u4fbf[\u4ef7\u503c]\u201d\u683c\u5f0f\u63cf\u8ff0\u9700\u6c42\u3002\n4. **\u5b9a\u4e49\u9a8c\u6536\u6807\u51c6 (Acceptance Criteria)**\uff1a\u4e3a\u6bcf\u4e2a\u7528\u6237\u6545\u4e8b\u8bbe\u5b9a\u660e\u786e\u7684\u201c\u5b8c\u6210\u201d\u5b9a\u4e49\uff0c\u907f\u514d\u6b67\u4e49\u3002\n5. **\u8fdb\u884c\u53ef\u884c\u6027\u5206\u6790**\uff1a\u8bc4\u4f30\u6280\u672f\u3001\u65f6\u95f4\u3001\u9884\u7b97\u548c\u6cd5\u5f8b\u5408\u89c4\u6027\u662f\u5426\u652f\u6301\u9879\u76ee\u843d\u5730\u3002\n6. **\u5236\u5b9a\u9879\u76ee\u8303\u56f4\u8bf4\u660e\u4e66**\uff1a\u660e\u786e\u5305\u542b\u4ec0\u4e48\uff08In-Scope\uff09\u548c\u4e0d\u5305\u542b\u4ec0\u4e48\uff08Out-of-Scope\uff09\u3002\n7. **\u8bc6\u522b\u5173\u952e\u5047\u8bbe\u4e0e\u4f9d\u8d56**\uff1a\u8bb0\u5f55\u5916\u90e8\u4f9d\u8d56\uff08\u5982\u7b2c\u4e09\u65b9API\u3001\u786c\u4ef6\u4f9b\u5e94\uff09\u53ca\u5176\u6f5c\u5728\u98ce\u9669\u3002\n8. **\u5efa\u7acb\u4f18\u5148\u7ea7\u77e9\u9635**\uff1a\u4f7f\u7528 MoSCoW \u65b9\u6cd5\uff08Must have, Should have, Could have, Won't have\uff09\u6392\u5e8f\u9700\u6c42\u3002\n9. **\u539f\u578b\u8bbe\u8ba1\u4e0e\u9a8c\u8bc1**\uff1a\u901a\u8fc7\u4f4e\u4fdd\u771f\u6216\u9ad8\u4fdd\u771f\u539f\u578b\u4e0e\u7528\u6237\u786e\u8ba4\u4ea4\u4e92\u903b\u8f91\uff0c\u51cf\u5c11\u540e\u671f\u8fd4\u5de5\u3002\n10. **\u7b7e\u7f72\u9700\u6c42\u57fa\u7ebf**\uff1a\u5728\u5f00\u53d1\u5f00\u59cb\u524d\uff0c\u4e0e\u5173\u952e\u5e72\u7cfb\u4eba\u786e\u8ba4\u5e76\u51bb\u7ed3\u521d\u59cb\u9700\u6c42\u7248\u672c\u3002\n\n---\n\n### \u7b2c\u4e8c\u9636\u6bb5\uff1a\u7cfb\u7edf\u67b6\u6784\u8bbe\u8ba1 (System Architecture)\n*\u76ee\u6807\uff1a\u6784\u5efa\u53ef\u6269\u5c55\u3001\u9ad8\u53ef\u7528\u3001\u6613\u7ef4\u62a4\u7684\u6280\u672f\u9aa8\u67b6\u3002*\n\n11. **\u9009\u62e9\u67b6\u6784\u98ce\u683c**\uff1a\u6839\u636e\u4e1a\u52a1\u590d\u6742\u5ea6\u9009\u62e9\u5355\u4f53\u3001\u5fae\u670d\u52a1\u3001Serverless \u6216\u4e8b\u4ef6\u9a71\u52a8\u67b6\u6784\u3002\n12. **\u5b9a\u4e49\u670d\u52a1\u8fb9\u754c**\uff1a\u9075\u5faa\u9886\u57df\u9a71\u52a8\u8bbe\u8ba1 (DDD)\uff0c\u5212\u5206\u9650\u754c\u4e0a\u4e0b\u6587 (Bounded Contexts)\u3002\n13. **\u8bbe\u8ba1\u6570\u636e\u6a21\u578b**\uff1a\u786e\u5b9a\u5173\u7cfb\u578b\u6570\u636e\u5e93\u3001NoSQL \u6216\u6df7\u5408\u5b58\u50a8\u7b56\u7565\uff0c\u8bbe\u8ba1 ER \u56fe\u6216\u6587\u6863\u6a21\u578b\u3002\n14. **\u89c4\u5212 API \u5951\u7ea6**\uff1a\u5b9a\u4e49 RESTful\u3001GraphQL \u6216 gRPC \u63a5\u53e3\u89c4\u8303\uff0c\u4f7f\u7528",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 52,
+          "prompt_ms": 302.1,
+          "prompt_per_token_ms": 5.81,
+          "prompt_per_second": 172.1,
+          "predicted_n": 512,
+          "predicted_ms": 5656.7,
+          "predicted_per_token_ms": 11.048,
+          "predicted_per_second": 90.5,
+          "draft_n": 455,
+          "draft_n_accepted": 301
+        },
+        "usage": {
+          "prompt_tokens": 52,
+          "completion_tokens": 512,
+          "total_tokens": 564,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 5.975321548990905,
+        "first_content_s": 0.3372260599862784
+      },
+      {
+        "text": "\u8bbe\u8ba1\u4e00\u4e2a\u53ef\u9760\u7684\u8f6f\u4ef6\u9879\u76ee\u662f\u4e00\u4e2a\u7cfb\u7edf\u5de5\u7a0b\uff0c\u6db5\u76d6\u4e86\u4ece\u9700\u6c42\u5206\u6790\u3001\u67b6\u6784\u8bbe\u8ba1\u3001\u7f16\u7801\u89c4\u8303\u3001\u6d4b\u8bd5\u7b56\u7565\u5230\u90e8\u7f72\u8fd0\u7ef4\u53ca\u957f\u671f\u7ef4\u62a4\u7684\u5168\u751f\u547d\u5468\u671f\u3002\u4e3a\u4e86\u786e\u4fdd\u5168\u9762\u6027\uff0c\u4ee5\u4e0b\u5c06\u5206\u4e3a **10 \u4e2a\u6838\u5fc3\u9636\u6bb5**\uff0c\u6bcf\u4e2a\u9636\u6bb5\u5217\u4e3e **10 \u9879** \u5177\u4f53\u6b65\u9aa4\u3001\u65b9\u6cd5\u6216\u5efa\u8bae\uff0c\u5171\u8ba1 **100 \u9879**\u3002\n\n---\n\n### \u7b2c\u4e00\u9636\u6bb5\uff1a\u9700\u6c42\u5206\u6790\u4e0e\u89c4\u5212 (Requirements & Planning)\n*\u76ee\u6807\uff1a\u660e\u786e\u201c\u505a\u4ec0\u4e48\u201d\u548c\u201c\u4e3a\u4ec0\u4e48\u505a\u201d\uff0c\u907f\u514d\u8303\u56f4\u8513\u5ef6\u3002*\n\n1. **\u660e\u786e\u4e1a\u52a1\u76ee\u6807**\uff1a\u5b9a\u4e49\u8f6f\u4ef6\u8981\u89e3\u51b3\u7684\u6838\u5fc3\u75db\u70b9\uff0c\u786e\u4fdd\u6280\u672f\u5b9e\u73b0\u670d\u52a1\u4e8e\u4e1a\u52a1\u4ef7\u503c\u3002\n2. **\u8bc6\u522b\u5229\u76ca\u76f8\u5173\u8005**\uff1a\u5217\u51fa\u6240\u6709\u53d7\u5f71\u54cd\u7684\u7528\u6237\u3001\u7ba1\u7406\u5c42\u3001\u8fd0\u7ef4\u56e2\u961f\u53ca\u7b2c\u4e09\u65b9\u5408\u4f5c\u4f19\u4f34\u3002\n3. **\u7f16\u5199\u7528\u6237\u6545\u4e8b (User Stories)**\uff1a\u4f7f\u7528\u201c\u4f5c\u4e3a[\u89d2\u8272]\uff0c\u6211\u60f3\u8981[\u529f\u80fd]\uff0c\u4ee5\u4fbf[\u4ef7\u503c]\u201d\u7684\u683c\u5f0f\u63cf\u8ff0\u9700\u6c42\u3002\n4. **\u5b9a\u4e49\u9a8c\u6536\u6807\u51c6 (Acceptance Criteria)**\uff1a\u4e3a\u6bcf\u4e2a\u7528\u6237\u6545\u4e8b\u5236\u5b9a\u6e05\u6670\u3001\u53ef\u6d4b\u8bd5\u7684\u5b8c\u6210\u5b9a\u4e49 (DoD)\u3002\n5. **\u8fdb\u884c\u53ef\u884c\u6027\u5206\u6790**\uff1a\u8bc4\u4f30\u6280\u672f\u3001\u65f6\u95f4\u3001\u9884\u7b97\u548c\u6cd5\u5f8b\u5408\u89c4\u6027\u662f\u5426\u652f\u6301\u9879\u76ee\u843d\u5730\u3002\n6. **\u5236\u5b9a\u9879\u76ee\u8303\u56f4\u8bf4\u660e\u4e66**\uff1a\u660e\u786e\u5305\u542b\u4ec0\u4e48\uff0c\u66f4\u91cd\u8981\u7684\u662f\u660e\u786e**\u4e0d\u5305\u542b**\u4ec0\u4e48\uff08Out of Scope\uff09\u3002\n7. **\u8bc6\u522b\u5173\u952e\u5047\u8bbe\u4e0e\u4f9d\u8d56**\uff1a\u8bb0\u5f55\u5916\u90e8\u4f9d\u8d56\uff08\u5982\u7b2c\u4e09\u65b9API\u3001\u786c\u4ef6\u4f9b\u5e94\uff09\u53ca\u5176\u6f5c\u5728\u98ce\u9669\u3002\n8. **\u5efa\u7acb\u4f18\u5148\u7ea7\u77e9\u9635**\uff1a\u4f7f\u7528 MoSCoW \u65b9\u6cd5\uff08Must have, Should have, Could have, Won't have\uff09\u6392\u5e8f\u9700\u6c42\u3002\n9. **\u539f\u578b\u8bbe\u8ba1\u4e0e\u9a8c\u8bc1**\uff1a\u901a\u8fc7\u4f4e\u4fdd\u771f\u6216\u9ad8\u4fdd\u771f\u539f\u578b\u4e0e\u7528\u6237\u786e\u8ba4\u4ea4\u4e92\u903b\u8f91\uff0c\u51cf\u5c11\u540e\u671f\u8fd4\u5de5\u3002\n10. **\u7b7e\u7f72\u9700\u6c42\u57fa\u7ebf**\uff1a\u5728\u5f00\u53d1\u5f00\u59cb\u524d\uff0c\u4e0e\u5173\u952e\u5e72\u7cfb\u4eba\u786e\u8ba4\u5e76\u51bb\u7ed3\u521d\u59cb\u9700\u6c42\u7248\u672c\u3002\n\n---\n\n### \u7b2c\u4e8c\u9636\u6bb5\uff1a\u7cfb\u7edf\u67b6\u6784\u8bbe\u8ba1 (System Architecture)\n*\u76ee\u6807\uff1a\u6784\u5efa\u53ef\u6269\u5c55\u3001\u9ad8\u53ef\u7528\u3001\u6613\u7ef4\u62a4\u7684\u6280\u672f\u9aa8\u67b6\u3002*\n\n11. **\u9009\u62e9\u67b6\u6784\u98ce\u683c**\uff1a\u6839\u636e\u4e1a\u52a1\u590d\u6742\u5ea6\u9009\u62e9\u5355\u4f53\u3001\u5fae\u670d\u52a1\u3001Serverless \u6216\u4e8b\u4ef6\u9a71\u52a8\u67b6\u6784\u3002\n12. **\u5b9a\u4e49\u6a21\u5757\u8fb9\u754c**\uff1a\u660e\u786e\u5404\u5b50\u7cfb\u7edf\u6216\u670d\u52a1\u7684\u804c\u8d23\u8303\u56f4\uff0c\u9075\u5faa\u9ad8\u5185\u805a\u4f4e\u8026\u5408\u539f\u5219\u3002\n13. **\u8bbe\u8ba1\u6570\u636e\u6a21\u578b**\uff1a\u7ed8\u5236 ER \u56fe\u6216 NoSQL \u6587\u6863\u7ed3\u6784\uff0c\u786e\u4fdd\u6570\u636e\u4e00\u81f4\u6027\u548c\u67e5\u8be2\u6548\u7387\u3002\n14. **\u89c4\u5212 API \u5951\u7ea6**\uff1a\u5b9a\u4e49 RESTful \u6216 GraphQL \u63a5\u53e3\u89c4\u8303\uff0c\u5305\u62ec\u8bf7\u6c42/\u54cd\u5e94\u683c\u5f0f",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 52,
+          "prompt_ms": 261.1,
+          "prompt_per_token_ms": 5.021,
+          "prompt_per_second": 199.2,
+          "predicted_n": 512,
+          "predicted_ms": 5329.3,
+          "predicted_per_token_ms": 10.409,
+          "predicted_per_second": 96.1,
+          "draft_n": 462,
+          "draft_n_accepted": 302
+        },
+        "usage": {
+          "prompt_tokens": 52,
+          "completion_tokens": 512,
+          "total_tokens": 564,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 5.6100261530373245,
+        "first_content_s": 0.2875037360936403
+      },
+      {
+        "text": "\u8bbe\u8ba1\u4e00\u4e2a\u53ef\u9760\u7684\u8f6f\u4ef6\u9879\u76ee\u662f\u4e00\u4e2a\u7cfb\u7edf\u5de5\u7a0b\uff0c\u6d89\u53ca\u4ece\u9700\u6c42\u5206\u6790\u3001\u67b6\u6784\u8bbe\u8ba1\u3001\u7f16\u7801\u89c4\u8303\u3001\u6d4b\u8bd5\u7b56\u7565\u5230\u8fd0\u7ef4\u76d1\u63a7\u7684\u5168\u751f\u547d\u5468\u671f\u3002\u4e3a\u4e86\u786e\u4fdd\u5168\u9762\u6027\u548c\u6df1\u5ea6\uff0c\u4ee5\u4e0b\u5c06\u5206\u4e3a **10 \u4e2a\u6838\u5fc3\u9636\u6bb5**\uff0c\u6bcf\u4e2a\u9636\u6bb5\u5217\u4e3e **10 \u9879** \u5177\u4f53\u6b65\u9aa4\u3001\u65b9\u6cd5\u6216\u5efa\u8bae\uff0c\u5171\u8ba1 **100 \u9879**\u3002\n\n---\n\n### \u7b2c\u4e00\u9636\u6bb5\uff1a\u9700\u6c42\u5206\u6790\u4e0e\u5b9a\u4e49 (Requirements & Definition)\n*\u76ee\u6807\uff1a\u660e\u786e\u201c\u505a\u4ec0\u4e48\u201d\uff0c\u907f\u514d\u8303\u56f4\u8513\u5ef6\u548c\u8bef\u89e3\u3002*\n\n1. **\u5efa\u7acb\u5229\u76ca\u76f8\u5173\u8005\u5730\u56fe**\uff1a\u8bc6\u522b\u6240\u6709\u53d7\u5f71\u54cd\u7684\u7528\u6237\u3001\u5ba2\u6237\u3001\u5185\u90e8\u56e2\u961f\u53ca\u7b2c\u4e09\u65b9\u7cfb\u7edf\uff0c\u786e\u4fdd\u9700\u6c42\u6765\u6e90\u5168\u9762\u3002\n2. **\u7f16\u5199\u7528\u6237\u6545\u4e8b (User Stories)**\uff1a\u4f7f\u7528\u201c\u4f5c\u4e3a[\u89d2\u8272]\uff0c\u6211\u60f3\u8981[\u529f\u80fd]\uff0c\u4ee5\u4fbf[\u4ef7\u503c]\u201d\u683c\u5f0f\uff0c\u786e\u4fdd\u9700\u6c42\u4ee5\u7528\u6237\u4ef7\u503c\u4e3a\u5bfc\u5411\u3002\n3. **\u5b9a\u4e49\u9a8c\u6536\u6807\u51c6 (Acceptance Criteria)**\uff1a\u4e3a\u6bcf\u4e2a\u7528\u6237\u6545\u4e8b\u5236\u5b9a\u660e\u786e\u7684\u3001\u53ef\u6d4b\u8bd5\u7684\u5b8c\u6210\u5b9a\u4e49 (DoD)\uff0c\u907f\u514d\u6a21\u7cca\u63cf\u8ff0\u3002\n4. **\u8fdb\u884c\u53ef\u884c\u6027\u5206\u6790**\uff1a\u8bc4\u4f30\u6280\u672f\u3001\u7ecf\u6d4e\u3001\u6cd5\u5f8b\u548c\u64cd\u4f5c\u53ef\u884c\u6027\uff0c\u8bc6\u522b\u6f5c\u5728\u7684\u6280\u672f\u503a\u52a1\u6216\u5408\u89c4\u98ce\u9669\u3002\n5. **\u5236\u5b9a\u975e\u529f\u80fd\u6027\u9700\u6c42 (NFRs)**\uff1a\u660e\u786e\u6027\u80fd\uff08\u54cd\u5e94\u65f6\u95f4\uff09\u3001\u5b89\u5168\u6027\u3001\u53ef\u7528\u6027\u3001\u53ef\u6269\u5c55\u6027\u548c\u517c\u5bb9\u6027\u6307\u6807\u3002\n6. **\u5efa\u7acb\u9700\u6c42\u4f18\u5148\u7ea7\u77e9\u9635**\uff1a\u4f7f\u7528 MoSCoW \u65b9\u6cd5\uff08Must have, Should have, Could have, Won't have\uff09\u5bf9\u9700\u6c42\u8fdb\u884c\u5206\u7ea7\u3002\n7. **\u539f\u578b\u8bbe\u8ba1\u4e0e\u9a8c\u8bc1**\uff1a\u901a\u8fc7\u4f4e\u4fdd\u771f\u6216\u9ad8\u4fdd\u771f\u539f\u578b\u4e0e\u7528\u6237\u4ea4\u4e92\uff0c\u63d0\u524d\u53d1\u73b0\u4ea4\u4e92\u903b\u8f91\u95ee\u9898\uff0c\u964d\u4f4e\u540e\u671f\u4fee\u6539\u6210\u672c\u3002\n8. **\u660e\u786e\u6570\u636e\u6a21\u578b\u521d\u6b65\u6982\u5ff5**\uff1a\u8bc6\u522b\u6838\u5fc3\u5b9e\u4f53\u53ca\u5176\u5173\u7cfb\uff0c\u4e3a\u540e\u7eed\u6570\u636e\u5e93\u8bbe\u8ba1\u6253\u4e0b\u57fa\u7840\u3002\n9. **\u5b9a\u4e49\u8fb9\u754c\u4e0e\u63a5\u53e3\u5951\u7ea6**\uff1a\u660e\u786e\u7cfb\u7edf\u4e0e\u5916\u90e8\u7cfb\u7edf\uff08\u5982\u652f\u4ed8\u7f51\u5173\u3001\u7b2c\u4e09\u65b9 API\uff09\u7684\u4ea4\u4e92\u8fb9\u754c\u548c\u6570\u636e\u683c\u5f0f\u3002\n10. **\u7b7e\u7f72\u9700\u6c42\u57fa\u7ebf\u6587\u6863**\uff1a\u5728\u5f00\u53d1\u5f00\u59cb\u524d\uff0c\u4e0e\u5173\u952e\u5229\u76ca\u76f8\u5173\u8005\u786e\u8ba4\u5e76\u51bb\u7ed3\u6838\u5fc3\u9700\u6c42\u8303\u56f4\uff0c\u53d8\u66f4\u9700\u8d70\u6b63\u5f0f\u6d41\u7a0b\u3002\n\n---\n\n### \u7b2c\u4e8c\u9636\u6bb5\uff1a\u7cfb\u7edf\u67b6\u6784\u8bbe\u8ba1 (System Architecture)\n*\u76ee\u6807\uff1a\u6784\u5efa\u7a33\u56fa\u3001\u53ef\u6269\u5c55\u4e14\u6613\u4e8e\u7ef4\u62a4\u7684\u6280\u672f\u9aa8\u67b6\u3002*\n\n11. **\u9009\u62e9\u67b6\u6784\u98ce\u683c**\uff1a\u6839\u636e\u4e1a\u52a1\u590d\u6742\u5ea6\u9009\u62e9\u5355\u4f53\u3001\u5fae\u670d\u52a1\u3001Serverless \u6216\u4e8b\u4ef6\u9a71\u52a8\u67b6\u6784\uff0c\u907f\u514d\u8fc7\u5ea6\u8bbe\u8ba1\u3002\n12. **\u8bbe\u8ba1\u9ad8\u53ef\u7528 (HA) \u7b56\u7565**\uff1a\u5f15\u5165\u8d1f\u8f7d\u5747\u8861\u3001\u591a\u533a\u57df\u90e8\u7f72\u3001\u6545\u969c\u8f6c\u79fb\u673a\u5236\uff0c\u786e\u4fdd\u5355\u70b9\u6545\u969c\u4e0d\u5f71\u54cd\u6574\u4f53\u670d\u52a1\u3002\n13. **\u5b9a\u4e49\u6570\u636e\u4e00\u81f4\u6027\u7b56\u7565",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 52,
+          "prompt_ms": 267.5,
+          "prompt_per_token_ms": 5.144,
+          "prompt_per_second": 194.4,
+          "predicted_n": 512,
+          "predicted_ms": 5678.1,
+          "predicted_per_token_ms": 11.09,
+          "predicted_per_second": 90.2,
+          "draft_n": 468,
+          "draft_n_accepted": 286
+        },
+        "usage": {
+          "prompt_tokens": 52,
+          "completion_tokens": 512,
+          "total_tokens": 564,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 5.9605222719255835,
+        "first_content_s": 0.291644339915365
+      }
+    ]
+  },
+  "correct": true,
+  "status": {
+    "service": "strata",
+    "model": "qwen3.8-flash-iq3-s",
+    "loaded": true,
+    "auto_load": true,
+    "structured_output": {
+      "formats": [
+        "json_object",
+        "json_schema"
+      ],
+      "method": "prompt_and_validate",
+      "constrained_decoding": false,
+      "stream_buffered": true
+    },
+    "engine": "0.1.41",
+    "started": 1791645984,
+    "uptime_s": 0,
+    "cache_max_tokens": 262144,
+    "context": {
+      "native": 262144,
+      "max_positions": 262144
+    },
+    "concurrency": {
+      "serving": 1,
+      "requested": 1
+    },
+    "dialects": [
+      "/v1/chat/completions",
+      "/v1/messages",
+      "/v1/responses"
+    ],
+    "vision": {
+      "enabled": true,
+      "available": true,
+      "error": null
+    },
+    "activity": {
+      "requests": 0,
+      "in_flight": 0,
+      "last_request_at": null
+    },
+    "last_timings": null,
+    "vram": {
+      "elastic": false
+    },
+    "machine": {
+      "at": 1791645984,
+      "gpu": null,
+      "ram": {
+        "used_gib": 126.9,
+        "total_gib": 1007.3
+      }
+    }
+  },
+  "recall": {
+    "text": "### The Five Secret Codes\n\n1. **CEDAR-712**\n2. **ORBIT-935**\n3. **MANGO-246**\n4. **RIVER-508**\n5. **TULIP-163**\n\n***\n\n### Detailed Explanation of Indexing Rules\n\nThe records provided follow a strict **two-dimensional indexing system** (often referred to as a \"Block\" or \"Page\" structure in database or memory contexts). Here is the breakdown of how the data is organized and how the secret codes are located:\n\n#### 1. The Indexing Format: `Block:Offset`\nEvery record is labeled with a pair of numbers separated by a colon (e.g., `Record 0:15`).\n*   **The First Number (Block ID):** This represents the major grouping or \"page\" of data.\n    *   **Block 0** contains records `0:0` through `0:399`.\n    *   **Block 1** contains records `1:0` through `1:399`.\n    *   **Block 2** contains records `2:0` through `2:39",
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 31566,
+      "prompt_ms": 7021.2,
+      "prompt_per_token_ms": 0.222,
+      "prompt_per_second": 4495.8,
+      "predicted_n": 256,
+      "predicted_ms": 2737.9,
+      "predicted_per_token_ms": 10.695,
+      "predicted_per_second": 93.5,
+      "draft_n": 205,
+      "draft_n_accepted": 166
+    },
+    "usage": {
+      "prompt_tokens": 31566,
+      "completion_tokens": 256,
+      "total_tokens": 31822,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "finish_reason": "length",
+    "wall_s": 9.794221604941413,
+    "first_content_s": 7.064381030853838
+  },
+  "image": {
+    "passed": true,
+    "answer": "The dominant color in the image is **red**."
+  },
+  "video": {
+    "passed": true,
+    "answer": "The dominant color throughout this video is red.",
+    "fps": 8
+  },
+  "tools": {
+    "passed": true,
+    "calls": [
+      {
+        "id": "call_e370a24282134b8ab8e9301b",
+        "type": "function",
+        "function": {
+          "name": "lookup_weather",
+          "arguments": "{\"city\":\"Sydney\"}"
+        }
+      }
+    ]
+  },
+  "anthropic": {
+    "passed": true
+  },
+  "rates": {
+    "english": [
+      92.1,
+      92.9,
+      95.6
+    ],
+    "code": [
+      99.8,
+      109.4,
+      111.2
+    ],
+    "chinese": [
+      90.5,
+      96.1,
+      90.2
+    ]
+  }
+}

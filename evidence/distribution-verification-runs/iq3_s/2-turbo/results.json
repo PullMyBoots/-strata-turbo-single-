@@ -1,0 +1,753 @@
+{
+  "configuration": {
+    "exe": "/home/student_su/qwen/release/strata-single-GPU/engine/distribution/strata-turbo",
+    "cwd": "/home/student_su/qwen/release/strata-single-GPU",
+    "gpu": [
+      0
+    ],
+    "gpus_asked": true,
+    "layer_split": "auto",
+    "backend": "cuda",
+    "host": "127.0.0.1",
+    "port": 39595,
+    "model_name": "qwen3.8-flash-iq3-s",
+    "aliases": [
+      "qwen3.8 flash",
+      "Qwen3.8-Flash-Next",
+      "Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S",
+      "qwen3.8-flash-next-ud-q3-k-xl"
+    ],
+    "draft_vocab": "full",
+    "sampling": {
+      "temperature": 0.3,
+      "top_p": 0.95,
+      "top_k": 20,
+      "min_p": 0.0,
+      "presence_penalty": 0.0,
+      "repetition_penalty": 1.0
+    },
+    "tokenizer": "/home/student_su/qwen/release/strata-single-GPU/assets/data/packs/iq3_s/tokenizer",
+    "log": "/home/student_su/qwen/release/strata-single-GPU/runtime/qualification-runs/20261010-131219-349bb306e31b/2-turbo/engine.log",
+    "lib_dirs": [
+      "/usr/local/cuda/lib64"
+    ],
+    "parallel_workers": 1,
+    "env": {
+      "STRATA_SPLIT_ASYNC_COMMIT": "1",
+      "STRATA_RESIDENT_PLAN_PARALLEL": "1",
+      "STRATA_GR_DOWN_MAX4": "1",
+      "STRATA_TOPK_PARALLEL": "1",
+      "STRATA_DECODE_TIMING": "1",
+      "STRATA_TOPK_COOPERATIVE": "1",
+      "STRATA_MTP_HNORM_STREAM": "1",
+      "STRATA_SH_OVERLAP": "1",
+      "STRATA_RESIDENT_COMBINE": "1",
+      "STRATA_MTP_SPARSE": "1",
+      "STRATA_PLE_PREFETCH": "1",
+      "STRATA_GR_EXACT_T": "1",
+      "STRATA_GR_UP_MAX4": "1",
+      "STRATA_GR_UP_COLS": "8",
+      "STRATA_GDN_AB_WARPS": "2",
+      "STRATA_GR_EXACT_T8": "1",
+      "STRATA_GR_QFUSE": "1",
+      "STRATA_MMVQ_ROWS": "2",
+      "STRATA_CUDA_EXPERT_FUSED": "1",
+      "STRATA_MTP_HEAD_ROUTER": "/home/student_su/qwen/release/strata-single-GPU/assets/data/mtp/head-router-iq3_s-full-r128-k8192",
+      "STRATA_MTP_ROUTER_INDEXED": "1",
+      "STRATA_MTP_ROUTER_FUSED_QUERY": "1",
+      "STRATA_MTP_ROUTER_SORT_BEGIN_BIT": "16",
+      "STRATA_VERIFY_DEVICE_PLAN": "1",
+      "STRATA_MTP_ADAPTIVE": "1",
+      "STRATA_MTP_COST_ROBUST": "1",
+      "CUDA_VISIBLE_DEVICES": "GPU-c9ae835b-bc1e-8d6c-f85f-e415defc30bc"
+    },
+    "args": [
+      "--pack",
+      "/home/student_su/qwen/release/strata-single-GPU/assets/data/packs/iq3_s",
+      "--native",
+      "/home/student_su/qwen/release/strata-single-GPU/assets/models/IQ3_S/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00001-of-00002.gguf",
+      "--ple-gguf",
+      "/home/student_su/qwen/release/strata-single-GPU/assets/models/IQ3_S/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00002-of-00002.gguf",
+      "--expert-profile",
+      "/home/student_su/qwen/release/strata-single-GPU/assets/data/expert-profile.bin",
+      "--expert-cache",
+      "auto",
+      "--max-context",
+      "262144",
+      "--kv",
+      "int8",
+      "--vision",
+      "--rope-scaling",
+      "none",
+      "--prefill",
+      "auto",
+      "--spec",
+      "8",
+      "--spec-min-p",
+      "0.3",
+      "--mtp",
+      "/home/student_su/qwen/release/strata-single-GPU/assets/data/mtp/native-q5-full",
+      "--pool-workers",
+      "32",
+      "--kv-resident",
+      "32768",
+      "--vram-reserve-mib",
+      "700",
+      "--prompt-cache",
+      "0"
+    ],
+    "vision": {
+      "exe": "/home/student_su/qwen/release/strata-single-GPU/engine/distribution/strata-vision",
+      "mmproj": "/home/student_su/qwen/release/strata-single-GPU/assets/models/Vision/mmproj-F16.gguf",
+      "model": "/home/student_su/qwen/release/strata-single-GPU/assets/models/IQ3_S/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00001-of-00002.gguf",
+      "gpu": true,
+      "cuda_device": "GPU-c9ae835b-bc1e-8d6c-f85f-e415defc30bc",
+      "threads": 32,
+      "max_tokens": 0,
+      "flash_attn": "on",
+      "native_video": {
+        "fps": 8.0,
+        "timestamp_interval_ms": 5000
+      }
+    },
+    "deployment": {
+      "project": "strata-turbo-single",
+      "weights": "iq3_s",
+      "context": 262144,
+      "physical_gpus": [
+        0
+      ],
+      "gpu_uuids": [
+        "GPU-c9ae835b-bc1e-8d6c-f85f-e415defc30bc"
+      ],
+      "max_concurrent_requests": 1,
+      "main_weights_changed": false,
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "audio_input": false,
+      "engine_selection": "turbo",
+      "numa_node": 0,
+      "resource_plan": {
+        "context": 262144,
+        "kv": "int8",
+        "workers": 32,
+        "vision_gpu": true,
+        "low_ram": false,
+        "kv_streaming": true,
+        "kv_resident": 32768,
+        "reserve_mib": 700,
+        "large_gpu_turbo": true,
+        "concurrency": 1,
+        "full_experts": true,
+        "input_modalities": [
+          "text",
+          "image",
+          "video"
+        ],
+        "audio_input": false
+      },
+      "cpu_affinity": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        256,
+        257,
+        258,
+        259,
+        260,
+        261,
+        262,
+        263,
+        264,
+        265,
+        266,
+        267,
+        268,
+        269,
+        270,
+        271,
+        272,
+        273,
+        274,
+        275,
+        276,
+        277,
+        278,
+        279,
+        280,
+        281,
+        282,
+        283,
+        284,
+        285,
+        286,
+        287,
+        288,
+        289,
+        290,
+        291,
+        292,
+        293,
+        294,
+        295,
+        296,
+        297,
+        298,
+        299,
+        300,
+        301,
+        302,
+        303,
+        304,
+        305,
+        306,
+        307,
+        308,
+        309,
+        310,
+        311,
+        312,
+        313,
+        314,
+        315,
+        316,
+        317,
+        318,
+        319,
+        320,
+        321,
+        322,
+        323,
+        324,
+        325,
+        326,
+        327,
+        328,
+        329,
+        330,
+        331,
+        332,
+        333,
+        334,
+        335,
+        336,
+        337,
+        338,
+        339,
+        340,
+        341,
+        342,
+        343,
+        344,
+        345,
+        346,
+        347,
+        348,
+        349,
+        350,
+        351,
+        352,
+        353,
+        354,
+        355,
+        356,
+        357,
+        358,
+        359,
+        360,
+        361,
+        362,
+        363,
+        364,
+        365,
+        366,
+        367,
+        368,
+        369,
+        370,
+        371,
+        372,
+        373,
+        374,
+        375,
+        376,
+        377,
+        378,
+        379,
+        380,
+        381,
+        382,
+        383
+      ]
+    },
+    "server_module": "serve.local_api"
+  },
+  "short": {
+    "english": [
+      {
+        "text": "# Comprehensive Guide to Organizing and Reviewing a Software Project\n\nThis guide provides a granular, step-by-step approach to managing the lifecycle of a software project, from initial conception through deployment and maintenance. It is divided into logical phases to ensure clarity and thoroughness.\n\n## Phase 1: Project Initiation and Definition\n\n1.  **Define the Core Problem Statement**: Clearly articulate the specific business or user problem the software aims to solve. Avoid vague descriptions; focus on pain points.\n2.  **Identify Stakeholders**: List all individuals and groups affected by the project, including end-users, management, IT support, and external partners.\n3.  **Establish Project Goals**: Define SMART (Specific, Measurable, Achievable, Relevant, Time-bound) goals for the project.\n4.  **Determine Success Metrics**: Decide how success will be measured (e.g., user adoption rate, reduction in processing time, error rate reduction).\n5.  **Conduct a Feasibility Study**: Assess technical, operational, and economic feasibility before committing resources.\n6.  **Create a Project Charter**: Draft a formal document that authorizes the project, outlining its purpose, objectives, and high-level scope.\n7.  **Assign a Project Manager**: Designate a single point of accountability for the project’s delivery and coordination.\n8.  **Form the Core Team**: Identify key roles such as Product Owner, Tech Lead, Developers, QA Engineers, and UX Designers.\n9.  **Define Roles and Responsibilities**: Use a RACI matrix (Responsible, Accountable, Consulted, Informed) to clarify who does what.\n10. **Establish Communication Channels**: Set up dedicated Slack channels, email lists, or project management tools for team communication.\n11. **Set Initial Budget Constraints**: Determine the financial limits for development, infrastructure, licensing, and personnel.\n12. **Identify Key Risks Early**: Brainstorm potential risks such as scope creep, resource turnover, or technology obsolescence.\n13. **Define High-Level Scope**: Outline what is included in the project and, crucially, what is explicitly excluded.\n14. **Select Project Management Methodology**: Choose between Agile (Scrum, Kanban), Waterfall, or Hybrid based on project nature and team preference.\n15. **Set Initial Timeline Estimates**: Create a rough timeline with major milestones, acknowledging that estimates will refine over time.\n16",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 53,
+          "prompt_ms": 191.7,
+          "prompt_per_token_ms": 3.617,
+          "prompt_per_second": 276.5,
+          "predicted_n": 512,
+          "predicted_ms": 3476.7,
+          "predicted_per_token_ms": 6.79,
+          "predicted_per_second": 147.3,
+          "draft_n": 502,
+          "draft_n_accepted": 338
+        },
+        "usage": {
+          "prompt_tokens": 53,
+          "completion_tokens": 512,
+          "total_tokens": 565,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 3.683357533067465
+      },
+      {
+        "text": "# Comprehensive Guide to Organizing and Reviewing a Software Project\n\nThis guide provides a step-by-step, numbered checklist for organizing, maintaining, and reviewing a software project. It covers everything from initial setup and repository hygiene to code quality, documentation, testing, and long-term maintenance. Follow these 100+ items to ensure your project is robust, maintainable, and scalable.\n\n## Phase 1: Project Initialization and Repository Structure\n\n1. **Define the Project Scope**: Clearly articulate what the software does, who it is for, and what problems it solves. Write a one-sentence elevator pitch.\n2. **Choose a Descriptive Project Name**: Ensure the name is unique, memorable, and relevant to the domain. Check for trademark conflicts if applicable.\n3. **Select a Version Control System**: Use Git as the industry standard. Ensure all team members have Git installed and configured.\n4. **Initialize the Git Repository**: Run `git init` in the root directory of your project.\n5. **Create a `.gitignore` File**: Immediately add a `.gitignore` file to prevent committing unnecessary files (e.g., `node_modules`, `__pycache__`, `.env`, build artifacts).\n6. **Configure Git Identity**: Set global or local user name and email (`git config --global user.name \"Your Name\"`).\n7. **Choose a Hosting Platform**: Select GitHub, GitLab, Bitbucket, or Azure DevOps based on team needs and budget.\n8. **Create the Remote Repository**: Initialize a new repository on your chosen hosting platform.\n9. **Link Local to Remote**: Add the remote origin (`git remote add origin <url>`) and push the initial commit.\n10. **Establish a Branching Strategy**: Decide on a workflow (e.g., Git Flow, GitHub Flow, Trunk-Based Development) and document it.\n11. **Create the Main Branch**: Name it `main` or `master` and protect it from direct pushes.\n12. **Create a Development Branch**: If using Git Flow, create a `develop` branch for integration.\n13. **Set Up Branch Protection Rules**: Require pull requests, status checks, and code reviews before merging into `main`.\n14. **Define Commit Message Standards**: Adopt a convention like Conventional Commits (e.g., `feat:`, `fix:`, `docs:`) to automate changelogs.\n15. **Install Pre-",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 53,
+          "prompt_ms": 175.6,
+          "prompt_per_token_ms": 3.313,
+          "prompt_per_second": 301.8,
+          "predicted_n": 512,
+          "predicted_ms": 3304.3,
+          "predicted_per_token_ms": 6.454,
+          "predicted_per_second": 154.9,
+          "draft_n": 536,
+          "draft_n_accepted": 343
+        },
+        "usage": {
+          "prompt_tokens": 53,
+          "completion_tokens": 512,
+          "total_tokens": 565,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 3.488766396883875
+      },
+      {
+        "text": "# Comprehensive Guide to Organizing and Reviewing a Software Project\n\nThis guide provides a rigorous, step-by-step framework for organizing, maintaining, and reviewing software projects. It is designed for engineering managers, tech leads, senior developers, and project managers. The process is divided into logical phases, from initial setup to long-term maintenance and retirement.\n\n### Phase 1: Project Initialization and Governance\n\n1.  **Define the Project Charter**: Clearly articulate the project’s purpose, scope, objectives, and success criteria. Ensure all stakeholders agree on what constitutes \"done.\"\n2.  **Identify Stakeholders**: List all individuals and groups affected by the project, including end-users, developers, QA, product owners, and external partners.\n3.  **Establish Roles and Responsibilities**: Define who is responsible for code, who reviews it, who manages the backlog, and who makes architectural decisions. Use a RACI matrix (Responsible, Accountable, Consulted, Informed) if necessary.\n4.  **Choose the Project Management Methodology**: Decide whether to use Agile (Scrum, Kanban), Waterfall, or a hybrid approach based on the project’s nature and team size.\n5.  **Set Up the Version Control System (VCS)**: Initialize a Git repository (or equivalent) with a clear branching strategy (e.g., GitFlow, Trunk-Based Development).\n6.  **Configure Repository Permissions**: Set up access controls to ensure only authorized personnel can push to protected branches like `main` or `master`.\n7.  **Create a `.gitignore` File**: Prevent unnecessary files (build artifacts, IDE configs, secrets) from being committed to the repository.\n8.  **Initialize the README.md**: Create a comprehensive README that explains what the project is, how to install it, how to run it, and how to contribute.\n9.  **Define Coding Standards**: Choose a language-specific style guide (e.g., PEP8 for Python, ESLint for JavaScript) and document it.\n10. **Set Up Pre-commit Hooks**: Automate code formatting and linting checks before code is committed to prevent style inconsistencies.\n11. **Establish a License**: Choose an appropriate open-source or proprietary license and include it in the repository root.\n12. **Create a Code of Conduct**: Define behavioral expectations for contributors to foster a healthy and inclusive community.\n13. **Set Up Issue Tracking**: Configure an issue tracker (Jira,",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 53,
+          "prompt_ms": 166.9,
+          "prompt_per_token_ms": 3.149,
+          "prompt_per_second": 317.6,
+          "predicted_n": 512,
+          "predicted_ms": 3279.4,
+          "predicted_per_token_ms": 6.405,
+          "predicted_per_second": 156.1,
+          "draft_n": 548,
+          "draft_n_accepted": 344
+        },
+        "usage": {
+          "prompt_tokens": 53,
+          "completion_tokens": 512,
+          "total_tokens": 565,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 3.456126408884302
+      }
+    ],
+    "code": [
+      {
+        "text": "```python\n\"\"\"\nPersistent Key-Value Database with Transactions and Recovery\n\nThis module implements a simple persistent key-value store with:\n- ACID transactions (Atomicity, Consistency, Isolation, Durability)\n- Write-ahead logging (WAL) for crash recovery\n- In-memory data structure backed by disk persistence\n- Support for basic operations: get, set, delete\n- Transaction support with commit/rollback\n- Recovery from crashes using WAL\n\nExample usage:\n    db = PersistentKVStore(\"mydb\")\n    db.set(\"name\", \"Alice\")\n    db.set(\"age\", \"30\")\n    \n    with db.transaction() as txn:\n        txn.set(\"name\", \"Bob\")\n        txn.set(\"age\", \"25\")\n        # Auto-commits on successful exit\n    \n    print(db.get(\"name\"))  # Bob\n\"\"\"\n\nimport os\nimport json\nimport threading\nimport time\nimport hashlib\nimport struct\nimport tempfile\nimport shutil\nfrom typing import Optional, Dict, Any, List, Tuple\nfrom contextlib import contextmanager\nfrom enum import Enum\nimport logging\n\n# Configure logging\nlogging.basicConfig(level=logging.INFO)\nlogger = logging.getLogger(__name__)\n\n\nclass TransactionState(Enum):\n    \"\"\"States of a transaction.\"\"\"\n    ACTIVE = \"active\"\n    COMMITTED = \"committed\"\n    ABORTED = \"aborted\"\n\n\nclass WALRecordType(Enum):\n    \"\"\"Types of WAL records.\"\"\"\n    BEGIN = \"BEGIN\"\n    SET = \"SET\"\n    DELETE = \"DELETE\"\n    COMMIT = \"COMMIT\"\n    ROLLBACK = \"ROLLBACK\"\n    CHECKPOINT = \"CHECKPOINT\"\n\n\nclass WALRecord:\n    \"\"\"Represents a single WAL record.\"\"\"\n    \n    def __init__(self, txn_id: str, record_type: WALRecordType, key: Optional[str] = None, \n                 value: Optional[str] = None, timestamp: Optional[float] = None):\n        self.txn_id = txn_id\n        self.record_type = record_type\n        self.key = key\n        self.value = value\n        self.timestamp = timestamp or time.time()\n    \n    def to_dict(self) -> Dict[str, Any]:\n        return {\n            \"txn_id\": self.txn_id,\n            \"record_type\": self.record_type.value,\n            \"key\": self.key,\n            \"value\": self.value,",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 52,
+          "prompt_ms": 171.9,
+          "prompt_per_token_ms": 3.306,
+          "prompt_per_second": 302.5,
+          "predicted_n": 512,
+          "predicted_ms": 3200.1,
+          "predicted_per_token_ms": 6.25,
+          "predicted_per_second": 160.0,
+          "draft_n": 457,
+          "draft_n_accepted": 362
+        },
+        "usage": {
+          "prompt_tokens": 52,
+          "completion_tokens": 512,
+          "total_tokens": 564,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 3.3907929081469774
+      },
+      {
+        "text": "```python\n\"\"\"\nPersistent Key-Value Database with Transactions and Recovery\n\nFeatures:\n- Persistent storage using a write-ahead log (WAL)\n- ACID transactions (Atomicity, Consistency, Isolation, Durability)\n- Crash recovery via WAL replay\n- Simple in-memory index for fast lookups\n- Thread-safe operations\n\nUsage:\n    db = PersistentKVStore(\"mydb.log\")\n    db.put(\"key1\", \"value1\")\n    db.put(\"key2\", \"value2\")\n    print(db.get(\"key1\"))  # \"value1\"\n    db.delete(\"key1\")\n    print(db.get(\"key1\"))  # None\n\nTransaction example:\n    with db.transaction() as txn:\n        txn.put(\"a\", \"1\")\n        txn.put(\"b\", \"2\")\n        # If an exception occurs, changes are rolled back\n\"\"\"\n\nimport os\nimport json\nimport threading\nimport time\nimport hashlib\nfrom typing import Optional, Dict, Any, List, Tuple\nfrom contextlib import contextmanager\n\n\nclass TransactionError(Exception):\n    \"\"\"Raised when a transaction fails.\"\"\"\n    pass\n\n\nclass WALRecord:\n    \"\"\"Represents a single record in the Write-Ahead Log.\"\"\"\n    \n    def __init__(self, txn_id: str, operation: str, key: str, value: Optional[str] = None, timestamp: float = None):\n        self.txn_id = txn_id\n        self.operation = operation  # 'BEGIN', 'PUT', 'DELETE', 'COMMIT', 'ROLLBACK'\n        self.key = key\n        self.value = value\n        self.timestamp = timestamp or time.time()\n    \n    def to_dict(self) -> Dict[str, Any]:\n        return {\n            \"txn_id\": self.txn_id,\n            \"operation\": self.operation,\n            \"key\": self.key,\n            \"value\": self.value,\n            \"timestamp\": self.timestamp\n        }\n    \n    @staticmethod\n    def from_dict(data: Dict[str, Any]) -> 'WALRecord':\n        return WALRecord(\n            txn_id=data[\"txn_id\"],\n            operation=data[\"operation\"],\n            key=data[\"key\"],\n            value=data.get(\"value\"),\n            timestamp=data.get(\"timestamp\", time.time())\n        )\n    \n    def to_json(self) -> str:\n        return json.dumps(self.to_dict",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 52,
+          "prompt_ms": 160.8,
+          "prompt_per_token_ms": 3.092,
+          "prompt_per_second": 323.4,
+          "predicted_n": 512,
+          "predicted_ms": 2727.4,
+          "predicted_per_token_ms": 5.327,
+          "predicted_per_second": 187.7,
+          "draft_n": 501,
+          "draft_n_accepted": 389
+        },
+        "usage": {
+          "prompt_tokens": 52,
+          "completion_tokens": 512,
+          "total_tokens": 564,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 2.9061589571647346
+      },
+      {
+        "text": "```python\n\"\"\"\nPersistent Key-Value Database with Transactions and Recovery\n\nFeatures:\n- Persistent storage using a write-ahead log (WAL)\n- ACID transactions (Atomicity, Consistency, Isolation, Durability)\n- Crash recovery from WAL\n- Simple in-memory index for fast lookups\n- Thread-safe operations\n\nUsage:\n    db = PersistentKVStore(\"mydb.log\")\n    db.put(\"key1\", \"value1\")\n    db.put(\"key2\", \"value2\")\n    with db.transaction() as txn:\n        txn.put(\"key3\", \"value3\")\n        txn.delete(\"key1\")\n    print(db.get(\"key3\"))  # value3\n    print(db.get(\"key1\"))  # None\n\"\"\"\n\nimport os\nimport json\nimport threading\nimport time\nimport hashlib\nimport struct\nimport tempfile\nimport shutil\nfrom typing import Optional, Dict, List, Tuple, Any\nfrom contextlib import contextmanager\nfrom enum import Enum\n\n\nclass LogRecordType(Enum):\n    BEGIN = \"BEGIN\"\n    PUT = \"PUT\"\n    DELETE = \"DELETE\"\n    COMMIT = \"COMMIT\"\n    ABORT = \"ABORT\"\n    CHECKPOINT = \"CHECKPOINT\"\n\n\nclass LogRecord:\n    \"\"\"Represents a single log record in the WAL.\"\"\"\n    \n    def __init__(self, record_type: LogRecordType, txn_id: int, key: Optional[str] = None, \n                 value: Optional[str] = None, timestamp: float = None):\n        self.record_type = record_type\n        self.txn_id = txn_id\n        self.key = key\n        self.value = value\n        self.timestamp = timestamp or time.time()\n    \n    def to_dict(self) -> Dict[str, Any]:\n        return {\n            \"type\": self.record_type.value,\n            \"txn_id\": self.txn_id,\n            \"key\": self.key,\n            \"value\": self.value,\n            \"timestamp\": self.timestamp\n        }\n    \n    @staticmethod\n    def from_dict(data: Dict[str, Any]) -> 'LogRecord':\n        return LogRecord(\n            record_type=LogRecordType(data[\"type\"]),\n            txn_id=data[\"txn_id\"],\n            key=data.get(\"key\"),\n            value=data.get(\"value\"),\n            timestamp=data.get(\"timestamp\", time.time())\n       ",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 52,
+          "prompt_ms": 159.4,
+          "prompt_per_token_ms": 3.065,
+          "prompt_per_second": 326.2,
+          "predicted_n": 512,
+          "predicted_ms": 2660.1,
+          "predicted_per_token_ms": 5.196,
+          "predicted_per_second": 192.5,
+          "draft_n": 491,
+          "draft_n_accepted": 385
+        },
+        "usage": {
+          "prompt_tokens": 52,
+          "completion_tokens": 512,
+          "total_tokens": 564,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 2.8367419650312513
+      }
+    ],
+    "chinese": [
+      {
+        "text": "设计一个可靠的软件项目是一个系统工程，涵盖了从需求分析、架构设计、编码规范、测试策略到部署运维的全生命周期。为了确保全面性和深度，以下将分为 **10 个核心阶段**，每个阶段列举 **10 项** 具体步骤、方法或建议，共计 **100 项**。\n\n---\n\n### 第一阶段：需求分析与定义 (Requirements & Definition)\n*目标：明确“做什么”，避免范围蔓延和误解。*\n\n1. **建立利益相关者地图**：识别所有受影响的用户、客户、内部团队及第三方系统，确保需求来源全面。\n2. **编写用户故事 (User Stories)**：使用“作为[角色]，我想要[功能]，以便[价值]”的格式描述需求，聚焦用户价值。\n3. **定义验收标准 (Acceptance Criteria)**：为每个用户故事制定明确的、可测试的完成定义（DoD），避免模糊描述。\n4. **进行可行性分析**：评估技术、经济、法律和操作上的可行性，识别潜在风险。\n5. **制定项目范围说明书**：明确包含什么和不包含什么（Out of Scope），防止范围蔓延。\n6. **优先级排序 (MoSCoW 方法)**：将需求分为必须有 (Must have)、应该有 (Should have)、可以有 (Could have) 和不会有 (Won't have)。\n7. **原型设计与验证**：使用低保真或高保真原型与用户交互，提前发现交互逻辑问题。\n8. **非功能性需求定义**：明确性能（响应时间）、安全性、可用性、可扩展性等指标。\n9. **数据字典与术语表**：统一业务术语，确保开发、测试和业务团队对同一概念理解一致。\n10. **需求变更控制流程**：建立正式的变更请求机制，评估变更对进度、成本和架构的影响。\n\n---\n\n### 第二阶段：系统架构与设计 (Architecture & Design)\n*目标：构建稳固、可扩展且易于维护的技术骨架。*\n\n11. **选择架构风格**：根据业务场景选择单体、微服务、Serverless 或事件驱动架构，权衡复杂度与收益。\n12. **定义技术栈**：选择成熟、社区活跃且团队熟悉的技术栈（语言、框架、数据库、中间件）。\n13. **绘制系统上下文图**：明确系统与外部系统（如支付网关、第三方 API）的交互边界。\n",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 52,
+          "prompt_ms": 203.2,
+          "prompt_per_token_ms": 3.908,
+          "prompt_per_second": 255.9,
+          "predicted_n": 512,
+          "predicted_ms": 3886.7,
+          "predicted_per_token_ms": 7.591,
+          "predicted_per_second": 131.7,
+          "draft_n": 411,
+          "draft_n_accepted": 290
+        },
+        "usage": {
+          "prompt_tokens": 52,
+          "completion_tokens": 512,
+          "total_tokens": 564,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 4.108937836950645
+      },
+      {
+        "text": "设计一个可靠的软件项目是一个系统工程，涵盖了从需求分析、架构设计、编码规范、测试策略到部署运维的全生命周期。为了确保全面性和深度，以下将分为 **10 个核心阶段**，每个阶段列举 **10 项** 具体步骤、方法或建议，共计 **100 项**。\n\n---\n\n### 第一阶段：需求分析与定义 (Requirements & Definition)\n*目标：明确“做什么”和“为什么做”，避免范围蔓延。*\n\n1. **明确业务目标**：清晰定义软件要解决的核心业务痛点，而非仅仅罗列功能。\n2. **识别利益相关者**：列出所有受影响的用户、管理层、运维团队及第三方合作伙伴。\n3. **用户故事映射**：使用 User Story Mapping 梳理用户旅程，确保功能覆盖完整场景。\n4. **定义验收标准 (AC)**：为每个功能点编写明确的、可测试的验收标准（Given-When-Then格式）。\n5. **非功能性需求 (NFR) 定义**：明确性能（响应时间）、安全性、可用性、可扩展性等指标。\n6. **数据字典构建**：定义核心业务实体的字段、类型、约束及关系，避免歧义。\n7. **优先级排序 (MoSCoW)**：将需求分为 Must have, Should have, Could have, Won't have。\n8. **原型设计 (Wireframes)**：通过低保真原型验证交互逻辑，早期发现体验问题。\n9. **合规性检查**：确认是否符合 GDPR、HIPAA、等保等法律法规要求。\n10. **需求冻结与变更控制**：建立正式的需求变更流程，防止无序修改导致项目失控。\n\n---\n\n### 第二阶段：系统架构设计 (System Architecture)\n*目标：构建稳固、可扩展、易维护的技术骨架。*\n\n11. **选择架构风格**：根据业务复杂度选择单体、微服务、Serverless 或事件驱动架构。\n12. **定义边界上下文 (Bounded Contexts)**：使用 DDD（领域驱动设计）划分模块边界，降低耦合。\n13. **技术栈选型**：评估语言、框架、数据库的成熟度、社区支持及团队熟悉度。\n14. **数据持久化策略**：决定使用关系型数据库（SQL）还是非关系型数据库（NoSQL），或混合使用。\n15. **缓存策略设计**",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 52,
+          "prompt_ms": 165.5,
+          "prompt_per_token_ms": 3.183,
+          "prompt_per_second": 314.2,
+          "predicted_n": 512,
+          "predicted_ms": 3256.1,
+          "predicted_per_token_ms": 6.36,
+          "predicted_per_second": 157.2,
+          "draft_n": 511,
+          "draft_n_accepted": 342
+        },
+        "usage": {
+          "prompt_tokens": 52,
+          "completion_tokens": 512,
+          "total_tokens": 564,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 3.4374552089720964
+      },
+      {
+        "text": "设计一个可靠的软件项目是一个系统工程，涉及从需求分析到长期运维的全生命周期。为了确保全面性和深度，以下将分为 **10 个核心阶段**，每个阶段列举 **10 项** 具体步骤、方法或建议，共计 **100 项**。\n\n---\n\n### 第一阶段：需求分析与规划 (Requirements & Planning)\n*目标：明确“做什么”和“为什么做”，避免方向性错误。*\n\n1. **明确业务目标**：定义软件要解决的核心痛点，确保技术实现服务于商业价值。\n2. **识别利益相关者**：列出所有受影响的用户、管理层、运维团队及第三方合作伙伴。\n3. **编写用户故事 (User Stories)**：使用“作为[角色]，我想要[功能]，以便[价值]”的格式描述需求。\n4. **定义验收标准 (Acceptance Criteria)**：为每个用户故事设定明确的“完成”定义，避免歧义。\n5. **进行可行性分析**：评估技术、时间、预算和法律合规性是否支持项目落地。\n6. **制定项目范围说明书**：明确包含什么（In-scope）和不包含什么（Out-of-scope），防止范围蔓延。\n7. **识别关键假设与依赖**：记录所有假设条件（如第三方API稳定性）和外部依赖项。\n8. **建立风险登记册**：早期识别潜在风险（如人员流失、技术选型错误）并制定缓解策略。\n9. **确定非功能性需求 (NFRs)**：明确性能、安全性、可用性、可扩展性等指标（如响应时间<200ms）。\n10. **制定初步里程碑计划**：设定关键交付节点，便于进度跟踪和资源协调。\n\n---\n\n### 第二阶段：系统架构设计 (System Architecture)\n*目标：构建稳固、可扩展且易于维护的技术骨架。*\n\n11. **选择架构风格**：根据业务复杂度选择单体、微服务、Serverless 或事件驱动架构。\n12. **定义服务边界**：遵循领域驱动设计 (DDD)，划分限界上下文，确保高内聚低耦合。\n13. **设计数据模型**：绘制 ER 图或 NoSQL 文档结构，确保数据一致性和查询效率。\n14. **选择数据存储策略**：根据读写比例选择关系型数据库、NoSQL、缓存或搜索引擎。\n15. **设计 API 契约",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 52,
+          "prompt_ms": 161.0,
+          "prompt_per_token_ms": 3.096,
+          "prompt_per_second": 323.0,
+          "predicted_n": 512,
+          "predicted_ms": 3396.2,
+          "predicted_per_token_ms": 6.633,
+          "predicted_per_second": 150.8,
+          "draft_n": 531,
+          "draft_n_accepted": 330
+        },
+        "usage": {
+          "prompt_tokens": 52,
+          "completion_tokens": 512,
+          "total_tokens": 564,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 3.571981906192377
+      }
+    ]
+  },
+  "correct": true,
+  "status": {
+    "service": "strata",
+    "model": "qwen3.8-flash-iq3-s",
+    "loaded": true,
+    "auto_load": true,
+    "structured_output": {
+      "formats": [
+        "json_object",
+        "json_schema"
+      ],
+      "method": "prompt_and_validate",
+      "constrained_decoding": false,
+      "stream_buffered": true
+    },
+    "engine": "0.1.38",
+    "started": 1791638129,
+    "uptime_s": 0,
+    "cache_max_tokens": 262144,
+    "context": {
+      "native": 262144,
+      "max_positions": 262144
+    },
+    "concurrency": {
+      "serving": 1,
+      "requested": 1,
+      "active": 0,
+      "queued": 0,
+      "mode": "single_session",
+      "prefill": "single_workspace"
+    },
+    "dialects": [
+      "/v1/chat/completions",
+      "/v1/messages"
+    ],
+    "vision": {
+      "enabled": true,
+      "available": true,
+      "error": null
+    },
+    "activity": {
+      "requests": 0,
+      "in_flight": 0,
+      "last_request_at": null
+    },
+    "last_timings": null,
+    "machine": {
+      "at": 1791638129,
+      "gpu": null,
+      "ram": {
+        "used_gib": 137.9,
+        "total_gib": 1007.3
+      }
+    }
+  },
+  "recall": {
+    "text": "### The Five Secret Codes\n\n1. **CEDAR-712**\n2. **ORBIT-935**\n3. **MANGO-246**\n4. **RIVER-508**\n5. **TULIP-163**\n\n***\n\n### Detailed Explanation of Indexing Rules\n\nThe records provided follow a strict **two-dimensional indexing system** (often referred to as a matrix or grid structure). Here is the breakdown of how the data is organized and how the secret codes are located:\n\n#### 1. The Indexing Format: `Block:Offset`\nEvery record is labeled with a pair of numbers separated by a colon (e.g., `Record 0:15`).\n*   **The First Number (Block ID):** This represents the major group or \"page\" of data.\n    *   `Record 0:x` belongs to Block 0.\n    *   `Record 1:x` belongs to Block 1.\n    *   `Record 2:x` belongs to Block 2, and so on.\n*   **The Second Number (Offset/Index):** This represents the specific position within that block.\n    *   The offsets start",
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 31566,
+      "prompt_ms": 7762.3,
+      "prompt_per_token_ms": 0.246,
+      "prompt_per_second": 4066.6,
+      "predicted_n": 256,
+      "predicted_ms": 1880.6,
+      "predicted_per_token_ms": 7.346,
+      "predicted_per_second": 136.1,
+      "draft_n": 214,
+      "draft_n_accepted": 167
+    },
+    "usage": {
+      "prompt_tokens": 31566,
+      "completion_tokens": 256,
+      "total_tokens": 31822,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "finish_reason": "length",
+    "wall_s": 9.744030131027102
+  },
+  "rates": {
+    "english": [
+      147.3,
+      154.9,
+      156.1
+    ],
+    "code": [
+      160.0,
+      187.7,
+      192.5
+    ],
+    "chinese": [
+      131.7,
+      157.2,
+      150.8
+    ]
+  }
+}

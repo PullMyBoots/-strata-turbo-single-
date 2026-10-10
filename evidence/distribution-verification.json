@@ -1,0 +1,105 @@
+{
+  "schema": 1,
+  "version": "0.2.0",
+  "created_utc": "2026-10-10T13:28:06Z",
+  "status": "passed; all three weights showed a local short-input advantage; six-slot capacity passed but batch-MTP IQ2 speed advantage was not confirmed",
+  "binaries": {
+    "turbo": {
+      "path": "engine/distribution/strata-turbo",
+      "bytes": 62732176,
+      "sha256": "147346e6112af5d9fd855c876569e430bbbb474f80ae0c6e00594a5ac6b7656b"
+    },
+    "official": {
+      "path": "engine/distribution/strata-official",
+      "bytes": 65016024,
+      "sha256": "d53542400023e94a7866bd7816a58668b774ce165f39e453af7047fac3caddae"
+    },
+    "official_media": {
+      "path": "engine/distribution/strata-upstream-media",
+      "bytes": 65024216,
+      "sha256": "54bf7a29420294216f78fb72e1c46f7496fb54ec809a5c5c464b9d4607a9acb9"
+    },
+    "vision": {
+      "path": "engine/distribution/strata-vision",
+      "bytes": 209057984,
+      "sha256": "e2fdf5537e8770a31960f9b5d412e88c3ac875413a2094e10ec7839b72d7d2e5"
+    }
+  },
+  "single": {
+    "swift": {
+      "gpu_uuid": "GPU-d198f84d-7195-2312-a5c8-39263b88d546",
+      "official_short_tps": 119.07827353346283,
+      "turbo_short_tps": 141.9575604882077,
+      "short_gain_percent": 19.213653570745983,
+      "capability_checks_passed": true,
+      "qualification_state": "qualified",
+      "evidence": "evidence/distribution-verification-runs/swift"
+    },
+    "iq3_s": {
+      "gpu_uuid": "GPU-c9ae835b-bc1e-8d6c-f85f-e415defc30bc",
+      "official_short_tps": 143.95347819223142,
+      "turbo_short_tps": 163.05930899677514,
+      "short_gain_percent": 13.272225891638655,
+      "capability_checks_passed": true,
+      "qualification_state": "qualified",
+      "evidence": "evidence/distribution-verification-runs/iq3_s"
+    },
+    "iq2_xs": {
+      "gpu_uuid": "GPU-c9ae835b-bc1e-8d6c-f85f-e415defc30bc",
+      "official_short_tps": 194.49005707901478,
+      "turbo_short_tps": 211.0657646260521,
+      "short_gain_percent": 8.522650358574978,
+      "official_long_tps": 137.3,
+      "turbo_long_tps": 175.3,
+      "capability_checks_passed": true,
+      "qualification_state": "qualified",
+      "long": {
+        "official": {
+          "prompt_tokens": 256013,
+          "completion_tokens": 512,
+          "prefill_s": 60.2686,
+          "generation_s": 3.7287,
+          "wall_s": 64.18377643194981
+        },
+        "turbo": {
+          "prompt_tokens": 256013,
+          "completion_tokens": 512,
+          "prefill_s": 129.2039,
+          "generation_s": 2.92,
+          "wall_s": 132.72925743297674
+        }
+      },
+      "evidence": "evidence/distribution-verification-runs/iq2_xs"
+    }
+  },
+  "concurrency": {
+    "model": "iq2_xs",
+    "count": 6,
+    "passed": true,
+    "seventh_request_queued": true,
+    "session_isolation": true,
+    "official_warm_aggregate_tps": 178.83348353909724,
+    "batch_mtp_warm_aggregate_tps": 167.42834389269947,
+    "speed_advantage_confirmed": false,
+    "protocol": "Two warmed measurements per arm after one warm-up; one service start each. Not ABBA."
+  },
+  "checks": {
+    "policy_tests_passed": 31,
+    "clean_venv_pip_install": true,
+    "path_with_spaces": true,
+    "relocated_entrypoint_arithmetic_image_video": true,
+    "asset_reconstruction": "evidence/distribution-asset-reconstruction.json",
+    "archive_dependencies_included": true,
+    "relocated_vision_cmake_configure": true,
+    "iq2_tools_openai_anthropic": true,
+    "actual_start_sh_reused_local_qualification_and_selected_turbo": true,
+    "entrypoint_evidence": "evidence/distribution-entrypoint.json"
+  },
+  "limits": [
+    "Only L40S physically tested; smaller VRAM/RAM configurations have policy tests only.",
+    "Native Windows/AMD and six full native-window sessions are not qualified.",
+    "Model downloads were reused offline; Python dependencies installed from cached official wheels.",
+    "Short ABBA measured on GPU0 for IQ3 and GPU1 for Swift, in parallel on different NUMA nodes. Compare paired ratios, not absolute rates across GPUs.",
+    "Text speed is output-stage only; media uses one-token verification and is not advertised as faster."
+  ]
+}

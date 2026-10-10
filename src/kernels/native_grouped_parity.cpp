@@ -31,6 +31,7 @@ namespace k = strata::kernels;
 namespace {
 
 int g_fail = 0;
+bool g_wide_scales = false;
 
 void ck(cudaError_t e, const char* what) {
     if (e != cudaSuccess) {
@@ -72,7 +73,7 @@ int block_values(int t) { return t == 20 || t == 7 || t == 6 || t == 8 ? 32 : t 
 std::vector<uint8_t> random_rows(int t, int64_t rows, int64_t n, std::mt19937& rng) {
     const size_t rb = k::iq_row_bytes(t, n), bs = k::iq_row_bytes(t, block_values(t));
     std::vector<uint8_t> w((size_t) rows * rb);
-    std::uniform_int_distribution<int> byte(0, 255), ex(2, 8), man(0, 1023), sgn(0, 1);
+    std::uniform_int_distribution<int> byte(0, 255), ex(2, g_wide_scales ? 14 : 8), man(0, 1023), sgn(0, 1);
     for (auto& b : w) b = (uint8_t) byte(rng);
     for (size_t o = 0; o < w.size(); o += bs) {
         if (t == 29) {
@@ -346,6 +347,22 @@ int main(int argc, char** argv) {
     check(6, 6, 2560, 640, s, rng);                                    // native Q5_0 MTP auxiliary
     check(21, 20, 2560, 640, s, rng);                                   // a model's shapes
     check(21, 23, 2560, 768, s, rng);
+#if !defined(__HIPCC__)
+    // The CUDA gate/up fusion only runs at the model's 2560-wide shape.
+    // Small synthetic shapes above cannot exercise it. Force the fused path
+    // against v1, including partial groups and reused, nonzero scratch.
+    k::native_expert_set_mode(8, 0);
+    for (bool wide : {false, true}) {
+        g_wide_scales = wide;
+        std::printf("CUDA gate/up fusion, wide scales=%d\n", wide);
+        for (int gu : {16, 17, 22}) {
+            for (int dt : {20, 42, 7, 6, 8}) check(gu, dt, 2560, 640, s, rng);
+            check(gu, 23, 2560, 768, s, rng);
+        }
+    }
+    g_wide_scales = false;
+    k::native_expert_set_mode(-1, 0);
+#endif
     if (do_bench) bench(s, rng);
     std::printf("native_grouped_parity: %d failures\n", g_fail);
     cudaStreamDestroy(s);

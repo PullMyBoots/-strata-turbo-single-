@@ -1,22 +1,13 @@
-# 单卡性能对照
+# Historical single-GPU performance
 
-测量权重均为GSQ-RCO IQ2_XS，同一主权重、原生262144窗口、int8 KV、单请求。中文、英文、代码的9份JSON请求在正常旧单卡和优化单卡之间全部相同，9份完整输出也相同。单张L40S GPU1上，164.2501 → 203.1452/200.8600，提升23.68%/22.29%。
+These IQ2_XS comparisons use unchanged target weights, native 262144 context, INT8 KV and one request. On the same L40S GPU1, a working older single-GPU configuration scored 164.2501 token/s versus 203.1452/200.8600 for the optimized configuration: +23.68%/+22.29%. All nine short requests and full replies matched between those configurations.
 
-长输入对照来自更早的原生262144单卡版本。GPU1、同一个实际256013-token输入、输出512 token、cache_n=0，114.5 → 162.3/161.6，提升41.75%/41.14%。两端都通过五个远距离检索点，但完整长回复的措辞不同；旧版prefill2048，新版1024。这是整体配置与引擎优化结果，不能作为单一内核的独立贡献，也不能声称该长回复与旧版逐字相同。新版输入处理约131秒，旧版约96秒；输出变快不代表所有端到端任务都变快。
+A separate earlier native-context configuration scored 114.5 token/s after the same 256013-token input, compared with 162.3/161.6 for the optimized setup: +41.75%/+41.14%. Both passed five retrieval checkpoints; their complete long answers differed. Prefill changed from 2048 to 1024 and took approximately 96 seconds versus 131 seconds. This is an aggregate configuration/engine improvement, not the isolated contribution of one kernel.
 
-更早曾出现单卡69.35 token/s，原因是prefill8192占用专家缓存，部分专家在CPU。把这段配置修复也计入时，69.35 → 203.15约为2.93倍（增加193%）。主宣传对比采用已正常运行的164.3基准，分别说明配置修复和后续加速。
+A still earlier misconfigured run scored 69.35 token/s because prefill8192 displaced expert cache. Comparing it with 203.15 mixes configuration repair with subsequent optimization; the working 164.3 baseline is the preferred short-input comparison.
 
-独立项目重新编译的引擎，在空闲GPU0/NUMA0，使用相同IQ2_XS资产及单卡优化预设，短输入综合202.2243、冷长输入162.0。9条短回复及1条完整长回复与已验证优化版的参考全文相同，五检索点通过。它证明新目录的构建与预设可用；不把GPU0/GPU1之间的差异作为算法加速比。
+A rebuild in the independent project on GPU0/NUMA0 scored 202.2243 short and 162.0 cold-long token/s. Nine short replies and one complete long reply matched the optimized reference. This checks the standalone build; it does not turn GPU0/GPU1 differences into an algorithmic speedup.
 
-实际接入的优化包括：
+The combined implementation includes smaller prefill/residency planning, native target verification, exact parallel QSA top-k, higher-precision Q5 auxiliary experts, draft-only low-rank candidate routing, PLE overlap, short-window HC/expert fusion, and adaptive speculative depth. There is no full per-component ablation, so additive percentages are not claimed. Experimental training, online draft correction and unrelated dual-GPU routes are not enabled in this single-GPU preset.
 
-- prefill1024和GPU专家完整驻留预算，关闭动态专家交换和输入阶段借用。
-- 全原生主模型验证、精确并行QSA top-k筛选及同分顺序处理。
-- 更高精度的Q5_0辅助预测专家、完整历史辅助稀疏注意力、独立辅助状态回滚。
-- 辅助输出层低秩候选路由及索引计算，草稿候选选择加速；主模型仍验证输出。
-- PLE读入重叠、精确HC短批次内核、草稿归一化流水和原生量化查询融合。
-- 按实际窗口成本调整推测长度，减少固定长草稿的无效计算。
-
-这些项目整体组合取得表中成绩，本记录没有拆分每项的可加百分比。双卡图内输出层和在线草稿纠错等后续试验不在单卡默认预设中启用。该项目入口限制单GPU，底层源代码保留上游及当前优化树的功能。
-
-原始性能汇总在performance.json，各旧/新请求和SSE事件分别位于evidence/baseline-normal、baseline-native-long、single-v2、single-v2-repeat；可独立核对cache_n、生成数量和计时。新编译原始回复位于runtime/built-benchmark，发布时汇总及日志复制到evidence。25项CPU/服务策略检查（2项C++、8项启动策略、15项API/并发）通过；思考、工具、图片、8fps视频、Anthropic API和单请求容量下的三请求排队也通过。
+Evidence: `evidence/performance.json`, `evidence/baseline-normal/`, `evidence/baseline-native-long/`, `evidence/single-v2/`, `evidence/single-v2-repeat/`, and `evidence/release-build-summary.json`. Capability checks covered reasoning, tools, images, native 8fps video, Anthropic API and queued requests. These checks are not a complete intelligence evaluation. Current three-weight evidence is in [three-weight tuning](three-weight-tuning.md); new portable binaries must be qualified separately.

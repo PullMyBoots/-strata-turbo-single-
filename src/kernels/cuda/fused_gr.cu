@@ -6,6 +6,10 @@
 #include "strata/kernels/q8_1_finite.hpp"
 
 #include <cuda_runtime.h>
+#if !defined(__HIPCC__)
+#include <cuda_bf16.h>
+#include <cublas_v2.h>
+#endif
 
 #include <algorithm>
 #include <atomic>
@@ -206,6 +210,73 @@ __global__ void __launch_bounds__(THREADS) gr_norm_multi_kernel(GrMulti m) {
     __syncthreads();
     for (int i = t; i < D; i += THREADS) xn[i] *= s_rs[i / N];
 }
+
+// Experimental Tensor Core HC. Split each FP32 activation into two BF16
+// components instead of silently dropping the low part. Main weights untouched.
+#if !defined(__HIPCC__)
+struct TcHc { cublasHandle_t handle=nullptr; void* workspace=nullptr;
+    __nv_bfloat16 *xh=nullptr,*xl=nullptr,*lh=nullptr,*ll=nullptr;
+    float *dh=nullptr,*dl=nullptr,*ih=nullptr,*il=nullptr,*uh=nullptr,*ul=nullptr; };
+TcHc tc_hc[64];
+int tc_mode_override=-1;
+int tc_mode() {static int m=[] {const char* v=std::getenv("STRATA_HC_TENSOR");return v?std::atoi(v):0;}();return tc_mode_override>=0?tc_mode_override:m;}
+void tc_ck(cublasStatus_t st) {if(st!=CUBLAS_STATUS_SUCCESS){std::fprintf(stderr,"HC Tensor Core cuBLAS error %d\n",(int)st);std::exit(1);}}
+void tc_gemm(TcHc& r,const uint16_t* w,const __nv_bfloat16* x,float* y,int rows,int cols,int width,float beta=0) {
+    const float alpha=1;
+    tc_ck(cublasGemmEx(r.handle,CUBLAS_OP_T,CUBLAS_OP_N,rows,cols,width,
+        &alpha,w,CUDA_R_16BF,width,x,CUDA_R_16BF,width,&beta,y,CUDA_R_32F,rows,
+        CUBLAS_COMPUTE_32F,CUBLAS_GEMM_DEFAULT_TENSOR_OP));
+}
+void tc_init() {
+    int dev=0;cudaGetDevice(&dev);if(dev<0||dev>=64)std::exit(1);auto& r=tc_hc[dev];if(r.handle)return;
+    tc_ck(cublasCreate(&r.handle));tc_ck(cublasSetMathMode(r.handle,CUBLAS_DEFAULT_MATH));
+    cudaMalloc(&r.workspace,4*1024*1024);
+    cudaMalloc(&r.xh,16*D*2);r.xl=r.xh+8*D;cudaMalloc(&r.lh,16*LR*2);r.ll=r.lh+8*LR;
+    cudaMalloc(&r.dh,16*LR*4);r.dl=r.dh+8*LR;cudaMalloc(&r.ih,16*HC*4);r.il=r.ih+8*HC;
+    cudaMalloc(&r.uh,16*D*4);r.ul=r.uh+8*D;
+    // cuBLAS's first use happens before CUDA graph capture.
+    uint16_t* warm=nullptr;cudaMalloc(&warm,D*LR*2);cudaMemset(warm,0,D*LR*2);
+    cudaMemset(r.xh,0,16*D*2);cudaMemset(r.lh,0,16*LR*2);
+    tc_ck(cublasSetWorkspace(r.handle,r.workspace,4*1024*1024));
+    tc_gemm(r,warm,r.xh,r.dh,LR,8,D);tc_gemm(r,warm,r.xh,r.ih,HC,8,D);tc_gemm(r,warm,r.lh,r.uh,D,8,LR);
+    cudaDeviceSynchronize();cudaFree(warm);
+    std::fprintf(stderr,"strata HC Tensor Core: mode%d, unchanged BF16 weights, %s activations\n",tc_mode(),tc_mode()==2?"two-component":"BF16-rounded");
+}
+__global__ void tc_split_x(GrMulti m,__nv_bfloat16* hi,__nv_bfloat16* low) {
+    int i=blockIdx.x*blockDim.x+threadIdx.x;if(i>=8*D)return;
+    float x=i<m.T*D?m.xn[i]:0.f;auto h=__float2bfloat16_rn(x);hi[i]=h;low[i]=__float2bfloat16_rn(x-__bfloat162float(h));
+}
+__global__ void tc_down_post(GrMulti m,const float* hi,const float* low,const float* ih,const float* il,
+                             __nv_bfloat16* lh,__nv_bfloat16* ll,bool two) {
+    int i=blockIdx.x*blockDim.x+threadIdx.x;
+    if(i<8*LR){int t=i/LR,k=i%LR;float v=t<m.T?(hi[i]+(two?low[i]:0.f))/(float)HC:0.f;
+        float z=v/(1.f+__expf(-v));if(t<m.T)m.a[t].lo[k]=z;auto h=__float2bfloat16_rn(z);lh[i]=h;ll[i]=__float2bfloat16_rn(z-__bfloat162float(h));}
+    if(i<m.T*HC && m.a[0].w_inject){int t=i/HC,c=i%HC;m.a[t].inject_out[c]=ih[i]+(two?il[i]:0.f);}
+}
+__global__ void tc_up_post(GrMulti m,const float* hi,const float* low,bool two) {
+    int i=blockIdx.x*blockDim.x+threadIdx.x;if(i>=m.T*N)return;int t=i/N,d=i%N;const auto& a=m.a[t];float total=0;
+#pragma unroll
+    for(int c=0;c<HC;++c){int j=c*N+d;float rv=a.R[j];
+        if(a.apply){rv=fmaf(a.bo_prev[d],2.f*sigmoidf_(a.inj_prev[c]/(float)HC),rv);a.R_out[j]=rv;}
+        float x=rv*a.w_norm[j]*a.rs[c];float z=hi[t*D+j]+(two?low[t*D+j]:0.f);total+=x*sigmoidf_(z);}
+    a.mixed[d]=total/(float)HC;
+}
+void tc_launch(GrMulti m,cudaStream_t stream) {
+    int dev=0;cudaGetDevice(&dev);auto& r=tc_hc[dev];if(!r.handle){std::fprintf(stderr,"HC Tensor workspace not initialized\n");std::exit(1);}
+    tc_ck(cublasSetStream(r.handle,stream));tc_ck(cublasSetWorkspace(r.handle,r.workspace,4*1024*1024));
+    const bool two=tc_mode()==2;
+    gr_norm_multi_kernel<<<m.T,256,0,stream>>>(m);
+    tc_split_x<<<(8*D+255)/256,256,0,stream>>>(m,r.xh,r.xl);
+    // High and low components are separate columns of ONE GEMM: one weight
+    // stream, preserving the two-component FP32 approximation.
+    const int cols=two?16:8;
+    tc_gemm(r,m.a[0].w_down,r.xh,r.dh,LR,cols,D);
+    if(m.a[0].w_inject)tc_gemm(r,m.a[0].w_inject,r.xh,r.ih,HC,cols,D);
+    tc_down_post<<<(8*LR+255)/256,256,0,stream>>>(m,r.dh,r.dl,r.ih,r.il,r.lh,r.ll,two);
+    tc_gemm(r,m.a[0].w_up,r.lh,r.uh,D,cols,LR);
+    tc_up_post<<<(m.T*N+255)/256,256,0,stream>>>(m,r.uh,r.ul,two);
+}
+#endif
 
 // Step 2 of `gr_down_kernel` for T tokens.  One warp per row (so each lane accumulates the same chunks in the
 // same order as the single-token kernel); per tile the lane's weight chunks are loaded BEFORE the activation
@@ -565,9 +636,9 @@ __global__ void __launch_bounds__(THREADS) gr_up_v3_kernel(GrMulti m, const floa
 // compares them on the card before a verify window uses them (STRATA_HC_SPLIT below).
 //  - the norm (split and staged): one block per token AND stream instead of one per token.  Each thread visits
 //    exactly the elements, in the order, it visited for that stream in the plain read, so every sum of squares and rs
-//    is the same; then it recomputes its R' * w_norm and writes it times rs (the plain read stored the product and
-//    scaled it in place: the same two roundings).  On an RTX 4080 SUPER, the plain read's norm took 0.58 ms per
-//    4-token round (96 launches of 1-4 blocks), this one 0.23 ms.
+//    is the same; it stores R' * w_norm and scales it in place, with the plain read's two roundings.
+//    Scratch reuse is from upstream ccd657a29678f38240900d6f98ab1a26c0d95b71;
+//    the per-thread sum and all dot/reduction operations stay unchanged.
 //  - the down projection, split: the plain read's kernel.
 //  - the down projection, staged: the plain read's 8 rows per block and lane order, but the activations arrive by
 //    cp.async in half-stream tiles, two in flight, so no thread waits on a chain of loads, and they sit in shared
@@ -602,6 +673,8 @@ __global__ void __launch_bounds__(THREADS) gr_norm_split_kernel(GrMulti m) {
         }
         const float sq = r.x * r.x + r.y * r.y + r.z * r.z + r.w * r.w;
         ss += sq;
+        const float4 g = *reinterpret_cast<const float4*>(a.w_norm + i);
+        *reinterpret_cast<float4*>(xn + i) = make_float4(r.x * g.x, r.y * g.y, r.z * g.z, r.w * g.w);
     }
     const float v = warp_sum(ss);
     if (lane == 0) part[warp] = v;
@@ -614,19 +687,7 @@ __global__ void __launch_bounds__(THREADS) gr_norm_split_kernel(GrMulti m) {
     }
     __syncthreads();
     const float rs = s_rs;
-    for (int i = t * 4; i < D; i += THREADS * 4) {
-        if (i / N != c) continue;
-        const int d = i - c * N;
-        float4 r = *reinterpret_cast<const float4*>(a.R + i);
-        if (a.apply) {
-            const float4 b = *reinterpret_cast<const float4*>(a.bo_prev + d);
-            r.x = fmaf(b.x, gw, r.x); r.y = fmaf(b.y, gw, r.y);
-            r.z = fmaf(b.z, gw, r.z); r.w = fmaf(b.w, gw, r.w);
-        }
-        const float4 g = *reinterpret_cast<const float4*>(a.w_norm + i);
-        const float px = r.x * g.x, py = r.y * g.y, pz = r.z * g.z, pw = r.w * g.w;
-        *reinterpret_cast<float4*>(xn + i) = make_float4(px * rs, py * rs, pz * rs, pw * rs);
-    }
+    for (int d = t; d < N; d += THREADS) xn[c * N + d] *= rs;
 }
 
 #if defined(__CUDA_ARCH__) && __CUDA_ARCH__ >= 800 && !defined(__HIPCC__)
@@ -993,6 +1054,9 @@ bool fused_gr_read_multi(const FusedGrArgs* a, int n_tok, float* xn_scratch, voi
     for(int t=0;t<n_tok;++t)q8=q8 && a[t].q8_mixed && a[t].q8_count==a[0].q8_count;
     if(!q8)for(int t=0;t<n_tok;++t)m.a[t].q8_mixed=nullptr;
     cudaStream_t st = (cudaStream_t) stream;
+#if !defined(__HIPCC__)
+    if(tc_mode()>0){tc_launch(m,st);return false;}
+#endif
     // STRATA_GR_V3=1: the two-kernel read above (another summation order - opt-in)
     static const bool v3 = [] { const char* v = std::getenv("STRATA_GR_V3"); return v != nullptr && std::atoi(v) != 0; }();
     static int split3[64] = {};   // per device: 0 = not decided yet, 1 / 2 = column halves S, -1 = does not fit
@@ -1208,6 +1272,12 @@ bool fused_gr_selftest(bool ok_variant[4], std::string why[4]) {
 
 }  // namespace
 
+void fused_gr_tensor_set(int mode) {
+#if !defined(__HIPCC__)
+    tc_mode_override=mode;if(mode>0)tc_init();
+#endif
+}
+
 int fused_gr_variant() {
     int dev = 0;
     cudaGetDevice(&dev);
@@ -1219,6 +1289,9 @@ int fused_gr_variant() {
 }
 
 void fused_gr_check() {
+#if !defined(__HIPCC__)
+    if(tc_mode()>0)tc_init();
+#endif
     int dev = 0;
     cudaGetDevice(&dev);
     if (dev < 0 || dev >= 64 || g_variant[dev].load() > 0) return;

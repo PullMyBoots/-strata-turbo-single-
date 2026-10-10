@@ -1,0 +1,54 @@
+{
+  "request": {
+    "model": "qwen3.8 flash",
+    "messages": [
+      {
+        "role": "user",
+        "content": "只原样回复字符串 QUEUE_CHECK_1_8417。"
+      }
+    ],
+    "max_tokens": 256,
+    "temperature": 0,
+    "reasoning_effort": "none",
+    "cache_prompt": false,
+    "seed": 20261008
+  },
+  "response": {
+    "id": "chatcmpl-b4dad72f775e442dba1ebd4b",
+    "object": "chat.completion",
+    "created": 1791489650,
+    "model": "qwen3.8 flash",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "QUEUE_CHECK_1_8417"
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 27,
+      "completion_tokens": 10,
+      "total_tokens": 37,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 27,
+      "prompt_ms": 183.9,
+      "prompt_per_token_ms": 6.811,
+      "prompt_per_second": 146.8,
+      "predicted_n": 10,
+      "predicted_ms": 48.2,
+      "predicted_per_token_ms": 4.82,
+      "predicted_per_second": 207.5,
+      "draft_n": 11,
+      "draft_n_accepted": 11
+    }
+  },
+  "http_status": 200
+}

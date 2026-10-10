@@ -1,0 +1,365 @@
+{
+  "binary_sha256": "a7a467411ecdd0e39c489b1c8897fe4d12fde9fcc9750bc766536c68c448cbf9",
+  "context": 262144,
+  "main_weights_changed": false,
+  "cases": [
+    {
+      "case": "after-code-and-32k-red",
+      "passed": true,
+      "expected": [
+        "red"
+      ],
+      "result": {
+        "text": "Red",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 122,
+          "prompt_ms": 358.3,
+          "prompt_per_token_ms": 2.937,
+          "prompt_per_second": 340.5,
+          "predicted_n": 2,
+          "predicted_ms": 28.5,
+          "predicted_per_token_ms": 14.25,
+          "predicted_per_second": 70.2,
+          "draft_n": 0,
+          "draft_n_accepted": 0
+        },
+        "usage": {
+          "prompt_tokens": 122,
+          "completion_tokens": 2,
+          "total_tokens": 124,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "stop",
+        "wall_s": 0.6723287638742477,
+        "first_content_s": 0.6518915928900242
+      }
+    },
+    {
+      "case": "after-code-and-32k-green",
+      "passed": true,
+      "expected": [
+        "green"
+      ],
+      "result": {
+        "text": "Green",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 122,
+          "prompt_ms": 196.7,
+          "prompt_per_token_ms": 1.612,
+          "prompt_per_second": 620.2,
+          "predicted_n": 2,
+          "predicted_ms": 33.5,
+          "predicted_per_token_ms": 16.75,
+          "predicted_per_second": 59.7,
+          "draft_n": 0,
+          "draft_n_accepted": 0
+        },
+        "usage": {
+          "prompt_tokens": 122,
+          "completion_tokens": 2,
+          "total_tokens": 124,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "stop",
+        "wall_s": 0.5084311300888658,
+        "first_content_s": 0.4813850100617856
+      }
+    },
+    {
+      "case": "after-code-and-32k-blue",
+      "passed": true,
+      "expected": [
+        "blue"
+      ],
+      "result": {
+        "text": "Based on the frames provided from the video, every single frame is filled with a solid, vibrant color.\nThe dominant color throughout this video is **blue**.",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 122,
+          "prompt_ms": 199.3,
+          "prompt_per_token_ms": 1.634,
+          "prompt_per_second": 612.1,
+          "predicted_n": 33,
+          "predicted_ms": 693.7,
+          "predicted_per_token_ms": 21.021,
+          "predicted_per_second": 47.6,
+          "draft_n": 0,
+          "draft_n_accepted": 0
+        },
+        "usage": {
+          "prompt_tokens": 122,
+          "completion_tokens": 33,
+          "total_tokens": 155,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "stop",
+        "wall_s": 1.1590696978382766,
+        "first_content_s": 0.47116415901109576
+      }
+    },
+    {
+      "case": "temporal-order",
+      "passed": true,
+      "expected": [
+        "red",
+        "green",
+        "blue"
+      ],
+      "result": {
+        "text": "Based on the sequence of frames in the video, the main colors appear in the following order:\n\n1.  **Red**\n2.  **Green**\n3.  **Blue**",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 475,
+          "prompt_ms": 325.9,
+          "prompt_per_token_ms": 0.686,
+          "prompt_per_second": 1457.5,
+          "predicted_n": 41,
+          "predicted_ms": 843.6,
+          "predicted_per_token_ms": 20.576,
+          "predicted_per_second": 48.6,
+          "draft_n": 0,
+          "draft_n_accepted": 0
+        },
+        "usage": {
+          "prompt_tokens": 475,
+          "completion_tokens": 41,
+          "total_tokens": 516,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "stop",
+        "wall_s": 1.5389868700876832,
+        "first_content_s": 0.6989977259654552
+      }
+    },
+    {
+      "case": "after-native-window-blue",
+      "passed": true,
+      "expected": [
+        "blue"
+      ],
+      "result": {
+        "text": "Based on the frames provided from the video, every single frame is filled with a solid, vibrant color.\nThe dominant color throughout this video is **blue**.",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 122,
+          "prompt_ms": 330.0,
+          "prompt_per_token_ms": 2.705,
+          "prompt_per_second": 369.7,
+          "predicted_n": 33,
+          "predicted_ms": 688.8,
+          "predicted_per_token_ms": 20.873,
+          "predicted_per_second": 47.9,
+          "draft_n": 0,
+          "draft_n_accepted": 0
+        },
+        "usage": {
+          "prompt_tokens": 122,
+          "completion_tokens": 33,
+          "total_tokens": 155,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "stop",
+        "wall_s": 1.0367701877839863,
+        "first_content_s": 0.3542525318916887
+      }
+    },
+    {
+      "case": "after-native-window-green",
+      "passed": true,
+      "expected": [
+        "green"
+      ],
+      "result": {
+        "text": "Green",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 122,
+          "prompt_ms": 200.0,
+          "prompt_per_token_ms": 1.639,
+          "prompt_per_second": 610.0,
+          "predicted_n": 2,
+          "predicted_ms": 33.0,
+          "predicted_per_token_ms": 16.5,
+          "predicted_per_second": 60.6,
+          "draft_n": 0,
+          "draft_n_accepted": 0
+        },
+        "usage": {
+          "prompt_tokens": 122,
+          "completion_tokens": 2,
+          "total_tokens": 124,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "stop",
+        "wall_s": 0.5011632749810815,
+        "first_content_s": 0.479234904050827
+      }
+    },
+    {
+      "case": "after-native-window-red",
+      "passed": true,
+      "expected": [
+        "red"
+      ],
+      "result": {
+        "text": "Red",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 122,
+          "prompt_ms": 200.2,
+          "prompt_per_token_ms": 1.641,
+          "prompt_per_second": 609.4,
+          "predicted_n": 2,
+          "predicted_ms": 35.3,
+          "predicted_per_token_ms": 17.65,
+          "predicted_per_second": 56.7,
+          "draft_n": 0,
+          "draft_n_accepted": 0
+        },
+        "usage": {
+          "prompt_tokens": 122,
+          "completion_tokens": 2,
+          "total_tokens": 124,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "stop",
+        "wall_s": 0.49957776186056435,
+        "first_content_s": 0.47347527788951993
+      }
+    }
+  ],
+  "passed": true,
+  "code_prefix": {
+    "text": "```python\n\"\"\"\nPersistent Key-Value Database with Transactions and Recovery.\n\nFeatures:\n- Persistent storage using a write-ahead log (WAL)\n- ACID transactions (Atomicity, Consistency, Isolation, Durability)\n- Crash recovery via WAL replay\n- Simple API: get, set, delete, transaction support\n\"\"\"\n\nimport os\nimport json\nimport threading\nimport time\nimport uuid\nfrom enum import Enum\nfrom typing import Any, Dict, List, Optional, Tuple\nfrom dataclasses import dataclass, field\nfrom pathlib import Path\n\n\nclass TransactionState(Enum):\n    \"\"\"States of a transaction.\"\"\"\n    ACTIVE = \"active\"\n    COMMITTED = \"committed\"\n    ABORTED = \"aborted\"\n\n\n@dataclass\nclass LogRecord:\n    \"\"\"Represents a single log record in the WAL.\"\"\"\n    tx_id: str\n    operation: str  # 'begin', 'set', 'delete', 'commit', 'abort'\n    key: Optional[str] = None\n    value: Optional[Any] = None\n    timestamp: float = field(default_factory=time.time)\n\n    def to_dict(self) -> Dict:\n        return {\n            \"tx_id\": self.tx_id,\n            \"operation\": self.operation,\n            \"key\": self.key,\n            \"value\": self.value,\n            \"timestamp\": self.timestamp,\n        }\n\n    @staticmethod\n    def from_dict(data: Dict) -> \"LogRecord\":\n        return LogRecord(\n            tx_id=data[\"tx_id\"],\n            operation=data[\"operation\"],\n            key=data.get(\"key\"),\n            value=data.get(\"value\"),\n            timestamp=data.get(\"timestamp\", time.time()),\n        )\n\n\nclass Transaction:\n    \"\"\"Represents a database transaction.\"\"\"\n\n    def __init__(self, tx_id: str, db: \"KeyValueDB\"):\n        self.tx_id = tx_id\n        self.db = db\n        self.state = TransactionState.ACTIVE\n        self.operations: List[LogRecord] = []\n        self._local_cache: Dict[str, Any] = {}\n        self._deleted_keys: set = set()\n\n    def set(self, key: str, value: Any) -> None:\n        \"\"\"Set a key-value pair within this transaction.\"\"\"\n        if self.state != TransactionState.ACTIVE:\n            raise RuntimeError(f\"Transaction {self.tx_id} is not",
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 33,
+      "prompt_ms": 147.4,
+      "prompt_per_token_ms": 4.467,
+      "prompt_per_second": 223.9,
+      "predicted_n": 512,
+      "predicted_ms": 3741.0,
+      "predicted_per_token_ms": 7.307,
+      "predicted_per_second": 136.9,
+      "draft_n": 465,
+      "draft_n_accepted": 380
+    },
+    "usage": {
+      "prompt_tokens": 33,
+      "completion_tokens": 512,
+      "total_tokens": 545,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "finish_reason": "length",
+    "wall_s": 3.8979261599015445,
+    "first_content_s": 0.18450836092233658
+  },
+  "recall_prefix": {
+    "text": "### The Five Secret Codes\n\n1.  **CEDAR-712**\n2.  **ORBIT-935**\n3.  **MANGO-246**\n4.  **RIVER-508**\n5.  **TULIP-163**\n\n***\n\n### Detailed Explanation of Indexing Rules\n\nBased on the provided records, the indexing system follows a **two-dimensional coordinate structure** (Row:Column) with specific rules for data storage and checkpoint placement.\n\n#### 1. The Coordinate System (Row:Column)\nThe records are organized using a `Row:Index` format (e.g., `Record 0:15`).\n*   **The First Number (Row):** Represents the \"Block\" or \"Group\" of data.\n    *   There are 5 distinct rows (0 through 4).\n    *   Each row contains a sequential list of records.\n*   **The Second Number (Index):** Represents the specific position within that row.\n    *   **Row 0** contains indices 0 through 400.\n    *   **Rows 1, 2, 3, and 4** contain indices",
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 31566,
+      "prompt_ms": 7454.7,
+      "prompt_per_token_ms": 0.236,
+      "prompt_per_second": 4234.4,
+      "predicted_n": 256,
+      "predicted_ms": 2111.8,
+      "predicted_per_token_ms": 8.249,
+      "predicted_per_second": 121.2,
+      "draft_n": 183,
+      "draft_n_accepted": 165
+    },
+    "usage": {
+      "prompt_tokens": 31566,
+      "completion_tokens": 256,
+      "total_tokens": 31822,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "finish_reason": "length",
+    "wall_s": 9.671453183982521,
+    "first_content_s": 7.561957414960489
+  },
+  "image": {
+    "passed": true,
+    "answer": "Based on the visual information provided in the image, here is a logical analysis to determine the dominant color:\n\n1.  **Visual Inspection**: The image consists of a single, uniform square. There are no gradients, patterns, text, or other objects present.\n2.  **Color Identification**: The entire area of the square is filled with a bright, saturated hue. This hue corresponds to the primary color red.\n3.  **Dominance Calculation**: Since 100% of the pixels in the image are this specific color, it is overwhelmingly the dominant color.\n\n**Conclusion:**\n\nThe dominant color is **Red**."
+  },
+  "native_long": {
+    "text": "LONG_RANGE_CHECKPOINT position=70 value=QF-1-C4E3871F0CDD\nLONG_RANGE_CHECKPOINT position=1757 value=QF-2-875F591FF188\nLONG_RANGE_CHECKPOINT position=3514 value=QF-3-E1A43FF7DA82\nLONG_RANGE_CHECKPOINT position=5271 value=QF-4-F46BD1822D45\nLONG_RANGE_CHECKPOINT position=6958 value=QF-5-02D043FED0CB\n\n### \u6a21\u578b\u63a8\u7406\u901f\u5ea6\u4e0e\u5185\u5b58\u5e26\u5bbd\u7684\u6df1\u5c42\u5173\u7cfb\uff1a\u4ece\u7406\u8bba\u74f6\u9888\u5230\u5de5\u7a0b\u5b9e\u8df5\n\n\u5728\u73b0\u4ee3\u4eba\u5de5\u667a\u80fd\uff0c\u7279\u522b\u662f\u5927\u8bed\u8a00\u6a21\u578b\uff08LLM\uff09\u7684\u90e8\u7f72\u4e0e\u4f18\u5316\u9886\u57df\uff0c\u4e00\u4e2a\u6838\u5fc3\u4e14\u5e38\u88ab\u8bef\u89e3\u7684\u6982\u5ff5\u662f\u201c\u63a8\u7406\u901f\u5ea6\u201d\u4e0e\u201c\u5185\u5b58\u5e26\u5bbd\u201d\u4e4b\u95f4\u7684\u5f3a\u8026\u5408\u5173\u7cfb\u3002\u8bb8\u591a\u5f00\u53d1\u8005\u76f4\u89c9\u5730\u8ba4\u4e3a\uff0c\u63d0\u5347\u63a8\u7406\u901f\u5ea6\u4e3b\u8981\u4f9d\u8d56\u4e8e\u589e\u52a0\u8ba1\u7b97\u5355\u5143\uff08\u5982GPU\u6838\u5fc3\u6570\uff09\u7684\u6570\u91cf\uff0c\u5373\u8ffd\u6c42\u66f4\u9ad8\u7684\u6d6e\u70b9\u8fd0\u7b97\u80fd\u529b\uff08FLOPS\uff09\u3002\u7136\u800c\uff0c\u5bf9\u4e8e\u7edd\u5927\u591a\u6570\u57fa\u4e8eTransformer\u67b6\u6784\u7684\u5927\u6a21\u578b\u800c\u8a00\uff0c\u63a8\u7406\u8fc7\u7a0b\u5e76\u975e\u8ba1\u7b97\u5bc6\u96c6\u578b\uff08Compute-bound\uff09\uff0c\u800c\u662f\u5185\u5b58\u5e26\u5bbd\u5bc6\u96c6\u578b\uff08Memory-bound\uff09\u3002\u7406\u89e3\u8fd9\u4e00\u672c\u8d28\uff0c\u662f\u4f18\u5316\u6a21\u578b\u5ef6\u8fdf\u3001\u541e\u5410\u91cf\u4ee5\u53ca\u786c\u4ef6\u9009\u578b\u7684\u5173\u952e\u6240\u5728\u3002\n\n#### 1. \u81ea\u56de\u5f52\u63a8\u7406\u7684\u672c\u8d28\uff1a\u7b97\u672f\u5f3a\u5ea6\u7684\u4f4e\u4e0b\n\n\u8981\u7406\u89e3\u4e3a\u4ec0\u4e48\u5185\u5b58\u5e26\u5bbd\u662f\u74f6\u9888\uff0c\u9996\u5148\u9700\u8981\u5256\u6790Transformer\u6a21\u578b\u5728\u63a8\u7406\u9636\u6bb5\u7684\u5de5\u4f5c\u673a\u5236\u3002\u4e0e\u8bad\u7ec3\u9636\u6bb5\u4e0d\u540c\uff0c\u63a8\u7406\u9636\u6bb5\u901a\u5e38\u91c7\u7528\u81ea\u56de\u5f52\uff08Autoregressive\uff09\u65b9\u5f0f\u751f\u6210\u6587\u672c\uff0c\u5373\u9010\u8bcd\uff08token-by-token\uff09\u751f\u6210\u3002\u5728\u751f\u6210\u6bcf\u4e00\u4e2a\u65b0token\u65f6\uff0c\u6a21\u578b\u9700\u8981\u6267\u884c\u4e00\u6b21\u524d\u5411\u4f20\u64ad\u3002\n\n\u5bf9\u4e8eTransformer\u4e2d\u7684\u6838\u5fc3\u7ec4\u4ef6\u2014\u2014\u6ce8\u610f\u529b\u673a\u5236\uff08Attention\uff09\u548c\u524d\u9988\u795e\u7ecf\u7f51\u7edc\uff08FFN\uff09\uff0c\u5176\u8ba1\u7b97\u8fc7\u7a0b\u6d89\u53ca\u5927\u91cf\u7684\u77e9\u9635\u4e58\u6cd5\u3002\u5728\u8bad\u7ec3\u9636\u6bb5\uff0c\u7531\u4e8e\u5b58\u5728\u6279\u91cf\u5904\u7406\uff08Batching\uff09\u548c\u5e8f\u5217\u5e76\u884c\uff0c\u77e9\u9635\u4e58\u6cd5\u7684\u7ef4\u5ea6\u8f83\u5927\uff0c\u7b97\u672f\u5f3a\u5ea6\uff08Arithmetic Intensity\uff0c\u5373\u6bcf\u5b57\u8282\u5185\u5b58\u8bbf\u95ee\u5bf9\u5e94\u7684\u6d6e\u70b9\u8fd0\u7b97\u6b21\u6570\uff09\u8f83\u9ad8\uff0c\u6b64\u65f6\u8ba1\u7b97\u5355\u5143\u5f80\u5f80\u662f\u74f6\u9888\u3002\n\n\u7136\u800c\uff0c\u5728\u63a8\u7406\u9636\u6bb5\uff0c\u5c24\u5176\u662f\u5f53Batch Size\u4e3a1\u65f6\uff08\u5373\u5b9e\u65f6\u4ea4\u4e92\u573a\u666f\uff09\uff0c\u77e9\u9635\u4e58\u6cd5\u9000\u5316\u4e3a\u77e9\u9635-\u5411\u91cf\u4e58\u6cd5\uff08Matrix-Vector Multiplication, GEMV\uff09\u3002\u4f8b\u5982\uff0c\u4e00\u4e2a\u6743\u91cd\u77e9\u9635 $W$ \u7684\u7ef4\u5ea6\u4e3a $N \\times N$\uff0c\u8f93\u5165\u5411\u91cf $x$ \u7684\u7ef4\u5ea6\u4e3a $N \\times 1$\u3002\u8ba1\u7b97 $W \\times x$ \u9700\u8981\u8bfb\u53d6 $",
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 256013,
+      "prompt_ms": 66253.8,
+      "prompt_per_token_ms": 0.259,
+      "prompt_per_second": 3864.1,
+      "predicted_n": 512,
+      "predicted_ms": 4951.8,
+      "predicted_per_token_ms": 9.671,
+      "predicted_per_second": 103.4,
+      "draft_n": 424,
+      "draft_n_accepted": 322
+    },
+    "usage": {
+      "prompt_tokens": 256013,
+      "completion_tokens": 512,
+      "total_tokens": 256525,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "finish_reason": "length",
+    "wall_s": 71.79450865602121,
+    "first_content_s": 66.88239881605841
+  },
+  "post_media_text": {
+    "text": "323",
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 28,
+      "prompt_ms": 141.0,
+      "prompt_per_token_ms": 5.036,
+      "prompt_per_second": 198.6,
+      "predicted_n": 4,
+      "predicted_ms": 69.1,
+      "predicted_per_token_ms": 17.275,
+      "predicted_per_second": 57.9,
+      "draft_n": 6,
+      "draft_n_accepted": 6
+    },
+    "usage": {
+      "prompt_tokens": 28,
+      "completion_tokens": 4,
+      "total_tokens": 32,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "finish_reason": "stop",
+    "wall_s": 0.2244616721291095,
+    "first_content_s": 0.16460628900676966
+  },
+  "process": {
+    "pid": 1378908,
+    "stopped": true,
+    "exit_code": 0
+  }
+}

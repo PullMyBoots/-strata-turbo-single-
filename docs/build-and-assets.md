@@ -1,44 +1,44 @@
-# 构建和资产
+# Build and assets
 
-主引擎构建使用根目录build.sh，默认CUDA sm_89、Release、系统原生CPU优化。CUDA编译器可通过CUDACXX指定，STRATA_CUDA_ARCH指定架构，STRATA_BUILD_JOBS指定并行编译数。需要cmake>=3.24、C++20编译器和CUDA12.x工具链。这里的二进制仅在本机Linux x86_64和L40S上验证，不保证换机器后保持同样的速度。
+For consumer installation and model preparation, use `./setup.sh`; see [distribution](distribution.md). Main model weights and the MTP expert tensors are downloaded separately. The release carries model-matched auxiliary routers and source, but no main GGUF files or local asset links.
 
-Python运行依赖版本列在requirements.txt；本服务器已经准备独立.venv。本机移植已有资产时不需要再下载模型。新主机可把下列目录置于assets/，或用--assets指定包含models/、data/的目录：
-
-```text
-assets/
-  models/IQ2_XS/
-    Qwen3.8-Flash-Next-GSQ-RCO-IQ2_XS-00001-of-00002.gguf
-    Qwen3.8-Flash-Next-GSQ-RCO-IQ2_XS-00002-of-00002.gguf
-    mmproj-Qwen3.8-Flash-Next-BF16.gguf
-  data/
-    packs/iq2_xs/                 # native_experts.txt, index.txt, dense.bin, tokenizer/
-    mtp/native-q5/                # 高精度辅助草稿运行资产
-    mtp/head-router-iq2-r128-k8192/ # 辅助词表路由
-    mtp/rt/                       # 并发模式原辅助运行资产
-    expert-profile.bin
-```
-
-attach_assets.py只创建指向这些资产的独立链接，不修改源文件。它不会链接旧项目的代码或.venv。原生模型pack可用tools/iq_pack.py从已下载GGUF重新生成；辅助Q5运行资产和路由必须一同迁移，其尺寸和原始生成方式记录在对应资产目录的元数据中，不能只复制主GGUF便声称复现200/160。
-
-主权重约68.0GB；native-q5辅助资产约1.85GB、路由约16MB，pack另占磁盘空间。导出源码/引擎时不包含这些权重数据、.venv、构建中间件、日志或本机资产链接。
-
-原生图片/视频编码器可从项目内的源码重建：
+Build all consumer engines and the GPU native media encoder:
 
 ```bash
-cmake -S tools/vision -B build-vision -DCMAKE_BUILD_TYPE=Release \
-  -DSTRATA_VISION_CUDA=ON -DCMAKE_CUDA_COMPILER=/path/to/nvcc \
-  -DCMAKE_CUDA_ARCHITECTURES=89 -DLLAMA_DIR="$PWD/third_party/llama.cpp"
-cmake --build build-vision --target strata-vision -j12
-install -m755 build-vision/bin/strata-vision engine/strata-vision-native
-python3 tools/release_manifest.py
+.venv/bin/python tools/build_distribution.py --arch 89 --nvcc /path/to/nvcc --jobs 8
 ```
 
-llama.cpp以源码形式内置，用于ggml量化格式和mtmd编码，不启动llama-server。SOURCE_PROVENANCE记录上游Strata基线以及本地源树快照；dependency目录使用内容快照保存，不能把上层Strata的git提交误认为llama.cpp提交。源码修改/重新编译后，binary SHA及能力/速度需要重新核对。
+The portable CPU baseline is AVX2; specialized CPU kernels dispatch at runtime. Set a semicolon-separated CUDA architecture list when building a multi-architecture archive. The consumer installer rebuilds for a mismatched GPU architecture. NVIDIA CUDA Toolkit, C++20 compiler and CMake >=3.24 are needed for a source build. Linux x86_64 NVIDIA is the qualified release target.
 
-导出本地发布包：
+The historical development build remains available through `build.sh` and does not overwrite the consumer binaries:
+
+```bash
+CUDACXX=/path/to/nvcc STRATA_CUDA_ARCH=89 ./build.sh
+./start.sh --legacy --weights iq2_xs --gpu 0
+```
+
+Typical consumer asset tree:
+
+```text
+models-data/
+  models/IQ2_XS/                 # two target GGUF shards and projector
+  models/Swift-1.5-IQ3_XXS/       # optional selected alternative
+  models/IQ3_S/                  # optional selected alternative
+  data/packs/<model>/            # native metadata, dense.bin, tokenizer/
+  data/mtp/rt/                   # upstream auxiliary runtime
+  data/mtp/native-q5-full/       # four complete-vocabulary auxiliary files
+  data/mtp/head-router-*/        # model-matched router; about 35 MiB each
+  data/expert-profile.bin
+```
+
+Do not use the IQ2 router for Swift or IQ3_S. The native loader verifies the head and vocabulary fingerprint. Main target GGUF files retain their published quantization; only auxiliary MTP experts are prepared in Q5. The full-vocabulary directory must not include the historical cropped `draft_vocab.bin`.
+
+`--adopt --assets PATH` uses a complete tree without modifying it. `--gguf-dir PATH` imports already downloaded shards and prepares other assets. The older `tools/attach_assets.py` remains a development helper; it creates asset links, not a self-contained release package.
+
+Create clean source/runtime archives:
 
 ```bash
 .venv/bin/python tools/package_release.py
 ```
 
-源码包用于构建；Linux sm_89运行包包含四个引擎二进制和源码。两包均排除模型及辅助权重。版本和文件SHA记录在artifacts/SHA256SUMS以及RELEASE.json。本项目尚未绑定远端发布仓库。
+The archive root is `strata-turbo-single-0.2.0/`. Each contains `PACKAGE.json` with per-file SHA256. `artifacts/SHA256SUMS-0.2.0` records archive hashes. Private environments, local settings/credentials, models, symlinks, logs and unrelated experiments are excluded. The native media encoder uses bundled llama.cpp/mtmd source and does not start llama-server.

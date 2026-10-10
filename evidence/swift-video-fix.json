@@ -1,0 +1,377 @@
+{
+  "schema": 1,
+  "version": "0.2.2",
+  "created_utc": "2026-10-10T15:31:43.172835+00:00",
+  "measurement_only": true,
+  "failure": "After unrelated text, red video answered 0:00 with the v0.2.1 binary.",
+  "repair": "Wait for adaptive exchanges; restore original expert bytes and residency before GENI; suppress adaptive exchanges during native media. Text retains adaptation.",
+  "opt_in": "STRATA_MEDIA_FIXED_PROFILE=1 in the Swift single-session preset",
+  "invariants": {
+    "target_weights_changed": false,
+    "experts_pruned": false,
+    "native_context": 262144,
+    "kv_precision": "int8",
+    "video_fps": 8,
+    "target_numerical_kernels_changed": false,
+    "media_verification_tokens": 1
+  },
+  "binaries": {
+    "turbo": {
+      "path": "engine/distribution/strata-turbo",
+      "bytes": 62740888,
+      "sha256": "a7a467411ecdd0e39c489b1c8897fe4d12fde9fcc9750bc766536c68c448cbf9"
+    },
+    "official": {
+      "path": "engine/distribution/strata-official",
+      "bytes": 65016024,
+      "sha256": "d53542400023e94a7866bd7816a58668b774ce165f39e453af7047fac3caddae"
+    },
+    "official_media": {
+      "path": "engine/distribution/strata-upstream-media",
+      "bytes": 65024216,
+      "sha256": "54bf7a29420294216f78fb72e1c46f7496fb54ec809a5c5c464b9d4607a9acb9"
+    },
+    "vision": {
+      "path": "engine/distribution/strata-vision",
+      "bytes": 209057984,
+      "sha256": "e2fdf5537e8770a31960f9b5d412e88c3ac875413a2094e10ec7839b72d7d2e5"
+    }
+  },
+  "regression": {
+    "full_history_passed": true,
+    "video_cases": [
+      {
+        "case": "after-code-and-32k-red",
+        "passed": true,
+        "expected": [
+          "red"
+        ],
+        "result": {
+          "text": "Red",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 122,
+            "prompt_ms": 358.3,
+            "prompt_per_token_ms": 2.937,
+            "prompt_per_second": 340.5,
+            "predicted_n": 2,
+            "predicted_ms": 28.5,
+            "predicted_per_token_ms": 14.25,
+            "predicted_per_second": 70.2,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 122,
+            "completion_tokens": 2,
+            "total_tokens": 124,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "stop",
+          "wall_s": 0.6723287638742477,
+          "first_content_s": 0.6518915928900242
+        }
+      },
+      {
+        "case": "after-code-and-32k-green",
+        "passed": true,
+        "expected": [
+          "green"
+        ],
+        "result": {
+          "text": "Green",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 122,
+            "prompt_ms": 196.7,
+            "prompt_per_token_ms": 1.612,
+            "prompt_per_second": 620.2,
+            "predicted_n": 2,
+            "predicted_ms": 33.5,
+            "predicted_per_token_ms": 16.75,
+            "predicted_per_second": 59.7,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 122,
+            "completion_tokens": 2,
+            "total_tokens": 124,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "stop",
+          "wall_s": 0.5084311300888658,
+          "first_content_s": 0.4813850100617856
+        }
+      },
+      {
+        "case": "after-code-and-32k-blue",
+        "passed": true,
+        "expected": [
+          "blue"
+        ],
+        "result": {
+          "text": "Based on the frames provided from the video, every single frame is filled with a solid, vibrant color.\nThe dominant color throughout this video is **blue**.",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 122,
+            "prompt_ms": 199.3,
+            "prompt_per_token_ms": 1.634,
+            "prompt_per_second": 612.1,
+            "predicted_n": 33,
+            "predicted_ms": 693.7,
+            "predicted_per_token_ms": 21.021,
+            "predicted_per_second": 47.6,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 122,
+            "completion_tokens": 33,
+            "total_tokens": 155,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "stop",
+          "wall_s": 1.1590696978382766,
+          "first_content_s": 0.47116415901109576
+        }
+      },
+      {
+        "case": "temporal-order",
+        "passed": true,
+        "expected": [
+          "red",
+          "green",
+          "blue"
+        ],
+        "result": {
+          "text": "Based on the sequence of frames in the video, the main colors appear in the following order:\n\n1.  **Red**\n2.  **Green**\n3.  **Blue**",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 475,
+            "prompt_ms": 325.9,
+            "prompt_per_token_ms": 0.686,
+            "prompt_per_second": 1457.5,
+            "predicted_n": 41,
+            "predicted_ms": 843.6,
+            "predicted_per_token_ms": 20.576,
+            "predicted_per_second": 48.6,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 475,
+            "completion_tokens": 41,
+            "total_tokens": 516,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "stop",
+          "wall_s": 1.5389868700876832,
+          "first_content_s": 0.6989977259654552
+        }
+      },
+      {
+        "case": "after-native-window-blue",
+        "passed": true,
+        "expected": [
+          "blue"
+        ],
+        "result": {
+          "text": "Based on the frames provided from the video, every single frame is filled with a solid, vibrant color.\nThe dominant color throughout this video is **blue**.",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 122,
+            "prompt_ms": 330.0,
+            "prompt_per_token_ms": 2.705,
+            "prompt_per_second": 369.7,
+            "predicted_n": 33,
+            "predicted_ms": 688.8,
+            "predicted_per_token_ms": 20.873,
+            "predicted_per_second": 47.9,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 122,
+            "completion_tokens": 33,
+            "total_tokens": 155,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "stop",
+          "wall_s": 1.0367701877839863,
+          "first_content_s": 0.3542525318916887
+        }
+      },
+      {
+        "case": "after-native-window-green",
+        "passed": true,
+        "expected": [
+          "green"
+        ],
+        "result": {
+          "text": "Green",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 122,
+            "prompt_ms": 200.0,
+            "prompt_per_token_ms": 1.639,
+            "prompt_per_second": 610.0,
+            "predicted_n": 2,
+            "predicted_ms": 33.0,
+            "predicted_per_token_ms": 16.5,
+            "predicted_per_second": 60.6,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 122,
+            "completion_tokens": 2,
+            "total_tokens": 124,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "stop",
+          "wall_s": 0.5011632749810815,
+          "first_content_s": 0.479234904050827
+        }
+      },
+      {
+        "case": "after-native-window-red",
+        "passed": true,
+        "expected": [
+          "red"
+        ],
+        "result": {
+          "text": "Red",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 122,
+            "prompt_ms": 200.2,
+            "prompt_per_token_ms": 1.641,
+            "prompt_per_second": 609.4,
+            "predicted_n": 2,
+            "predicted_ms": 35.3,
+            "predicted_per_token_ms": 17.65,
+            "predicted_per_second": 56.7,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 122,
+            "completion_tokens": 2,
+            "total_tokens": 124,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "stop",
+          "wall_s": 0.49957776186056435,
+          "first_content_s": 0.47347527788951993
+        }
+      }
+    ],
+    "image": {
+      "passed": true,
+      "answer": "Based on the visual information provided in the image, here is a logical analysis to determine the dominant color:\n\n1.  **Visual Inspection**: The image consists of a single, uniform square. There are no gradients, patterns, text, or other objects present.\n2.  **Color Identification**: The entire area of the square is filled with a bright, saturated hue. This hue corresponds to the primary color red.\n3.  **Dominance Calculation**: Since 100% of the pixels in the image are this specific color, it is overwhelmingly the dominant color.\n\n**Conclusion:**\n\nThe dominant color is **Red**."
+    },
+    "native_window_prompt_tokens": 256013,
+    "native_window_retrieval_passed": true,
+    "post_media_arithmetic": "323",
+    "actual_consumer_launcher_passed": true,
+    "repeated_media_passed": true,
+    "cache_enabled_replay_passed": true,
+    "replayed_video_cached_tokens": 1719,
+    "slot_restore_timings": {
+      "long-profile-candidate": [
+        {
+          "slots": 853,
+          "milliseconds": 56.1
+        }
+      ],
+      "history-profile": [
+        {
+          "slots": 2464,
+          "milliseconds": 161.6
+        },
+        {
+          "slots": 1856,
+          "milliseconds": 123.2
+        }
+      ],
+      "long-profile-cached": [
+        {
+          "slots": 450,
+          "milliseconds": 30.0
+        }
+      ]
+    }
+  },
+  "paired_performance": {
+    "protocol": "ABBA; 3 task families x 3 requests x 2 service starts per arm; no prompt cache",
+    "gpu": {
+      "uuid": "GPU-c9ae835b-bc1e-8d6c-f85f-e415defc30bc",
+      "name": "NVIDIA L40S",
+      "arch": 89,
+      "memory_mib": 45709,
+      "cuda_driver": 13000
+    },
+    "family_median_output_tps": {
+      "official": {
+        "english": 149.64999999999998,
+        "code": 176.35000000000002,
+        "chinese": 155.14999999999998
+      },
+      "turbo": {
+        "english": 166.14999999999998,
+        "code": 200.05,
+        "chinese": 165.25
+      }
+    },
+    "aggregate_output_tps": {
+      "official": 159.98084574253835,
+      "turbo": 176.43854044292033
+    },
+    "gain_percent": 10.287290721582853,
+    "prefill_ratios": {
+      "recall": 0.9170990681974593
+    },
+    "qualification": "qualified",
+    "evidence": "evidence/prefill-upgrade-runs/swift"
+  },
+  "checks": {
+    "cpu_unit_tests_passed": 34,
+    "fused_parity_failures": 0,
+    "actual_failing_request_fused_parity": "passed",
+    "resident_byte_audit": "passed",
+    "compute_sanitizer": "incomplete, excluded"
+  },
+  "rejected": [
+    "Whole-service fixed placement: capability passed, only 0.67% aggregate speed gain.",
+    "PLE/shared-overlap ablations and all-GPU media experts did not repair the failure."
+  ],
+  "limits": [
+    "Detailed low-level mechanism of adaptive-history sensitivity remains unresolved.",
+    "Fixtures, retrieval and arithmetic are bounded capability checks, not full intelligence equivalence.",
+    "Swift full-window run validates capability; it has no paired official long-speed control.",
+    "Compact RAM sources use fixed placement throughout and require separate local qualification.",
+    "No cross-machine activation certificate is bundled."
+  ],
+  "raw_evidence": "evidence/swift-video-fix-runs",
+  "source_files": [
+    "src/program/generate.cpp",
+    "configs/swift-single.json",
+    "src/kernels/native_grouped_parity.cpp",
+    "tools/test_single_gpu.py"
+  ]
+}

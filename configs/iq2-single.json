@@ -1,5 +1,5 @@
 {
-  "name": "iq2-single-native262144-r1",
+  "name": "iq2-single-native262144-r2",
   "validation_state": "passed",
   "context": 262144,
   "args": {
@@ -9,7 +9,7 @@
     "--kv-resident": "32768",
     "--mtp-window": "4096",
     "--vram-reserve-mib": "700",
-    "--mtp": "{assets}/data/mtp/native-q5"
+    "--mtp": "{assets}/data/mtp/native-q5-full"
   },
   "env": {
     "STRATA_SPLIT_ASYNC_COMMIT": "1",
@@ -24,7 +24,7 @@
     "STRATA_RESIDENT_COMBINE": "1",
     "STRATA_MTP_ADAPTIVE": "1",
     "STRATA_VERIFY_PRECAPTURE": "1",
-    "STRATA_MTP_HEAD_ROUTER": "{assets}/data/mtp/head-router-iq2-r128-k8192",
+    "STRATA_MTP_HEAD_ROUTER": "{assets}/data/mtp/head-router-full-r128-k8192",
     "STRATA_MTP_SPARSE": "1",
     "STRATA_PLE_PREFETCH": "1",
     "STRATA_GR_EXACT_T": "1",
@@ -36,7 +36,9 @@
     "STRATA_MTP_ROUTER_SORT_BEGIN_BIT": "16",
     "STRATA_GR_EXACT_T8": "1",
     "STRATA_GR_QFUSE": "1",
-    "STRATA_MTP_COST_ROBUST": "1"
+    "STRATA_MTP_COST_ROBUST": "1",
+    "STRATA_CUDA_EXPERT_FUSED": "1",
+    "STRATA_MMVQ_ROWS": "2"
   },
   "evidence": {
     "bundled": "evidence/performance.json",
@@ -48,8 +50,10 @@
     "historical_cold_long_tps": [
       162.3,
       161.6
-    ]
+    ],
+    "qualification": "evidence/qualification-r2.json"
   },
   "historical_engine_sha256": "f36733037335ff780b9622fea64bd6292e160cedb732b544f04d2007e6afcf5f",
-  "binary_policy": "engine/manifest.json records chosen built or historical engine"
+  "binary_policy": "engine/manifest.json records chosen built or historical engine",
+  "draft_vocab": "full"
 }

@@ -1564,6 +1564,66 @@ __global__ void __launch_bounds__(256) swiglu_q8_1_entries_kernel(const float* _
     }
 }
 
+// CUDA exploration: gate/up -> SwiGLU -> Q8_1 inside one CTA. The
+// existing exact 16-lane dot tree is reused; weights are decoded once per
+// group of up to four tokens. No approximate expert selection or math.
+#if !defined(__HIPCC__)
+template<int TG, int NC, bool STAGE_GRID>
+__device__ __forceinline__ void cuda_gu_fused_tile(
+    const uint8_t* blob, const block_q8_1* xq, const int32_t* ent_tok,
+    int e, int r0, NativeExpertLayout L, const uint32_t* s_grid,
+    float (&res)[4][64], block_q8_1* hq) {
+    const int tid = threadIdx.x, t = tid & 15, sub = tid >> 4;
+    int off[NC];
+#pragma unroll
+    for (int c = 0; c < NC; ++c) off[c] = ent_tok[e+c] * 80;
+#pragma unroll
+    for (int pass = 0; pass < 2; ++pass) {
+        const int rr = sub + pass*16;
+        const uint8_t* gate = blob + (size_t)(r0+rr)*L.gu_row;
+        const uint8_t* up = gate + L.up_off;
+        float sg[NC], su[NC];
+        row_dot_80_sub16<TG,NC,true,STAGE_GRID>(gate,xq,off,NC,t,sg,s_grid);
+        row_dot_80_sub16<TG,NC,true,STAGE_GRID>(up,xq,off,NC,t,su,s_grid);
+        if (t < NC) { res[t][rr] = sg[t]; res[t][32+rr] = su[t]; }
+    }
+    __syncthreads();
+    const int warp = tid >> 5, lane = tid & 31;
+    if (warp < NC) {
+        const float g = res[warp][lane];
+        const float xi = __fmul_rn(g/(1.0f+__expf(-g)),res[warp][32+lane]);
+        q8_1_store(xi,hq, (long long)(e+warp)*L.n_ff+r0+lane);
+    }
+    __syncthreads();
+}
+template<int TG, bool STAGE_GRID=kStageIqGrid<TG>>
+__global__ void __launch_bounds__(256) cuda_gu_fused_kernel(
+    const unsigned long long* __restrict__ grp_ptr,
+    const int32_t* __restrict__ grp_start,const int32_t* __restrict__ n_groups,
+    const int32_t* __restrict__ ent_tok,const block_q8_1* __restrict__ xq,
+    NativeExpertLayout L,block_q8_1* __restrict__ hq) {
+    const int ng = *n_groups;
+    if (blockIdx.y >= ng) return;
+    STRATA_SHARED_ALIGN16_U32(s_grid_buf,IqGridWords<TG,STAGE_GRID>::value);
+    __shared__ float res[4][64];
+    const uint32_t* s_grid=stage_iq_grid<TG,STAGE_GRID>(s_grid_buf,threadIdx.x,256);
+    const int r0=blockIdx.x*32;
+    for(int g=blockIdx.y;g<ng;g+=gridDim.y) {
+        const uint8_t* blob=(const uint8_t*)grp_ptr[g];
+        for(int e=grp_start[g];e<grp_start[g+1];e+=4) {
+            const int nc=min(4,grp_start[g+1]-e);
+            switch(nc) {
+                case 1: cuda_gu_fused_tile<TG,1,STAGE_GRID>(blob,xq,ent_tok,e,r0,L,s_grid,res,hq);break;
+                case 2: cuda_gu_fused_tile<TG,2,STAGE_GRID>(blob,xq,ent_tok,e,r0,L,s_grid,res,hq);break;
+                case 3: cuda_gu_fused_tile<TG,3,STAGE_GRID>(blob,xq,ent_tok,e,r0,L,s_grid,res,hq);break;
+                default:cuda_gu_fused_tile<TG,4,STAGE_GRID>(blob,xq,ent_tok,e,r0,L,s_grid,res,hq);break;
+            }
+        }
+    }
+}
+int g_cuda_fused_mode=-1;
+#endif
+
 // ---------------------------------------------------------------- dequant (dequantize.cuh)
 template<typename dst_t> __device__ __forceinline__ dst_t cvt(float v);
 template<> __device__ __forceinline__ float cvt<float>(float v) { return v; }
@@ -3360,7 +3420,7 @@ void native_expert_set_mode(int mode, int phase) {
 #if defined(STRATA_HIP_GFX906)
     g_exp_mode = mode;
 #else
-    (void) mode;
+    g_cuda_fused_mode = mode;
 #endif
     g_exp_phase = phase;
 }
@@ -3435,7 +3495,20 @@ void native_expert_grouped(const NativeExpertLayout& L, const unsigned long long
     }
     if (g_exp_phase != 2 && !fused_gu) {
 #else
-    if (g_exp_phase != 2) {
+    static const bool cuda_fused_env = env_on("STRATA_CUDA_EXPERT_FUSED");
+    const bool fused_gu = !v1 && !g_old_kernels && L.n_embd == 2560 && L.n_ff % 32 == 0 &&
+        (L.gu_type == 16 || L.gu_type == 17 || L.gu_type == 22) &&
+        (g_cuda_fused_mode >= 0 ? g_cuda_fused_mode == 8 : cuda_fused_env);
+    if (fused_gu && g_exp_phase != 2) {
+        const dim3 gf((unsigned)(L.n_ff / 32), (unsigned)gy);
+        switch(L.gu_type) {
+            case 16: cuda_gu_fused_kernel<16><<<gf,256,0,s>>>(grp_ptr,grp_start,n_groups,ent_tok,X,L,hq);break;
+            case 17: cuda_gu_fused_kernel<17><<<gf,256,0,s>>>(grp_ptr,grp_start,n_groups,ent_tok,X,L,hq);break;
+            default:cuda_gu_fused_kernel<22><<<gf,256,0,s>>>(grp_ptr,grp_start,n_groups,ent_tok,X,L,hq);break;
+        }
+        check("native_expert_grouped/cuda fused gu");
+    }
+    if (g_exp_phase != 2 && !fused_gu) {
 #endif
 #if defined(STRATA_HIP_GFX906)
     const bool lds_gu = (em0 == 5 || em0 == 6 || em0 == 7 || em0 == 8) && (L.gu_type == 18 || L.gu_type == 21 || L.gu_type == 22 || L.gu_type == 23);

@@ -17,16 +17,30 @@
       "role": "native image/video encoder"
     },
     "strata-single-built": {
-      "sha256": "b0ab599a7631e4cb5fa8d833e1069ffedfeec6a65cba71e02bded0405b479acf",
-      "bytes": 62094048,
+      "sha256": "74c45804b992b3c84e99ff95c700f34e84372ed78c5464e4f45de235541ccd2e",
+      "bytes": 62875568,
       "role": "fresh build of bundled source; benchmark separately",
       "validation": {
         "state": "passed",
-        "measurement_device": "L40S GPU0 NUMA0",
-        "short_tps": 202.22431637506287,
-        "cold_long_tps": 162.0,
-        "main_output_parity": "10/10 complete texts equal single-v2 reference",
-        "api_smoke": true
+        "measurement_device": "L40S physical GPU0 NUMA0",
+        "short_tps": [
+          208.68668946258595,
+          207.77622611995957
+        ],
+        "fresh_service_long_tps": [
+          158.3,
+          158.2,
+          159.0
+        ],
+        "fresh_service_long_median": 158.3,
+        "historical_protocol_warm_service_long": 165.5,
+        "historical_protocol_repetitions": 1,
+        "actual_default_launcher_short_tps": 209.90426293695222,
+        "main_output_parity": "54 short and 8 long reference comparisons, plus 9 actual default-launcher short comparisons, all equal",
+        "api_smoke": true,
+        "main_weights_changed": false,
+        "context": 262144,
+        "target_280_300_achieved": false
       }
     }
   }

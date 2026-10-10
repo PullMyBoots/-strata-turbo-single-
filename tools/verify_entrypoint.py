@@ -28,7 +28,7 @@ def main():
             cfg=json.loads((ROOT/'runtime/current.json').read_text())
             assert cfg['gpu']==[0] and cfg['parallel_workers']==1
             assert Path(cfg['exe']).name=='strata-single-built'
-            request={'model':'qwen3.8 flash','messages':[{'role':'user','content':'计算17乘23，只回复结果。'}],
+            request={'model':'qwen3.8 flash','messages':[{'role':'user','content':'Calculate 17 times 23. Reply with the number only.'}],
                      'temperature':0,'max_tokens':128,'reasoning_effort':'none','cache_prompt':False}
             response=s.post('http://127.0.0.1:18084/v1/chat/completions',json=request,timeout=60)
             response.raise_for_status();data=response.json()

@@ -53,6 +53,7 @@ struct VerifyHits {
     int64_t n_slots = 0;                  ///< E-6: how many (for the device copy)
     int64_t blob = 0;
     bool static_residency = false;       ///< caller guarantees no cache borrowing or adaptive exchanges
+    bool prefill_restore = false;        ///< single-session loans are suspended and restored before every window
     PeerExperts* peer = nullptr;         ///< opt-in GPU-dispatched, jointly resident native experts
 };
 
@@ -141,6 +142,10 @@ public:
     /// false with `err` when it failed.  Free when nothing is pending.
     bool wait_commit(std::string& err);
 
+    /// Suspend windows before lending expert slots. Resume only after queued expert copies have completed
+    /// and the original device residency table has been restored. A window during a loan is an error.
+    bool set_cache_lent(bool lent, std::string& err);
+
     /// Measurement hook (STRATA_LOGPOS): after run(), write one line per row t of the last window's head -
     /// "pos target logprob top top_logprob hit extra_logprob target_logprob_without_extra" - where row t is the
     /// distribution at pos0 + t, targets[t] is the token at pos0 + t + 1, extra_logprob is the log-probability of
@@ -194,6 +199,8 @@ private:
     std::atomic<bool> released_{false};  ///< #267: release_gpu_waits ran (maybe on the watchdog thread): no more windows
     bool device_plan_ = false;            ///< E-6: resident-only layers planned on the device (STRATA_VERIFY_DEVICE_PLAN)
     bool device_only_ = false;            ///< opt-in: every expert in this stage is permanently resident
+    bool cache_lent_ = false;
+    std::vector<int32_t> restored_residency_;
     std::unique_ptr<PeerDecode> peer_decode_;
     struct PlePrefetch;
     std::unique_ptr<PlePrefetch> ple_prefetch_;

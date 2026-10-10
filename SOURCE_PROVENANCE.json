@@ -6,5 +6,68 @@
   "historical_single_engine_sha256": "f36733037335ff780b9622fea64bd6292e160cedb732b544f04d2007e6afcf5f",
   "historical_single_engine_is_separate_from_fresh_source_build": true,
   "llama_dependency": "vendored local source snapshot; default upstream CMake pin 3cf03257f219afbe7334045ff7c6a06ac68c627d; do not treat parent Strata git SHA as dependency commit",
-  "no_main_model_weights_bundled": true
+  "no_main_model_weights_bundled": true,
+  "qualified_r2": {
+    "binary": "/home/student_su/qwen/release/strata-single-GPU-hc/engine/strata-qualified-r2",
+    "sha256": "74c45804b992b3c84e99ff95c700f34e84372ed78c5464e4f45de235541ccd2e",
+    "source_patch_sha256": "53eb3dd9a827e4c2d7b4bbd2b323d872a19c9a4a79dab27c4560d1bfe2abf671",
+    "base_commit": "4e1fce325bd726574e3ea080fa110b18272a4f04",
+    "source_files_sha256": {
+      "src/kernels/cuda/fused_gr.cu": "42937c819d99a24e921d4ff8a87d4b8049bd4c0e7fb8c16502a28eb5d319098d",
+      "src/kernels/cuda/iq_kernels.cu": "c75bbc8ec347af70017d9ec6e1fc085512e79dd87dc61609e6a672087be41b5b"
+    },
+    "source_patch": "evidence/qualified-source-r2.patch"
+  },
+  "native_batch_20261010": {
+    "upstream_commit": "fb58e0dbc8399662c0e47c76578c6e878b14f6cf",
+    "patch": "Existing SVE2 native-media reader imported from retained single-GPU source. Numerical libraries reused unchanged.",
+    "source": "experimental/native-batch/source",
+    "exact_build": "evidence/native-batch-media-build.json",
+    "qualification": "evidence/three-weight-tuning-20261010.json"
+  },
+  "distribution_0_2_0": {
+    "upstream_commit": "fb58e0dbc8399662c0e47c76578c6e878b14f6cf",
+    "vendor_manifest": "distribution/manifest.json",
+    "build_manifest": "distribution/build.json",
+    "optimized_source": "src, include, cmake; exact source hashes recorded in the build manifest.",
+    "upstream_comparator": "Unmodified vendored upstream numerical source. Media adapter imports the retained SVE2 reader only.",
+    "media_guard": "Optimized GENI requests use one-token target verification; text path is unchanged.",
+    "dependency_repair": "third_party/llama.cpp/cmake/build-info.cmake copied from the existing /home/student_su/qwen/Strata dependency snapshot; needed for a clean vision build.",
+    "model_derived_routers": "distribution/routers; model-matched full vocabulary; notices/licenses preserved in distribution."
+  },
+  "distribution_0_2_1": {
+    "prefill_contract": "Single-serving-loop guarded cache loans, synchronized original-slot refill and device residency validation before verifier windows.",
+    "opt_in": "STRATA_VERIFY_PREFILL_RESTORE=1; adapt-swaps=0; no peer, split or IPC.",
+    "consumer_profile": "IQ2_XS large-GPU, one session, auto:16384; historical development and other model/concurrency profiles retain their prefill policy.",
+    "source_files": [
+      "src/program/generate.cpp",
+      "src/core/verify.cpp",
+      "include/strata/core/verify.hpp",
+      "tools/distribution.py",
+      "tools/qualify_distribution.py"
+    ],
+    "build_manifest": "evidence/swift-video-fix-runs/v021-build.json",
+    "evidence": "evidence/swift-video-fix-runs/v021-prefill-upgrade.json",
+    "numerical_kernels_changed": false,
+    "source_patch": "evidence/swift-video-fix-runs/v021-prefill-source.patch",
+    "source_patch_sha256": "d277cc579c1f80e504e0b7890bd400d76003bd2d102d0a9cffa2183bdb83df43"
+  },
+  "distribution_0_2_2": {
+    "base": "v0.2.1 guarded IQ2_XS prefill source",
+    "media_state_repair": "Swift original expert profile restored and synchronized before GENI; adaptive exchanges suppressed only for media on the immutable arena; compact RAM sources retain fixed placement.",
+    "opt_in": "STRATA_MEDIA_FIXED_PROFILE=1 in the Swift single-session preset",
+    "consumer_profile": "Swift retains adaptive text caching, native prefill and one-token media verification.",
+    "source_files": [
+      "src/program/generate.cpp",
+      "configs/swift-single.json",
+      "tools/test_single_gpu.py",
+      "src/kernels/native_grouped_parity.cpp"
+    ],
+    "build_manifest": "distribution/build.json",
+    "evidence": "evidence/swift-video-fix.json",
+    "numerical_kernels_changed": false,
+    "low_level_adaptive_history_mechanism": "unresolved; request-scoped state repair validated separately",
+    "source_patch": "evidence/prefill-upgrade-source.patch",
+    "source_patch_sha256": "2da37880eecc37e18c44105f8c392ba04edc99918a4951c787d7c81fc00e3b6e"
+  }
 }

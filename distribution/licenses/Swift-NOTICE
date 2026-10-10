@@ -1,0 +1,27 @@
+Swift-Qwen3.8-Flash-Next
+Copyright 2026 UkisAI
+
+UkisAI's contribution (the "Swift Contribution") is licensed under the
+Swift Open License v1.0. See LICENSE.
+
+This model is a derivative work of Qwen3.8-Flash-Next
+  https://huggingface.co/Qwen/Qwen3.8-Flash-Next
+  Copyright (c) 2026 Qwen
+  Licensed under the Qwen Community License 1.0. See LICENSE-QWEN.
+Changes made by UkisAI:
+  - model-*.safetensors: model weights were modified by UkisAI through fine-tuning.
+  - tokenizer.json, tokenizer_config.json: re-serialized from UkisAI's training
+    base. Vocabulary and merges are unchanged; the file format, some metadata
+    fields and the pre-tokenizer pattern differ from the Base Model files.
+  - README.md: replaced. LICENSE (Swift Open License v1.0), NOTICE,
+    benchmarks/ and ukisai-banner.png added.
+  - The Base Model's license text was moved from LICENSE to LICENSE-QWEN.
+  - All other files (config.json, generation_config.json, chat_template.jinja,
+    model.safetensors.index.json, vocab.json, merges.txt,
+    preprocessor_config.json, video_preprocessor_config.json) are unmodified
+    from Qwen3.8-Flash-Next and remain under the Qwen Community License 1.0.
+GSQ-RCO GGUF release changes by UkisAI:
+  - Swift Flash Next weights converted to mixed-precision GGUF, with
+    reused ISTA-DASLab allocation profiles and Swift-specific refinement.
+  - Weights split into two GGUF shards per tier; BF16 vision projector included.
+  - Quantization metadata, evaluation records and an adapted README added.

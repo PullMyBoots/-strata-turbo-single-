@@ -1,0 +1,85 @@
+{
+  "passed": true,
+  "checks": {
+    "thinking": true,
+    "tools": true,
+    "image": "背景是白色，图形是红色，形状是圆形。",
+    "video_8fps": "视频画面在固定的彩色条纹背景上，展示了一个动态变化的场景。主要的变化包括：一条彩虹色的线条在画面中不断移动和改变角度；一个灰色的几何图形（从方块变为十字，再变回方块）在画面左侧出现、变化并消失；同时，画面右侧有一个固定的棋盘格图案，其上方有彩色像素点不断生成和下落。",
+    "anthropic_api": true,
+    "single_capacity_queue": true
+  },
+  "status_after": {
+    "service": "strata",
+    "model": "qwen3.8-flash-next-ud-q3-k-xl",
+    "loaded": true,
+    "auto_load": true,
+    "structured_output": {
+      "formats": [
+        "json_object",
+        "json_schema"
+      ],
+      "method": "prompt_and_validate",
+      "constrained_decoding": false,
+      "stream_buffered": true
+    },
+    "engine": "0.1.38",
+    "started": 1791489614,
+    "uptime_s": 36,
+    "cache_max_tokens": 262144,
+    "context": {
+      "native": 262144,
+      "max_positions": 262144
+    },
+    "concurrency": {
+      "serving": 1,
+      "requested": 1,
+      "active": 0,
+      "queued": 0,
+      "mode": "single_session",
+      "prefill": "single_workspace"
+    },
+    "dialects": [
+      "/v1/chat/completions",
+      "/v1/messages"
+    ],
+    "vision": {
+      "enabled": true,
+      "available": true,
+      "error": null
+    },
+    "activity": {
+      "requests": 18,
+      "in_flight": 0,
+      "last_request_at": 1791489650
+    },
+    "last_timings": {
+      "cache_n": 0,
+      "prompt_n": 27,
+      "prompt_ms": 185.8,
+      "prompt_per_token_ms": 6.881,
+      "prompt_per_second": 145.3,
+      "predicted_n": 10,
+      "predicted_ms": 48.3,
+      "predicted_per_token_ms": 4.83,
+      "predicted_per_second": 207.0,
+      "draft_n": 11,
+      "draft_n_accepted": 11,
+      "at": 1791489650
+    },
+    "machine": {
+      "at": 1791489650,
+      "gpu": {
+        "name": "NVIDIA L40S",
+        "used_mib": 45536.0,
+        "total_mib": 46068.0,
+        "util_pct": 30,
+        "temp_c": 60,
+        "power_w": 240.413
+      },
+      "ram": {
+        "used_gib": 105.8,
+        "total_gib": 1007.3
+      }
+    }
+  }
+}

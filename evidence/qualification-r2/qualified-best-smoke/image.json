@@ -1,0 +1,65 @@
+{
+  "request": {
+    "model": "qwen3.8 flash",
+    "messages": [
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "背景和图形是什么颜色？图形是什么形状？简短回答。"
+          },
+          {
+            "type": "image_url",
+            "image_url": {
+              "url": "data:image/png;base64,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"
+            }
+          }
+        ]
+      }
+    ],
+    "max_tokens": 256,
+    "temperature": 0,
+    "reasoning_effort": "none",
+    "cache_prompt": false,
+    "seed": 20261008
+  },
+  "response": {
+    "id": "chatcmpl-2310f27ae8354c7b933f648d",
+    "object": "chat.completion",
+    "created": 1791488266,
+    "model": "qwen3.8 flash",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "背景是白色，图形是红色，形状是圆形。"
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 246,
+      "completion_tokens": 13,
+      "total_tokens": 259,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 246,
+      "prompt_ms": 364.7,
+      "prompt_per_token_ms": 1.483,
+      "prompt_per_second": 674.5,
+      "predicted_n": 13,
+      "predicted_ms": 53.5,
+      "predicted_per_token_ms": 4.115,
+      "predicted_per_second": 243.0,
+      "draft_n": 13,
+      "draft_n_accepted": 13
+    }
+  },
+  "http_status": 200
+}

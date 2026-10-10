@@ -30,7 +30,7 @@ def main():
         print(name,data.get('usage'),flush=True)
         return data['choices'][0]['message']
     try:
-        result=call('thinking',[{'role':'user','content':'计算17*23，检查一次，只给简短结论。'}],
+        result=call('thinking',[{'role':'user','content':'Calculate 17*23, check once, and give a brief conclusion.'}],
                     reasoning_effort='low',max_tokens=2048)
         assert '391' in (result.get('content') or '') and result.get('reasoning_content'),result
         summary['checks']['thinking']=True
@@ -45,18 +45,18 @@ def main():
         image=Image.new('RGB',(640,360),'white');ImageDraw.Draw(image).ellipse((230,90,410,270),fill='red')
         data=io.BytesIO();image.save(data,format='PNG')
         encoded='data:image/png;base64,'+base64.b64encode(data.getvalue()).decode()
-        result=call('image',[{'role':'user','content':[{'type':'text','text':'背景和图形是什么颜色？图形是什么形状？简短回答。'},
+        result=call('image',[{'role':'user','content':[{'type':'text','text':'What are the background color, shape color and shape? Answer briefly in English.'},
                      {'type':'image_url','image_url':{'url':encoded}}]}])
-        text=result.get('content') or '';assert '红' in text and ('圆' in text or '圈' in text),result
+        text=result.get('content') or '';assert 'red' in text.lower() and 'circle' in text.lower(),result
         summary['checks']['image']=text
         video=ROOT/'evidence/fixtures/probe-360p-5s.mp4'
         encoded='data:video/mp4;base64,'+base64.b64encode(video.read_bytes()).decode()
-        result=call('video-8fps',[{'role':'user','content':[{'type':'text','text':'简短描述视频画面的变化。'},
+        result=call('video-8fps',[{'role':'user','content':[{'type':'text','text':'Briefly describe the changes in the video frames.'},
                       {'type':'video_url','video_url':{'url':encoded}}]}],max_tokens=512)
         assert (result.get('content') or '').strip(),result
         summary['checks']['video_8fps']=result['content']
         request={'model':'qwen3.8 flash','max_tokens':128,'thinking':{'type':'disabled'},
-                 'messages':[{'role':'user','content':'只原样回复 ANTHROPIC_READY，不要添加文字。'}]}
+                 'messages':[{'role':'user','content':'Reply with exactly ANTHROPIC_READY and no additional text.'}]}
         r=session().post(args.url+'/v1/messages',json=request,timeout=60);data=r.json()
         (args.output/'anthropic.json').write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n')
         r.raise_for_status()
@@ -64,7 +64,7 @@ def main():
         summary['checks']['anthropic_api']=True
         def queued(i):
             secret=f'QUEUE_CHECK_{i}_8417'
-            result=call('queued-'+str(i),[{'role':'user','content':f'只原样回复字符串 {secret}。'}])
+            result=call('queued-'+str(i),[{'role':'user','content':f'Reply with exactly {secret} and no additional text.'}])
             assert secret in (result.get('content') or ''),result
             return True
         with ThreadPoolExecutor(max_workers=3) as pool:assert all(pool.map(queued,range(3)))

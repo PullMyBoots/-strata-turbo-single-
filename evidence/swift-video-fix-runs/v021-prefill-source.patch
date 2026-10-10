@@ -1,0 +1,443 @@
+--- a/include/strata/core/verify.hpp
++++ b/include/strata/core/verify.hpp
+@@ -53,6 +53,7 @@
+     int64_t n_slots = 0;                  ///< E-6: how many (for the device copy)
+     int64_t blob = 0;
+     bool static_residency = false;       ///< caller guarantees no cache borrowing or adaptive exchanges
++    bool prefill_restore = false;        ///< single-session loans are suspended and restored before every window
+     PeerExperts* peer = nullptr;         ///< opt-in GPU-dispatched, jointly resident native experts
+ };
+ 
+@@ -141,6 +142,10 @@
+     /// false with `err` when it failed.  Free when nothing is pending.
+     bool wait_commit(std::string& err);
+ 
++    /// Suspend windows before lending expert slots. Resume only after queued expert copies have completed
++    /// and the original device residency table has been restored. A window during a loan is an error.
++    bool set_cache_lent(bool lent, std::string& err);
++
+     /// Measurement hook (STRATA_LOGPOS): after run(), write one line per row t of the last window's head -
+     /// "pos target logprob top top_logprob hit extra_logprob target_logprob_without_extra" - where row t is the
+     /// distribution at pos0 + t, targets[t] is the token at pos0 + t + 1, extra_logprob is the log-probability of
+@@ -194,6 +199,8 @@
+     std::atomic<bool> released_{false};  ///< #267: release_gpu_waits ran (maybe on the watchdog thread): no more windows
+     bool device_plan_ = false;            ///< E-6: resident-only layers planned on the device (STRATA_VERIFY_DEVICE_PLAN)
+     bool device_only_ = false;            ///< opt-in: every expert in this stage is permanently resident
++    bool cache_lent_ = false;
++    std::vector<int32_t> restored_residency_;
+     std::unique_ptr<PeerDecode> peer_decode_;
+     struct PlePrefetch;
+     std::unique_ptr<PlePrefetch> ple_prefetch_;
+--- a/src/core/verify.cpp
++++ b/src/core/verify.cpp
+@@ -451,8 +451,8 @@
+         if(peer_requested && (!requested || !hits.peer || lb_!=0 || le_!=g.n_layers || g_test_stall!=0)) {
+             err="verify: GPU peer dispatch requires --peer-device, device-only planning and an unsplit model";return false;
+         }
+-        if (requested && !hits.static_residency) {
+-            err = "verify: device-only planning requires --adapt-swaps 0 and --no-prefill-borrow";
++        if (requested && !hits.static_residency && !hits.prefill_restore) {
++            err = "verify: device-only planning requires static residency or guarded single-session prefill restoration";
+             return false;
+         }
+         if (requested && g_test_stall == 0) {
+@@ -468,6 +468,7 @@
+                     const int32_t slot = residency[(size_t) l * g.n_expert + e];
+                     if (slot < 0 || slot >= hits.n_slots) device_only_ = false;
+                 }
++            if (device_only_ && hits.prefill_restore) restored_residency_ = residency;
+             device_plan_ = true;
+             if(peer_requested) {
+                 peer_decode_=std::make_unique<PeerDecode>();
+@@ -477,7 +478,9 @@
+             std::fprintf(stderr, "strata verify: CUDA%d layers %lld-%lld device-only planning %s\n",
+                          device_, (long long) lb_, (long long) (le_ - 1),
+                          peer_decode_ ? "enabled (experts jointly resident on both GPUs)" :
+-                         device_only_ ? "enabled (all experts permanently resident)" : "disabled (partial residency)");
++                         device_only_ ? (hits.prefill_restore ? "enabled (guarded prefill restoration)"
++                                                             : "enabled (all experts permanently resident)")
++                                      : "disabled (partial residency)");
+         }
+     }
+     if (device_plan_) {
+@@ -1224,6 +1227,7 @@
+     using namespace strata::kernels;
+     const OnDevice on_device(device_);
+     if (T < 1 || T > max_t_) { err = "verify: window size out of range"; return false; }
++    if (cache_lent_) { err = "verify: expert-cache slots are lent to prefill; restore them before running a window"; return false; }
+     if (released_.load()) { err = "verify: an earlier window never finished on the GPU (#267); restart the engine"; return false; }
+     const ModelGeometry& g = *g_;
+     SessionState& ss = *ss_;
+@@ -1606,6 +1610,31 @@
+     return next_ == nullptr || next_->wait_commit(err);
+ }
+ 
++bool Verifier::set_cache_lent(bool lent, std::string& err) {
++    if (cache_lent_ == lent) return true;
++    if (lent) {
++        // A previous asynchronous commit must finish before another stream overwrites expert slots.
++        if (!wait_commit(err)) return false;
++        cache_lent_ = true;
++        return true;
++    }
++    if (!restored_residency_.empty()) {
++        const OnDevice on_device(device_);
++        std::vector<int32_t> actual(restored_residency_.size());
++        if (cudaMemcpy(actual.data(), hits_.d_res, actual.size() * sizeof(int32_t),
++                       cudaMemcpyDeviceToHost) != cudaSuccess) {
++            err = "verify: cannot validate restored expert residency";
++            return false;
++        }
++        if (actual != restored_residency_) {
++            err = "verify: prefill did not restore the original expert-cache mapping";
++            return false;
++        }
++    }
++    cache_lent_ = false;
++    return true;
++}
++
+ bool Verifier::copy_logits(int t, float* host) const {
+     if (next_ != nullptr) return next_->copy_logits(t, host);   // a layer split: the head is on the last stage
+     if (head_logits_ == nullptr || host == nullptr || t < 0 || n_vocab_ <= 0) return false;
+--- a/src/program/generate.cpp
++++ b/src/program/generate.cpp
+@@ -4526,6 +4526,11 @@
+         vh.slot_off = xcache.slot_offsets();   // E-6: the device plan's pointers
+         vh.n_slots = xcache.slots();
+         vh.static_residency = o.no_prefill_borrow && o.adapt_swaps == 0;
++        // Only this single-session loop owns the loan/refill lifecycle. Split, peer and IPC engines
++        // retain their original static-residency requirement; adaptive exchanges remain forbidden.
++        const char* restore_env = std::getenv("STRATA_VERIFY_PREFILL_RESTORE");
++        vh.prefill_restore = restore_env && std::string(restore_env) == "1" && o.adapt_swaps == 0
++                             && !multi_gpu && !peer.valid() && !strata::core::shared_weights_enabled();
+         vh.peer = peer.valid() ? &peer : nullptr;
+         // Layer split: `ver` runs layers [0, K1) and hands its residual to the next stage's verifier, and so on; the
+         // last runs the head.  The hand-offs are mapped pinned memory, portable: a stage on another GPU reads it.
+@@ -5730,7 +5735,9 @@
+                                  std::chrono::duration<double, std::milli>(Clock::now() - t_rf).count());
+                     std::fflush(stderr);
+                 }
+-                return true;
++                // fill_slot_queued has completed and res_upload restored every original slot. The verifier
++                // checks the device table before it allows the unchanged device-only graphs to run again.
++                return !vh.prefill_restore || ver.set_cache_lent(false, e);
+             };
+             // lend the slots `tokens` batched prompt tokens need: the prompt path's buffers for min(chunk, tokens
+             // rounded up to 256), laid out in the last of the slots it may borrow - per participant, out of that
+@@ -5748,6 +5755,7 @@
+                     e = "prefill: cannot lend buffers for an empty request segment";
+                     return false;
+                 }
++                if (vh.prefill_restore && !ver.set_cache_lent(true, e)) return false;
+                 bool any = false;
+                 for (PfPart& p : pf_parts) {
+                     if (p.first < 0) continue;
+--- a/tools/distribution.py
++++ b/tools/distribution.py
+@@ -352,6 +352,12 @@
+         cfg.update(parallel=plan['concurrency'], parallel_workers=1)
+         if arm == 'turbo':
+             args += ['--batch-mtp']
++    if arm == 'turbo' and plan['large_gpu_turbo'] and plan['concurrency'] == 1 and weights == 'iq2_xs':
++        # Keep the tuned decode path and restore every borrowed expert before its captured graphs run.
++        # The engine sizes loans from actual free cache space and uses smaller layouts for short inputs.
++        args = set_arg(args, '--no-prefill-borrow')
++        args = set_arg(args, '--prefill', 'auto:16384')
++        cfg['env']['STRATA_VERIFY_PREFILL_RESTORE'] = '1'
+     for flag, value in (('--pool-workers', plan['workers']), ('--kv-resident', plan['kv_resident']),
+                         ('--vram-reserve-mib', plan['reserve_mib'])):
+         args = set_arg(args, flag, value)
+@@ -367,6 +373,25 @@
+     # Producer/consumer versions must match. Both arms get the same API and media adapter.
+     cfg['server_module'] = 'serve.local_api' if arm == 'turbo' and plan['concurrency'] == 1 else 'experimental-native-api'
+     return cfg
++
++
++def performance_options(cfg):
++    """Fingerprint actual execution flags; paths/ports are not tuning settings."""
++    paths = {'--native', '--ple-gguf', '--mtp', '--pack', '--expert-profile'}
++    flags = []
++    i = 0
++    while i < len(cfg['args']):
++        if cfg['args'][i] in paths:
++            i += 2
++        else:
++            flags.append(cfg['args'][i])
++            i += 1
++    return {'args': flags, 'env': {k: v for k, v in cfg['env'].items()
++                                  if k not in ('CUDA_VISIBLE_DEVICES', 'STRATA_MTP_HEAD_ROUTER')},
++            'draft_vocab': cfg.get('draft_vocab'), 'server_module': cfg.get('server_module'),
++            'parallel': cfg.get('parallel', 1), 'parallel_workers': cfg.get('parallel_workers', 1),
++            'vision': {k: cfg['vision'].get(k) for k in
++                       ('gpu', 'threads', 'max_tokens', 'flash_attn', 'native_video')}}
+ 
+ 
+ def identity(hw, cfg):
+@@ -391,6 +416,7 @@
+             'binaries': {p.name: digest(p) for p in files}, 'assets': assets,
+             'distribution_binaries': {k: v['sha256'] for k, v in json.loads(BUILD.read_text())['binaries'].items()},
+             'plan': cfg['deployment']['resource_plan'], 'weights': cfg['deployment']['weights'],
++            'execution_options': performance_options(cfg),
+             'api_sha256': digest(ROOT / 'serve/local_api.py'),
+             'installer_sha256': digest(Path(__file__)),
+             'qualification_sha256': digest(ROOT / 'tools/qualify_distribution.py'),
+--- a/tools/qualify_distribution.py
++++ b/tools/qualify_distribution.py
+@@ -26,19 +26,31 @@
+ from distribution import ROOT, child_environment, identity, key, save, server_command
+ 
+ 
+-def decide(official, turbo, correct, min_gain=0.03):
++def decide(official, turbo, correct, min_gain=0.03, *, official_prefill=None, turbo_prefill=None,
++           max_prefill_regression=0.10):
+     """Pure decision function: no successful speed claim without valid evidence."""
+     if not correct or set(official) != set(turbo) or not official:
+         return {'selection': 'official', 'state': 'failed', 'gain_percent': 0.0,
+                 'reason': 'Correctness, media, workload completeness or configuration checks failed.'}
+     ratios = {name: statistics.median(turbo[name]) / statistics.median(official[name]) for name in official}
+     ratio = math.exp(statistics.mean(math.log(v) for v in ratios.values()))
+-    leading = ratio >= 1 + min_gain and min(ratios.values()) >= 0.97
++    prefill_ratios = {}
++    if official_prefill is not None or turbo_prefill is not None:
++        if (not official_prefill or not turbo_prefill or set(official_prefill) != set(turbo_prefill)
++                or any(not values or any(not math.isfinite(v) or v <= 0 for v in values)
++                       for arm in (official_prefill, turbo_prefill) for values in arm.values())):
++            return {'selection': 'official', 'state': 'failed', 'gain_percent': 0.0,
++                    'reason': 'Prefill comparisons are incomplete or invalid.'}
++        prefill_ratios = {name: statistics.median(turbo_prefill[name]) / statistics.median(official_prefill[name])
++                          for name in official_prefill}
++    leading = (ratio >= 1 + min_gain and min(ratios.values()) >= 0.97
++               and all(v >= 1 - max_prefill_regression for v in prefill_ratios.values()))
+     return {'selection': 'turbo' if leading else 'official',
+             'state': 'qualified' if leading else 'no-confirmed-advantage',
+-            'gain_percent': (ratio - 1) * 100, 'ratios': ratios,
+-            'reason': 'At least 3% aggregate gain, no task-family regression over 3%.' if leading
+-                      else 'The local workload did not confirm a sufficiently consistent Turbo advantage.'}
++            'gain_percent': (ratio - 1) * 100, 'ratios': ratios, 'prefill_ratios': prefill_ratios,
++            'max_prefill_regression': max_prefill_regression,
++            'reason': 'At least 3% output gain, no output-family regression over 3%, tested-prefill regression within the recorded tolerance.' if leading
++                      else 'The local workload did not confirm a consistent output advantage with preserved prefill speed.'}
+ 
+ 
+ def session():
+@@ -56,6 +68,7 @@
+ def request(url, body):
+     events = []
+     begin = time.monotonic()
++    first_content_s = None
+     with session().post(url + '/v1/chat/completions', json=dict(body, stream=True,
+                           stream_options={'include_usage': True}), stream=True, timeout=(10, 1800)) as response:
+         response.raise_for_status()
+@@ -64,13 +77,15 @@
+                 event = json.loads(line[6:])
+                 if event.get('error'):
+                     raise ValueError(str(event['error']))
++                if first_content_s is None and any(c.get('delta', {}).get('content') for c in event.get('choices', [])):
++                    first_content_s = time.monotonic() - begin
+                 events.append(event)
+     text = ''.join(c.get('delta', {}).get('content') or '' for e in events for c in e.get('choices', []))
+     timings = next((e['timings'] for e in reversed(events) if e.get('timings')), {})
+     usage = next((e['usage'] for e in reversed(events) if e.get('usage')), {})
+     finish = next((c.get('finish_reason') for e in reversed(events) for c in e.get('choices', []) if c.get('finish_reason')), None)
+     return {'text': text, 'timings': timings, 'usage': usage,
+-            'finish_reason': finish, 'wall_s': time.monotonic() - begin}
++            'finish_reason': finish, 'wall_s': time.monotonic() - begin, 'first_content_s': first_content_s}
+ 
+ 
+ def body(model, text, maximum=512):
+@@ -148,6 +163,7 @@
+ 
+ 
+ def evaluate(cfg, folder, long=False, media=False):
++    folder = Path(folder).absolute()
+     cfg = copy.deepcopy(cfg)
+     cfg.update(port=free_port(), host='127.0.0.1')
+     cfg['args'] += ['--prompt-cache', '0']
+@@ -212,7 +228,7 @@
+                 raise ValueError('Arithmetic smoke failed.')
+             recall, names = recall_body(model)
+             recalled = request(url, recall)
+-            if not all(name in recalled['text'] for name in names):
++            if not all(name in recalled['text'] for name in names) or recalled['timings'].get('cache_n') != 0:
+                 raise ValueError('Long-prompt recall smoke failed.')
+             report['recall'] = recalled
+             if media:
+@@ -230,7 +246,8 @@
+                 req = dict(sample['request'], model=model)
+                 result = request(url, req)
+                 names = json.loads((ROOT / 'evidence/checkpoints.json').read_text())
+-                if result['usage'].get('prompt_tokens') != 256013 or not all(n in result['text'] for n in names):
++                if (result['usage'].get('prompt_tokens') != 256013 or result['usage'].get('completion_tokens') != 512
++                        or result['timings'].get('cache_n') != 0 or not all(n in result['text'] for n in names)):
+                     raise ValueError('Native-window recall qualification failed.')
+                 rates['native_long'] = [result['timings']['predicted_per_second']]
+                 report['native_long'] = result
+@@ -249,6 +266,7 @@
+     output.mkdir(parents=True)
+     arms = {'official': official, 'turbo': turbo}
+     collected = {arm: {} for arm in arms}
++    collected_prefill = {arm: {} for arm in arms}
+     details = []
+     result = {'identity_key': token, 'identity': identity(hw, turbo),
+               'official_binary_sha256': identity(hw, official)['binaries'],
+@@ -265,11 +283,15 @@
+             details.append({'arm': arm, 'path': str(folder), 'correct': report['correct']})
+             for task, values in report['rates'].items():
+                 collected[arm].setdefault(task, []).extend(values)
+-        result.update(decide(collected['official'], collected['turbo'], all(r['correct'] for r in details)))
++            for task in ('recall', 'native_long'):
++                if task in report:
++                    collected_prefill[arm].setdefault(task, []).append(report[task]['timings']['prompt_per_second'])
++        result.update(decide(collected['official'], collected['turbo'], all(r['correct'] for r in details),
++                             official_prefill=collected_prefill['official'], turbo_prefill=collected_prefill['turbo']))
+     except Exception as error:
+         result.update(selection='official', state='failed', gain_percent=0.0, reason=str(error))
+         print('Qualification failed: ' + str(error), flush=True)
+-    result.update(rates=collected, runs=details,
++    result.update(rates=collected, prefill_rates=collected_prefill, runs=details,
+                   fallback_validated=any(r['arm'] == 'official' and r['correct'] for r in details))
+     save(record, result)
+     save(output / 'summary.json', result)
+--- a/tools/test_distribution.py
++++ b/tools/test_distribution.py
+@@ -77,6 +77,22 @@
+         turbo['english'] = [90, 90, 90]
+         self.assertEqual(decide(self.rates(100), turbo, True)['selection'], 'official')
+ 
++    def test_output_gain_cannot_hide_slower_prefill(self):
++        result = decide(self.rates(100), self.rates(120), True,
++                        official_prefill={'recall': [4000, 4100]}, turbo_prefill={'recall': [2000, 2100]})
++        self.assertEqual(result['selection'], 'official')
++        self.assertLess(result['prefill_ratios']['recall'], .97)
++        result = decide(self.rates(100), self.rates(120), True,
++                        official_prefill={'recall': [4000]}, turbo_prefill={'recall': [4200]})
++        self.assertEqual(result['selection'], 'turbo')
++
++    def test_native_prefill_regression_and_invalid_results_are_rejected(self):
++        for turbo in ({'recall': [4200]}, {'recall': [4200], 'native_long': [2000]},
++                      {'recall': [float('nan')], 'native_long': [4000]}):
++            result = decide(self.rates(100), self.rates(120), True,
++                            official_prefill={'recall': [4000], 'native_long': [4000]}, turbo_prefill=turbo)
++            self.assertEqual(result['selection'], 'official')
++
+     def test_binary_and_resource_changes_invalidate_identity(self):
+         base = {'binary': 'a', 'gpu': 'one', 'concurrency': 1, 'context': 262144}
+         for field, value in (('binary', 'b'), ('gpu', 'two'), ('concurrency', 6)):
+@@ -85,6 +101,21 @@
+ 
+ 
+ class ConfigPolicy(unittest.TestCase):
++    def test_actual_prefill_and_cache_restore_options_invalidate_qualification(self):
++        cfg = {'args': ['--pack', '/assets/model', '--prefill', 'auto', '--spec', '8'],
++               'env': {'CUDA_VISIBLE_DEVICES': 'GPU-one', 'STRATA_VERIFY_PREFILL_RESTORE': '1'},
++               'vision': {'gpu': True, 'native_video': {'fps': 8}}}
++        original = dist.key(dist.performance_options(cfg))
++        changed = copy.deepcopy(cfg)
++        changed['args'] = dist.set_arg(changed['args'], '--prefill', 'auto:32768')
++        self.assertNotEqual(original, dist.key(dist.performance_options(changed)))
++        changed = copy.deepcopy(cfg)
++        changed['env']['STRATA_VERIFY_PREFILL_RESTORE'] = '0'
++        self.assertNotEqual(original, dist.key(dist.performance_options(changed)))
++        changed = copy.deepcopy(cfg)
++        changed['args'][1] = '/relocated/assets/model'
++        self.assertEqual(original, dist.key(dist.performance_options(changed)))
++
+     def test_consumer_configs_preserve_one_gpu_and_use_portable_engines(self):
+         gpu = {'index': 3, 'uuid': 'GPU-unit-test', 'pci': '00000000:01:00.0', 'free_vram_mib': 48*1024}
+         hw = {'gpu': gpu, 'ram_available_bytes': 128*10**9, 'local_physical_cores': 32, 'wsl': False}
+@@ -108,6 +139,12 @@
+                         if count > 1:
+                             self.assertEqual(cfg['parallel_workers'], 1)
+                             self.assertEqual(cfg['parallel'], count)
++                        if weights == 'iq2_xs' and count == 1 and arm == 'turbo':
++                            self.assertNotIn('--no-prefill-borrow', cfg['args'])
++                            self.assertEqual(cfg['args'][cfg['args'].index('--prefill') + 1], 'auto:16384')
++                            self.assertEqual(cfg['env']['STRATA_VERIFY_PREFILL_RESTORE'], '1')
++                            self.assertEqual(cfg['env']['STRATA_VERIFY_DEVICE_ONLY'], '1')
++                            self.assertEqual(cfg['args'][cfg['args'].index('--adapt-swaps') + 1], '0')
+ 
+ 
+ if __name__ == '__main__':
+--- /dev/null
++++ b/tools/tune_prefill.py
+@@ -0,0 +1,79 @@
++"""Replay a bounded, same-device prefill candidate with exact configuration evidence."""
++from __future__ import annotations
++
++import argparse
++import copy
++import json
++from pathlib import Path
++
++import distribution as dist
++import qualify_distribution as qualify
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('--gpu', default='0')
++    parser.add_argument('--weights', choices=dist.MODELS, default='iq2_xs')
++    parser.add_argument('--variant', choices=('old', 'official', 'dynamic', 'phase', 'phase16', 'phase32'), required=True)
++    parser.add_argument('--binary', type=Path)
++    parser.add_argument('--base-config', type=Path)
++    parser.add_argument('--output', type=Path, required=True)
++    parser.add_argument('--long', action='store_true')
++    parser.add_argument('--media', action='store_true')
++    args = parser.parse_args()
++    args.output = args.output.absolute()
++    args.output.mkdir(parents=True, exist_ok=False)
++    hw = dist.detect(args.gpu)
++    plan = dist.resource_plan(hw, args.weights)
++    if args.base_config:
++        cfg = json.loads(args.base_config.read_text())
++        cfg['gpu'] = [hw['gpu']['index']]
++        cfg['env']['CUDA_VISIBLE_DEVICES'] = hw['gpu']['uuid']
++        cfg['vision']['cuda_device'] = hw['gpu']['uuid']
++        cfg['deployment']['physical_gpus'] = [hw['gpu']['index']]
++        cfg['deployment']['gpu_uuids'] = [hw['gpu']['uuid']]
++        cfg['deployment']['numa_node'] = hw['numa_node']
++        cfg['deployment']['cpu_affinity'] = hw['local_cpu_affinity']
++    else:
++        settings = json.loads((dist.ROOT / 'runtime/install.json').read_text())
++        cfg = dist.build_config(settings['assets'], hw, args.weights, plan,
++                                arm='official' if args.variant == 'official' else 'turbo')
++    cfg = copy.deepcopy(cfg)
++    if cfg['deployment']['weights'] != args.weights:
++        raise ValueError('The saved base configuration does not match --weights.')
++    if args.binary:
++        cfg['exe'] = str(args.binary.absolute())
++    if args.variant in ('dynamic', 'phase', 'phase16', 'phase32'):
++        cfg['args'] = dist.set_arg(cfg['args'], '--no-prefill-borrow')
++        chunk = {'phase16': 'auto:16384', 'phase32': 'auto:32768'}.get(args.variant, 'auto')
++        cfg['args'] = dist.set_arg(cfg['args'], '--prefill', chunk)
++        if args.variant == 'dynamic':
++            cfg['env'].pop('STRATA_VERIFY_DEVICE_ONLY', None)
++            cfg['env'].pop('STRATA_VERIFY_PRECAPTURE', None)
++            cfg['env']['STRATA_VERIFY_DEVICE_PLAN'] = '1'
++        elif args.weights == 'iq2_xs':
++            cfg['env']['STRATA_VERIFY_PREFILL_RESTORE'] = '1'
++    dist.save(args.output / 'hardware.json', hw)
++    dist.save(args.output / 'input-config.json', cfg)
++    dist.save(args.output / 'manifest.json', {
++        'variant': args.variant, 'weights': args.weights,
++        'binary_sha256': dist.digest(Path(cfg['exe'])),
++        'context': dist.single_gpu.CONTEXT, 'prompt_cache': False,
++        'long_checked': args.long, 'media_checked': args.media,
++        'main_weights_changed': False,
++    })
++    report = qualify.evaluate(cfg, args.output, long=args.long, media=args.media)
++    rates = report['rates']
++    summary = {'variant': args.variant, 'weights': args.weights,
++               'short_tps': qualify.math.exp(qualify.statistics.mean(
++                   qualify.math.log(qualify.statistics.median(rates[case]))
++                   for case in ('english', 'chinese', 'code'))),
++               'recall': report['recall']['timings'], 'correct': report['correct']}
++    if args.long:
++        summary['native_long'] = {k: v for k, v in report['native_long'].items() if k != 'text'}
++    dist.save(args.output / 'summary.json', summary)
++    print(json.dumps(summary, indent=2), flush=True)
++
++
++if __name__ == '__main__':
++    main()

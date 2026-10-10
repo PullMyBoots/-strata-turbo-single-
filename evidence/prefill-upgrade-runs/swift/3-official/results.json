@@ -1,0 +1,737 @@
+{
+  "configuration": {
+    "exe": "/home/student_su/qwen/release/strata-single-GPU/engine/distribution/strata-upstream-media",
+    "cwd": "/home/student_su/qwen/release/strata-single-GPU",
+    "gpu": [
+      0
+    ],
+    "gpus_asked": true,
+    "layer_split": "auto",
+    "backend": "cuda",
+    "host": "127.0.0.1",
+    "port": 43761,
+    "model_name": "qwen3.8-flash-swift-iq3-xxs",
+    "aliases": [
+      "qwen3.8 flash",
+      "Qwen3.8-Flash-Next",
+      "Swift-Qwen3.8-Flash-Next-GSQ-RCO-IQ3_XXS",
+      "qwen3.8-flash-next-ud-q3-k-xl"
+    ],
+    "draft_vocab": "full",
+    "sampling": {
+      "temperature": 0.3,
+      "top_p": 0.95,
+      "top_k": 20,
+      "min_p": 0.0,
+      "presence_penalty": 0.0,
+      "repetition_penalty": 1.0
+    },
+    "tokenizer": "/home/student_su/qwen/release/strata-single-GPU/assets/data/packs/swift-1.5-iq3_xxs/tokenizer",
+    "log": "/home/student_su/qwen/release/strata-single-GPU/runtime/qualification-runs/20261010-151542-d15c1f05b156/3-official/engine.log",
+    "lib_dirs": [
+      "/usr/local/cuda/lib64"
+    ],
+    "parallel_workers": 1,
+    "env": {
+      "CUDA_VISIBLE_DEVICES": "GPU-c9ae835b-bc1e-8d6c-f85f-e415defc30bc"
+    },
+    "args": [
+      "--pack",
+      "/home/student_su/qwen/release/strata-single-GPU/assets/data/packs/swift-1.5-iq3_xxs",
+      "--native",
+      "/home/student_su/qwen/release/strata-single-GPU/assets/models/Swift-1.5-IQ3_XXS/Swift-Qwen3.8-Flash-Next-GSQ-RCO-IQ3_XXS-00001-of-00002.gguf",
+      "--ple-gguf",
+      "/home/student_su/qwen/release/strata-single-GPU/assets/models/Swift-1.5-IQ3_XXS/Swift-Qwen3.8-Flash-Next-GSQ-RCO-IQ3_XXS-00001-of-00002.gguf",
+      "--expert-profile",
+      "/home/student_su/qwen/release/strata-single-GPU/assets/data/expert-profile.bin",
+      "--expert-cache",
+      "auto",
+      "--max-context",
+      "262144",
+      "--kv",
+      "int8",
+      "--rope-scaling",
+      "none",
+      "--vision",
+      "--prefill",
+      "auto",
+      "--spec",
+      "4",
+      "--spec-min-p",
+      "0.5",
+      "--mtp",
+      "/home/student_su/qwen/release/strata-single-GPU/assets/data/mtp/rt",
+      "--pool-workers",
+      "32",
+      "--kv-resident",
+      "32768",
+      "--vram-reserve-mib",
+      "700",
+      "--prompt-cache",
+      "0"
+    ],
+    "vision": {
+      "exe": "/home/student_su/qwen/release/strata-single-GPU/engine/distribution/strata-vision",
+      "mmproj": "/home/student_su/qwen/release/strata-single-GPU/assets/models/Swift-1.5-IQ3_XXS/mmproj-Swift-Qwen3.8-Flash-Next-BF16.gguf",
+      "model": "/home/student_su/qwen/release/strata-single-GPU/assets/models/Swift-1.5-IQ3_XXS/Swift-Qwen3.8-Flash-Next-GSQ-RCO-IQ3_XXS-00001-of-00002.gguf",
+      "gpu": true,
+      "cuda_device": "GPU-c9ae835b-bc1e-8d6c-f85f-e415defc30bc",
+      "threads": 32,
+      "max_tokens": 0,
+      "flash_attn": "on",
+      "native_video": {
+        "fps": 8.0,
+        "timestamp_interval_ms": 5000
+      }
+    },
+    "deployment": {
+      "project": "strata-turbo-single",
+      "weights": "swift",
+      "context": 262144,
+      "physical_gpus": [
+        0
+      ],
+      "gpu_uuids": [
+        "GPU-c9ae835b-bc1e-8d6c-f85f-e415defc30bc"
+      ],
+      "max_concurrent_requests": 1,
+      "main_weights_changed": false,
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "audio_input": false,
+      "engine_selection": "official",
+      "numa_node": 0,
+      "resource_plan": {
+        "context": 262144,
+        "kv": "int8",
+        "workers": 32,
+        "vision_gpu": true,
+        "low_ram": false,
+        "kv_streaming": true,
+        "kv_resident": 32768,
+        "reserve_mib": 700,
+        "large_gpu_turbo": true,
+        "concurrency": 1,
+        "full_experts": true,
+        "input_modalities": [
+          "text",
+          "image",
+          "video"
+        ],
+        "audio_input": false
+      },
+      "cpu_affinity": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        256,
+        257,
+        258,
+        259,
+        260,
+        261,
+        262,
+        263,
+        264,
+        265,
+        266,
+        267,
+        268,
+        269,
+        270,
+        271,
+        272,
+        273,
+        274,
+        275,
+        276,
+        277,
+        278,
+        279,
+        280,
+        281,
+        282,
+        283,
+        284,
+        285,
+        286,
+        287,
+        288,
+        289,
+        290,
+        291,
+        292,
+        293,
+        294,
+        295,
+        296,
+        297,
+        298,
+        299,
+        300,
+        301,
+        302,
+        303,
+        304,
+        305,
+        306,
+        307,
+        308,
+        309,
+        310,
+        311,
+        312,
+        313,
+        314,
+        315,
+        316,
+        317,
+        318,
+        319,
+        320,
+        321,
+        322,
+        323,
+        324,
+        325,
+        326,
+        327,
+        328,
+        329,
+        330,
+        331,
+        332,
+        333,
+        334,
+        335,
+        336,
+        337,
+        338,
+        339,
+        340,
+        341,
+        342,
+        343,
+        344,
+        345,
+        346,
+        347,
+        348,
+        349,
+        350,
+        351,
+        352,
+        353,
+        354,
+        355,
+        356,
+        357,
+        358,
+        359,
+        360,
+        361,
+        362,
+        363,
+        364,
+        365,
+        366,
+        367,
+        368,
+        369,
+        370,
+        371,
+        372,
+        373,
+        374,
+        375,
+        376,
+        377,
+        378,
+        379,
+        380,
+        381,
+        382,
+        383
+      ]
+    },
+    "server_module": "experimental-native-api"
+  },
+  "short": {
+    "english": [
+      {
+        "text": "# The Comprehensive Guide to Organizing and Reviewing a Software Project\n\nThis guide provides a rigorous, step-by-step methodology for organizing, maintaining, and reviewing software projects. It is designed for engineering leads, project managers, and developers seeking to establish high standards of quality, maintainability, and scalability. The guide is divided into logical phases, progressing from initial setup to long-term maintenance.\n\n### Phase 1: Foundation and Governance\n\n1.  **Define the Project Charter**: Clearly articulate the project\u2019s mission, goals, scope, and success criteria in a single document.\n2.  **Identify Stakeholders**: List all internal and external stakeholders, including product owners, end-users, and compliance officers.\n3.  **Establish a Governance Model**: Decide on the decision-making hierarchy (e.g., RFCs, Architecture Review Board) for technical choices.\n4.  **Select the License**: Choose an appropriate open-source license (MIT, Apache, GPL) or proprietary licensing strategy early to avoid legal friction.\n5.  **Create a Code of Conduct**: Define behavioral expectations for contributors to ensure a healthy, inclusive community.\n6.  **Set Up Version Control**: Initialize a Git repository with a clear branching strategy (e.g., GitFlow, Trunk-Based Development).\n7.  **Configure .gitignore**: Ensure build artifacts, local environment files, and IDE-specific files are excluded from version control.\n8.  **Standardize Commit Messages**: Adopt a convention (e.g., Conventional Commits) to enable automated changelog generation and semantic versioning.\n9.  **Define Branch Naming Conventions**: Use descriptive prefixes (feature/, fix/, hotfix/) to make branch history readable.\n10. **Implement Pre-Commit Hooks**: Use tools like Husky or pre-commit to enforce linting and formatting before code is committed.\n\n### Phase 2: Repository Structure and Organization\n\n11. **Adopt a Standard Directory Layout**: Use a recognized structure (e.g., `src/`, `tests/`, `docs/`, `scripts/`) to reduce cognitive load.\n12. **Separate Configuration from Code**: Keep environment-specific configs in dedicated files (e.g., `.env`, `config/`) and never hardcode secrets.\n13. **Organize by Feature, Not Layer**: Structure code directories by business features (e.g., `auth/`, `billing/`) rather than technical layers (e.g., `controllers/`, `models/",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 53,
+          "prompt_ms": 168.4,
+          "prompt_per_token_ms": 3.177,
+          "prompt_per_second": 314.7,
+          "predicted_n": 512,
+          "predicted_ms": 3486.7,
+          "predicted_per_token_ms": 6.81,
+          "predicted_per_second": 146.8,
+          "draft_n": 473,
+          "draft_n_accepted": 292
+        },
+        "usage": {
+          "prompt_tokens": 53,
+          "completion_tokens": 512,
+          "total_tokens": 565,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 3.667655408149585,
+        "first_content_s": 0.18572585098445415
+      },
+      {
+        "text": "# The Comprehensive Guide to Organizing and Reviewing a Software Project\n\nThis guide provides a rigorous, step-by-step methodology for organizing, maintaining, and reviewing software projects. It is designed for engineering leads, project managers, and developers seeking to establish high standards of quality, maintainability, and scalability. The guide is divided into logical phases, covering everything from initial setup to final archival.\n\n### Phase 1: Foundation and Governance\n\n1.  **Define Project Scope and Objectives**: Clearly articulate the problem the software solves, the target audience, and the success metrics. Avoid scope creep by documenting non-goals.\n2.  **Establish a Project Charter**: Create a formal document outlining the project\u2019s purpose, stakeholders, budget, timeline, and high-level requirements.\n3.  **Select the Technology Stack**: Choose languages, frameworks, databases, and infrastructure based on team expertise, project requirements, and long-term maintainability, not just hype.\n4.  **Define Coding Standards**: Establish a style guide (e.g., PEP 8 for Python, ESLint for JavaScript) covering naming conventions, indentation, and file structure.\n5.  **Choose a Version Control System**: Standardize on Git. Ensure all team members understand branching strategies (e.g., GitFlow, Trunk-Based Development).\n6.  **Set Up a Central Repository**: Initialize a remote repository (GitHub, GitLab, Bitbucket) with protected main branches and clear access controls.\n7.  **Create a `.gitignore` File**: Proactively exclude build artifacts, local environment files, IDE configurations, and sensitive data from version control.\n8.  **Define Branch Naming Conventions**: Standardize branch names (e.g., `feature/user-auth`, `bugfix/login-crash`) to improve traceability.\n9.  **Establish Commit Message Standards**: Adopt a convention like Conventional Commits (`feat:`, `fix:`, `chore:`) to automate changelog generation and semantic versioning.\n10. **Implement Pre-Commit Hooks**: Use tools like Husky or pre-commit to enforce linting, formatting, and secret scanning before code is committed.\n11. **Create a README.md**: Write a comprehensive README that includes project description, installation instructions, usage examples, and contribution guidelines.\n12. **Document Architecture Overview**: Create a high-level diagram (C4 model, UML, or simple flowcharts) showing system components and data flow.\n13. **Define",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 53,
+          "prompt_ms": 162.6,
+          "prompt_per_token_ms": 3.068,
+          "prompt_per_second": 326.0,
+          "predicted_n": 512,
+          "predicted_ms": 3423.3,
+          "predicted_per_token_ms": 6.686,
+          "predicted_per_second": 149.6,
+          "draft_n": 467,
+          "draft_n_accepted": 292
+        },
+        "usage": {
+          "prompt_tokens": 53,
+          "completion_tokens": 512,
+          "total_tokens": 565,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 3.6030617838259786,
+        "first_content_s": 0.180172047810629
+      },
+      {
+        "text": "# The Comprehensive Guide to Organizing and Reviewing a Software Project\n\nThis guide provides a rigorous, step-by-step methodology for organizing, maintaining, and reviewing software projects. It is designed for engineering leads, project managers, and senior developers who wish to ensure code quality, maintainability, security, and team efficiency. The guide is divided into logical phases, progressing from initial setup to long-term maintenance.\n\n## Phase 1: Project Initialization and Structure\n\n1.  **Define the Project Scope**: Clearly articulate the problem statement, target audience, and core value proposition. Avoid scope creep by documenting what is explicitly *out* of scope.\n2.  **Select the Technology Stack**: Choose languages, frameworks, and libraries based on team expertise, performance requirements, and long-term viability. Document the rationale for each choice.\n3.  **Establish Version Control Strategy**: Initialize a Git repository. Choose a branching strategy (e.g., GitFlow, Trunk-Based Development) that aligns with your release cadence.\n4.  **Create a `.gitignore` File**: Proactively exclude build artifacts, local environment files, IDE configurations, and dependency caches from version control.\n5.  **Standardize Directory Structure**: Adopt a conventional project layout (e.g., `src/`, `tests/`, `docs/`, `scripts/`, `config/`) to ensure predictability for new contributors.\n6.  **Set Up Package Management**: Configure dependency managers (e.g., `npm`, `pip`, `cargo`, `maven`) with lock files to ensure reproducible builds.\n7.  **Define Coding Standards**: Create a style guide covering naming conventions, indentation, line length, and comment styles. Use linters to enforce these rules automatically.\n8.  **Initialize Documentation Skeleton**: Create a `README.md` with a project overview, installation instructions, and basic usage examples.\n9.  **Set Up Continuous Integration (CI) Pipeline**: Configure a CI server (e.g., GitHub Actions, Jenkins, GitLab CI) to run on every commit.\n10. **Configure Pre-Commit Hooks**: Install tools like `pre-commit` to run linters, formatters, and basic tests before code is committed.\n11. **Establish Issue Tracking System**: Set up a project management tool (e.g., Jira, GitHub Issues, Linear) with clear workflows for bug reports and feature requests.\n12. **Define Branch Naming Conventions**: Standardize branch names (",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 53,
+          "prompt_ms": 162.4,
+          "prompt_per_token_ms": 3.064,
+          "prompt_per_second": 326.4,
+          "predicted_n": 512,
+          "predicted_ms": 3375.6,
+          "predicted_per_token_ms": 6.593,
+          "predicted_per_second": 151.7,
+          "draft_n": 454,
+          "draft_n_accepted": 296
+        },
+        "usage": {
+          "prompt_tokens": 53,
+          "completion_tokens": 512,
+          "total_tokens": 565,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 3.5525936980266124,
+        "first_content_s": 0.17964204214513302
+      }
+    ],
+    "code": [
+      {
+        "text": "```python\n\"\"\"\nPersistent Key-Value Database with Transactions and Recovery\n\nThis module implements a persistent key-value store with ACID transaction support,\nwrite-ahead logging (WAL), and crash recovery.\n\nFeatures:\n- Persistent storage using a log-structured approach\n- ACID transactions (Atomicity, Consistency, Isolation, Durability)\n- Write-Ahead Logging (WAL) for crash recovery\n- Checkpointing for log compaction\n- Thread-safe operations\n\"\"\"\n\nimport os\nimport json\nimport threading\nimport time\nimport hashlib\nimport struct\nimport tempfile\nimport shutil\nfrom typing import Any, Dict, List, Optional, Tuple, Set\nfrom dataclasses import dataclass, field\nfrom enum import Enum, auto\nfrom contextlib import contextmanager\n\n\nclass TransactionState(Enum):\n    \"\"\"States of a transaction.\"\"\"\n    ACTIVE = auto()\n    COMMITTED = auto()\n    ABORTED = auto()\n\n\n@dataclass\nclass LogRecord:\n    \"\"\"Represents a single log record in the WAL.\"\"\"\n    tx_id: int\n    operation: str  # 'BEGIN', 'SET', 'DELETE', 'COMMIT', 'ABORT', 'CHECKPOINT'\n    key: Optional[str] = None\n    value: Optional[Any] = None\n    old_value: Optional[Any] = None\n    timestamp: float = field(default_factory=time.time)\n\n    def to_dict(self) -> Dict:\n        return {\n            'tx_id': self.tx_id,\n            'operation': self.operation,\n            'key': self.key,\n            'value': self.value,\n            'old_value': self.old_value,\n            'timestamp': self.timestamp\n        }\n\n    @staticmethod\n    def from_dict(d: Dict) -> 'LogRecord':\n        return LogRecord(\n            tx_id=d['tx_id'],\n            operation=d['operation'],\n            key=d.get('key'),\n            value=d.get('value'),\n            old_value=d.get('old_value'),\n            timestamp=d.get('timestamp', time.time())\n        )\n\n\nclass Transaction:\n    \"\"\"Represents a database transaction.\"\"\"\n\n    def __init__(self, tx_id: int, db: 'PersistentKVDB'):\n        self.tx_id = tx_id\n        self.db = db\n        self.state = TransactionState.ACTIVE\n        self.operations: List[LogRecord] = []\n       ",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 52,
+          "prompt_ms": 161.0,
+          "prompt_per_token_ms": 3.096,
+          "prompt_per_second": 323.0,
+          "predicted_n": 512,
+          "predicted_ms": 2917.3,
+          "predicted_per_token_ms": 5.698,
+          "predicted_per_second": 175.5,
+          "draft_n": 445,
+          "draft_n_accepted": 339
+        },
+        "usage": {
+          "prompt_tokens": 52,
+          "completion_tokens": 512,
+          "total_tokens": 564,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 3.094238287070766,
+        "first_content_s": 0.17952862312085927
+      },
+      {
+        "text": "```python\n\"\"\"\nPersistent Key-Value Database with Transactions and Recovery\n\nThis module implements a persistent key-value store with ACID transaction support,\nwrite-ahead logging (WAL), and crash recovery.\n\nFeatures:\n- Persistent storage using a log-structured file\n- ACID transactions (Atomicity, Consistency, Isolation, Durability)\n- Write-Ahead Logging (WAL) for crash recovery\n- Checkpointing to compact the log\n- Thread-safe operations\n\"\"\"\n\nimport os\nimport json\nimport threading\nimport time\nimport struct\nimport hashlib\nfrom typing import Any, Dict, List, Optional, Tuple\nfrom dataclasses import dataclass, field\nfrom enum import Enum, auto\nfrom collections import defaultdict\nimport logging\n\n# Configure logging\nlogging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')\nlogger = logging.getLogger(__name__)\n\n\nclass TransactionState(Enum):\n    \"\"\"States of a transaction.\"\"\"\n    ACTIVE = auto()\n    COMMITTED = auto()\n    ABORTED = auto()\n\n\n@dataclass\nclass LogRecord:\n    \"\"\"Represents a single log record in the WAL.\"\"\"\n    tx_id: int\n    operation: str  # 'BEGIN', 'SET', 'DELETE', 'COMMIT', 'ABORT', 'CHECKPOINT'\n    key: Optional[str] = None\n    value: Optional[Any] = None\n    timestamp: float = field(default_factory=time.time)\n    checksum: str = \"\"\n\n    def to_dict(self) -> Dict:\n        return {\n            'tx_id': self.tx_id,\n            'operation': self.operation,\n            'key': self.key,\n            'value': self.value,\n            'timestamp': self.timestamp,\n            'checksum': self.checksum\n        }\n\n    @staticmethod\n    def from_dict(data: Dict) -> 'LogRecord':\n        return LogRecord(\n            tx_id=data['tx_id'],\n            operation=data['operation'],\n            key=data.get('key'),\n            value=data.get('value'),\n            timestamp=data.get('timestamp', time.time()),\n            checksum=data.get('checksum', '')\n        )\n\n    def compute_checksum(self) -> str:\n        \"\"\"Compute checksum for integrity verification.\"\"\"\n        content = f\"{self.tx_id}:{self.operation}:{self.key}:{json.dumps(self.value, sort_keys=True)}:{self.timestamp}\"\n",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 52,
+          "prompt_ms": 158.7,
+          "prompt_per_token_ms": 3.052,
+          "prompt_per_second": 327.7,
+          "predicted_n": 512,
+          "predicted_ms": 2903.0,
+          "predicted_per_token_ms": 5.67,
+          "predicted_per_second": 176.4,
+          "draft_n": 450,
+          "draft_n_accepted": 338
+        },
+        "usage": {
+          "prompt_tokens": 52,
+          "completion_tokens": 512,
+          "total_tokens": 564,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 3.0757152130827308,
+        "first_content_s": 0.17677541496232152
+      },
+      {
+        "text": "```python\n\"\"\"\nPersistent Key-Value Database with Transactions and Recovery\n\nThis module implements a persistent key-value store with ACID transaction support,\nwrite-ahead logging (WAL), and crash recovery.\n\nFeatures:\n- Persistent storage using a log-structured file\n- ACID transactions (Atomicity, Consistency, Isolation, Durability)\n- Write-Ahead Logging (WAL) for crash recovery\n- Checkpointing to compact the log\n- Thread-safe operations\n\"\"\"\n\nimport os\nimport json\nimport threading\nimport time\nimport struct\nimport hashlib\nfrom typing import Any, Dict, List, Optional, Tuple\nfrom dataclasses import dataclass, field\nfrom enum import Enum, auto\nfrom collections import OrderedDict\nimport tempfile\nimport shutil\n\n\nclass TransactionState(Enum):\n    \"\"\"States of a transaction.\"\"\"\n    ACTIVE = auto()\n    COMMITTED = auto()\n    ABORTED = auto()\n\n\n@dataclass\nclass LogRecord:\n    \"\"\"Represents a single log record in the WAL.\"\"\"\n    tx_id: int\n    operation: str  # 'BEGIN', 'SET', 'DELETE', 'COMMIT', 'ABORT', 'CHECKPOINT'\n    key: Optional[str] = None\n    value: Optional[Any] = None\n    old_value: Optional[Any] = None\n    timestamp: float = field(default_factory=time.time)\n\n    def to_dict(self) -> Dict:\n        return {\n            'tx_id': self.tx_id,\n            'operation': self.operation,\n            'key': self.key,\n            'value': self.value,\n            'old_value': self.old_value,\n            'timestamp': self.timestamp\n        }\n\n    @staticmethod\n    def from_dict(d: Dict) -> 'LogRecord':\n        return LogRecord(\n            tx_id=d['tx_id'],\n            operation=d['operation'],\n            key=d.get('key'),\n            value=d.get('value'),\n            old_value=d.get('old_value'),\n            timestamp=d.get('timestamp', time.time())\n        )\n\n\nclass WAL:\n    \"\"\"Write-Ahead Log for crash recovery.\"\"\"\n\n    def __init__(self, log_path: str):\n        self.log_path = log_path\n        self.lock = threading.Lock()\n        self._ensure_log_file()\n\n    def _ensure_log_file(self):\n        \"\"\"Ensure the log file exists.\"\"\"\n        if not",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 52,
+          "prompt_ms": 158.5,
+          "prompt_per_token_ms": 3.048,
+          "prompt_per_second": 328.1,
+          "predicted_n": 512,
+          "predicted_ms": 2811.1,
+          "predicted_per_token_ms": 5.49,
+          "predicted_per_second": 182.1,
+          "draft_n": 440,
+          "draft_n_accepted": 340
+        },
+        "usage": {
+          "prompt_tokens": 52,
+          "completion_tokens": 512,
+          "total_tokens": 564,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 2.986248705070466,
+        "first_content_s": 0.17594717210158706
+      }
+    ],
+    "chinese": [
+      {
+        "text": "\u8bbe\u8ba1\u4e00\u4e2a\u53ef\u9760\u7684\u8f6f\u4ef6\u9879\u76ee\u662f\u4e00\u4e2a\u7cfb\u7edf\u5de5\u7a0b\uff0c\u6d89\u53ca\u4ece\u9700\u6c42\u5206\u6790\u5230\u957f\u671f\u7ef4\u62a4\u7684\u5168\u751f\u547d\u5468\u671f\u3002\u4e3a\u4e86\u786e\u4fdd\u53ef\u9760\u6027\u3001\u53ef\u7ef4\u62a4\u6027\u548c\u53ef\u6269\u5c55\u6027\uff0c\u4ee5\u4e0b\u5c06\u8be6\u7ec6\u5217\u4e3e **100+ \u9879** \u5173\u952e\u6b65\u9aa4\u3001\u6d4b\u8bd5\u65b9\u6cd5\u548c\u7ef4\u62a4\u5efa\u8bae\uff0c\u5206\u4e3a **\u67b6\u6784\u4e0e\u8bbe\u8ba1**\u3001**\u5f00\u53d1\u5b9e\u73b0**\u3001**\u6d4b\u8bd5\u4e0e\u8d28\u91cf\u4fdd\u969c**\u3001**\u90e8\u7f72\u4e0e\u8fd0\u7ef4**\u3001**\u7ef4\u62a4\u4e0e\u6f14\u8fdb** \u4e94\u5927\u9636\u6bb5\u3002\n\n---\n\n### \u7b2c\u4e00\u9636\u6bb5\uff1a\u67b6\u6784\u4e0e\u8bbe\u8ba1\uff081-20\uff09\n\n1. **\u660e\u786e\u4e1a\u52a1\u76ee\u6807**\uff1a\u6e05\u6670\u5b9a\u4e49\u8f6f\u4ef6\u8981\u89e3\u51b3\u7684\u6838\u5fc3\u95ee\u9898\uff0c\u907f\u514d\u8303\u56f4\u8513\u5ef6\u3002\n2. **\u7528\u6237\u753b\u50cf\u5206\u6790**\uff1a\u8bc6\u522b\u4e3b\u8981\u7528\u6237\u7fa4\u4f53\u53ca\u5176\u4f7f\u7528\u573a\u666f\uff0c\u786e\u4fdd\u529f\u80fd\u8d34\u5408\u5b9e\u9645\u9700\u6c42\u3002\n3. **\u975e\u529f\u80fd\u6027\u9700\u6c42\u5b9a\u4e49**\uff1a\u660e\u786e\u6027\u80fd\u3001\u5b89\u5168\u6027\u3001\u53ef\u7528\u6027\u3001\u53ef\u6269\u5c55\u6027\u7b49\u975e\u529f\u80fd\u6307\u6807\u3002\n4. **\u6280\u672f\u9009\u578b\u8bc4\u4f30**\uff1a\u6839\u636e\u56e2\u961f\u6280\u80fd\u3001\u793e\u533a\u652f\u6301\u3001\u957f\u671f\u7ef4\u62a4\u6027\u9009\u62e9\u7f16\u7a0b\u8bed\u8a00\u548c\u6846\u67b6\u3002\n5. **\u6570\u636e\u5e93\u9009\u578b**\uff1a\u6839\u636e\u6570\u636e\u5173\u7cfb\u590d\u6742\u5ea6\u9009\u62e9\u5173\u7cfb\u578b\uff08SQL\uff09\u6216\u975e\u5173\u7cfb\u578b\uff08NoSQL\uff09\u6570\u636e\u5e93\u3002\n6. **\u5fae\u670d\u52a1 vs \u5355\u4f53\u51b3\u7b56**\uff1a\u6839\u636e\u56e2\u961f\u89c4\u6a21\u548c\u4e1a\u52a1\u590d\u6742\u5ea6\u51b3\u5b9a\u67b6\u6784\u6a21\u5f0f\uff0c\u907f\u514d\u8fc7\u5ea6\u8bbe\u8ba1\u3002\n7. **API \u8bbe\u8ba1\u89c4\u8303**\uff1a\u5236\u5b9a\u7edf\u4e00\u7684 RESTful \u6216 GraphQL API \u8bbe\u8ba1\u6807\u51c6\uff0c\u5305\u62ec\u7248\u672c\u63a7\u5236\u7b56\u7565\u3002\n8. **\u6570\u636e\u6a21\u578b\u8bbe\u8ba1**\uff1a\u7ed8\u5236 ER \u56fe\uff0c\u5b9a\u4e49\u6838\u5fc3\u5b9e\u4f53\u53ca\u5176\u5173\u7cfb\uff0c\u786e\u4fdd\u6570\u636e\u4e00\u81f4\u6027\u3002\n9. **\u72b6\u6001\u7ba1\u7406\u7b56\u7565**\uff1a\u786e\u5b9a\u5e94\u7528\u72b6\u6001\u7ba1\u7406\u65b9\u6848\uff08\u5982 Redux, Vuex, Context API \u7b49\uff09\u3002\n10. **\u5b89\u5168\u67b6\u6784\u8bbe\u8ba1**\uff1a\u89c4\u5212\u8eab\u4efd\u8ba4\u8bc1\uff08AuthN\uff09\u3001\u6388\u6743\uff08AuthZ\uff09\u3001\u6570\u636e\u52a0\u5bc6\u548c\u4f20\u8f93\u5b89\u5168\u3002\n11. **\u5bb9\u9519\u673a\u5236\u8bbe\u8ba1**\uff1a\u8bbe\u8ba1\u91cd\u8bd5\u673a\u5236\u3001\u7194\u65ad\u5668\uff08Circuit Breaker\uff09\u548c\u964d\u7ea7\u7b56\u7565\u3002\n12. **\u65e5\u5fd7\u89c4\u8303\u5236\u5b9a**\uff1a\u5b9a\u4e49\u65e5\u5fd7\u7ea7\u522b\uff08DEBUG, INFO, WARN, ERROR\uff09\u548c\u7ed3\u6784\u5316\u65e5\u5fd7\u683c\u5f0f\uff08JSON\uff09\u3002\n13. **\u914d\u7f6e\u7ba1\u7406\u7b56\u7565**\uff1a\u4f7f\u7528\u73af\u5883\u53d8\u91cf\u3001\u914d\u7f6e\u4e2d\u5fc3\uff08\u5982 Consul, Nacos\uff09\u7ba1\u7406\u4e0d\u540c\u73af\u5883\u7684\u914d\u7f6e\u3002\n14. **\u4f9d\u8d56\u7ba1\u7406\u7b56\u7565**\uff1a\u5efa\u7acb\u7b2c\u4e09\u65b9\u5e93\u5f15\u5165\u6807\u51c6\uff0c\u5b9a\u671f\u5ba1\u67e5\u4f9d\u8d56\u7684\u5b89\u5168\u6f0f\u6d1e\u3002\n15. **\u4ee3\u7801\u98ce\u683c\u6307\u5357**\uff1a\u5236\u5b9a\u7edf\u4e00\u7684\u4ee3\u7801\u89c4\u8303\uff08Linting rules\uff09\uff0c\u786e\u4fdd\u4ee3\u7801\u53ef\u8bfb\u6027\u3002\n16. **\u5206\u652f\u7b56\u7565\u5236\u5b9a**\uff1a\u786e\u5b9a Git \u5de5\u4f5c\u6d41\uff08\u5982 GitFlow, Trunk-Based Development\uff09\u3002\n17. **CI/CD \u6d41\u6c34\u7ebf\u8bbe\u8ba1**\uff1a\u89c4\u5212\u81ea\u52a8\u5316\u6784\u5efa\u3001",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 52,
+          "prompt_ms": 170.3,
+          "prompt_per_token_ms": 3.275,
+          "prompt_per_second": 305.3,
+          "predicted_n": 512,
+          "predicted_ms": 3449.7,
+          "predicted_per_token_ms": 6.738,
+          "predicted_per_second": 148.4,
+          "draft_n": 480,
+          "draft_n_accepted": 296
+        },
+        "usage": {
+          "prompt_tokens": 52,
+          "completion_tokens": 512,
+          "total_tokens": 564,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 3.63580845692195,
+        "first_content_s": 0.18910256191156805
+      },
+      {
+        "text": "\u8bbe\u8ba1\u4e00\u4e2a\u53ef\u9760\u7684\u8f6f\u4ef6\u9879\u76ee\u662f\u4e00\u4e2a\u7cfb\u7edf\u5de5\u7a0b\uff0c\u6d89\u53ca\u4ece\u9700\u6c42\u5206\u6790\u5230\u957f\u671f\u7ef4\u62a4\u7684\u5168\u751f\u547d\u5468\u671f\u3002\u4e3a\u4e86\u786e\u4fdd\u53ef\u9760\u6027\u3001\u53ef\u7ef4\u62a4\u6027\u548c\u53ef\u6269\u5c55\u6027\uff0c\u4ee5\u4e0b\u5c06\u8be6\u7ec6\u5217\u4e3e **100+ \u9879** \u5173\u952e\u6b65\u9aa4\u3001\u6d4b\u8bd5\u65b9\u6cd5\u548c\u7ef4\u62a4\u5efa\u8bae\uff0c\u5206\u4e3a **\u67b6\u6784\u4e0e\u8bbe\u8ba1**\u3001**\u5f00\u53d1\u5b9e\u73b0**\u3001**\u6d4b\u8bd5\u4e0e\u8d28\u91cf\u4fdd\u969c**\u3001**\u90e8\u7f72\u4e0e\u8fd0\u7ef4**\u3001**\u7ef4\u62a4\u4e0e\u6f14\u8fdb** \u4e94\u5927\u9636\u6bb5\u3002\n\n---\n\n### \u7b2c\u4e00\u9636\u6bb5\uff1a\u67b6\u6784\u4e0e\u8bbe\u8ba1\uff081-20\uff09\n\n1. **\u660e\u786e\u4e1a\u52a1\u76ee\u6807**\uff1a\u6e05\u6670\u5b9a\u4e49\u8f6f\u4ef6\u8981\u89e3\u51b3\u7684\u6838\u5fc3\u95ee\u9898\uff0c\u907f\u514d\u8303\u56f4\u8513\u5ef6\u3002\n2. **\u7528\u6237\u753b\u50cf\u5206\u6790**\uff1a\u8bc6\u522b\u4e3b\u8981\u7528\u6237\u7fa4\u4f53\u53ca\u5176\u4f7f\u7528\u573a\u666f\uff0c\u786e\u4fdd\u529f\u80fd\u8d34\u5408\u5b9e\u9645\u9700\u6c42\u3002\n3. **\u975e\u529f\u80fd\u6027\u9700\u6c42\u5b9a\u4e49**\uff1a\u660e\u786e\u6027\u80fd\u3001\u5b89\u5168\u6027\u3001\u53ef\u7528\u6027\u3001\u53ef\u6269\u5c55\u6027\u7b49\u975e\u529f\u80fd\u6307\u6807\u3002\n4. **\u6280\u672f\u9009\u578b\u8bc4\u4f30**\uff1a\u6839\u636e\u56e2\u961f\u6280\u80fd\u3001\u9879\u76ee\u89c4\u6a21\u3001\u957f\u671f\u7ef4\u62a4\u6210\u672c\u9009\u62e9\u7f16\u7a0b\u8bed\u8a00\u3001\u6846\u67b6\u548c\u6570\u636e\u5e93\u3002\n5. **\u5fae\u670d\u52a1 vs \u5355\u4f53\u51b3\u7b56**\uff1a\u6839\u636e\u4e1a\u52a1\u590d\u6742\u5ea6\u51b3\u5b9a\u67b6\u6784\u6a21\u5f0f\uff0c\u907f\u514d\u8fc7\u5ea6\u8bbe\u8ba1\u3002\n6. **\u9886\u57df\u9a71\u52a8\u8bbe\u8ba1\uff08DDD\uff09**\uff1a\u5212\u5206\u9650\u754c\u4e0a\u4e0b\u6587\uff0c\u786e\u4fdd\u4e1a\u52a1\u903b\u8f91\u4e0e\u4ee3\u7801\u7ed3\u6784\u4e00\u81f4\u3002\n7. **API \u8bbe\u8ba1\u89c4\u8303**\uff1a\u91c7\u7528 RESTful \u6216 GraphQL \u6807\u51c6\uff0c\u5b9a\u4e49\u6e05\u6670\u7684\u63a5\u53e3\u5951\u7ea6\u3002\n8. **\u6570\u636e\u6a21\u578b\u8bbe\u8ba1**\uff1a\u8bbe\u8ba1\u89c4\u8303\u5316\u6570\u636e\u5e93\u7ed3\u6784\uff0c\u907f\u514d\u5197\u4f59\uff0c\u786e\u4fdd\u6570\u636e\u4e00\u81f4\u6027\u3002\n9. **\u7f13\u5b58\u7b56\u7565\u89c4\u5212**\uff1a\u786e\u5b9a\u7f13\u5b58\u5c42\u7ea7\uff08\u672c\u5730\u3001Redis\u3001CDN\uff09\uff0c\u8bbe\u5b9a\u5931\u6548\u7b56\u7565\u3002\n10. **\u5f02\u6b65\u5904\u7406\u673a\u5236**\uff1a\u5f15\u5165\u6d88\u606f\u961f\u5217\uff08\u5982 Kafka\u3001RabbitMQ\uff09\u89e3\u8026\u9ad8\u8017\u65f6\u4efb\u52a1\u3002\n11. **\u5bb9\u9519\u4e0e\u91cd\u8bd5\u673a\u5236**\uff1a\u8bbe\u8ba1\u670d\u52a1\u95f4\u8c03\u7528\u7684\u8d85\u65f6\u3001\u91cd\u8bd5\u548c\u7194\u65ad\u7b56\u7565\u3002\n12. **\u5e42\u7b49\u6027\u8bbe\u8ba1**\uff1a\u786e\u4fdd\u5173\u952e\u64cd\u4f5c\uff08\u5982\u652f\u4ed8\u3001\u4e0b\u5355\uff09\u591a\u6b21\u6267\u884c\u7ed3\u679c\u4e00\u81f4\u3002\n13. **\u5206\u5e03\u5f0f\u4e8b\u52a1\u65b9\u6848**\uff1a\u9009\u62e9 Saga\u3001TCC \u6216\u6700\u7ec8\u4e00\u81f4\u6027\u65b9\u6848\u5904\u7406\u8de8\u670d\u52a1\u4e8b\u52a1\u3002\n14. **\u5b89\u5168\u67b6\u6784\u8bbe\u8ba1**\uff1a\u89c4\u5212\u8eab\u4efd\u8ba4\u8bc1\uff08OAuth2/JWT\uff09\u3001\u6388\u6743\uff08RBAC/ABAC\uff09\u548c\u6570\u636e\u52a0\u5bc6\u65b9\u6848\u3002\n15. **\u65e5\u5fd7\u4e0e\u76d1\u63a7\u67b6\u6784**\uff1a\u8bbe\u8ba1\u7edf\u4e00\u65e5\u5fd7\u683c\u5f0f\uff08JSON\uff09\u3001\u94fe\u8def\u8ffd\u8e2a\uff08TraceID\uff09\u548c\u6307\u6807\u91c7\u96c6\u65b9\u6848\u3002\n16. **\u914d\u7f6e\u7ba1\u7406\u7b56\u7565**\uff1a\u4f7f\u7528\u914d\u7f6e\u4e2d\u5fc3\uff08\u5982 Nacos\u3001Consul\uff09\u5b9e\u73b0\u52a8\u6001\u914d\u7f6e\u66f4\u65b0\u3002\n17. **\u4f9d\u8d56\u7ba1\u7406\u7b56\u7565**\uff1a\u660e\u786e\u7b2c\u4e09\u65b9\u5e93\u7248\u672c\u9501\u5b9a\uff0c\u907f\u514d\u4f9d\u8d56\u51b2\u7a81\u3002\n18",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 52,
+          "prompt_ms": 158.8,
+          "prompt_per_token_ms": 3.054,
+          "prompt_per_second": 327.5,
+          "predicted_n": 512,
+          "predicted_ms": 3277.5,
+          "predicted_per_token_ms": 6.401,
+          "predicted_per_second": 156.2,
+          "draft_n": 464,
+          "draft_n_accepted": 304
+        },
+        "usage": {
+          "prompt_tokens": 52,
+          "completion_tokens": 512,
+          "total_tokens": 564,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 3.453272307990119,
+        "first_content_s": 0.17635762714780867
+      },
+      {
+        "text": "\u8bbe\u8ba1\u4e00\u4e2a\u53ef\u9760\u7684\u8f6f\u4ef6\u9879\u76ee\u662f\u4e00\u4e2a\u7cfb\u7edf\u5de5\u7a0b\uff0c\u6d89\u53ca\u4ece\u9700\u6c42\u5206\u6790\u5230\u957f\u671f\u7ef4\u62a4\u7684\u5168\u751f\u547d\u5468\u671f\u3002\u4e3a\u4e86\u786e\u4fdd\u53ef\u9760\u6027\u3001\u53ef\u7ef4\u62a4\u6027\u548c\u53ef\u6269\u5c55\u6027\uff0c\u4ee5\u4e0b\u5c06\u8be6\u7ec6\u5217\u4e3e **100+ \u9879** \u5173\u952e\u6b65\u9aa4\u3001\u6d4b\u8bd5\u65b9\u6cd5\u548c\u7ef4\u62a4\u5efa\u8bae\uff0c\u5206\u4e3a **\u67b6\u6784\u4e0e\u8bbe\u8ba1**\u3001**\u5f00\u53d1\u5b9e\u73b0**\u3001**\u6d4b\u8bd5\u4e0e\u8d28\u91cf\u4fdd\u969c**\u3001**\u90e8\u7f72\u4e0e\u8fd0\u7ef4**\u3001**\u7ef4\u62a4\u4e0e\u6f14\u8fdb** \u4e94\u5927\u9636\u6bb5\u3002\n\n---\n\n### \u7b2c\u4e00\u9636\u6bb5\uff1a\u67b6\u6784\u4e0e\u8bbe\u8ba1\uff081-20\uff09\n\n1. **\u660e\u786e\u4e1a\u52a1\u76ee\u6807**\uff1a\u6e05\u6670\u5b9a\u4e49\u8f6f\u4ef6\u8981\u89e3\u51b3\u7684\u6838\u5fc3\u95ee\u9898\uff0c\u907f\u514d\u8303\u56f4\u8513\u5ef6\u3002\n2. **\u7528\u6237\u753b\u50cf\u5206\u6790**\uff1a\u8bc6\u522b\u4e3b\u8981\u7528\u6237\u7fa4\u4f53\u53ca\u5176\u4f7f\u7528\u573a\u666f\uff0c\u786e\u4fdd\u529f\u80fd\u8d34\u5408\u5b9e\u9645\u9700\u6c42\u3002\n3. **\u975e\u529f\u80fd\u6027\u9700\u6c42\u5b9a\u4e49**\uff1a\u660e\u786e\u6027\u80fd\u3001\u5b89\u5168\u6027\u3001\u53ef\u7528\u6027\u3001\u53ef\u6269\u5c55\u6027\u7b49\u975e\u529f\u80fd\u6307\u6807\u3002\n4. **\u6280\u672f\u9009\u578b\u8bc4\u4f30**\uff1a\u6839\u636e\u56e2\u961f\u6280\u80fd\u3001\u9879\u76ee\u89c4\u6a21\u3001\u957f\u671f\u7ef4\u62a4\u6210\u672c\u9009\u62e9\u7f16\u7a0b\u8bed\u8a00\u3001\u6846\u67b6\u548c\u6570\u636e\u5e93\u3002\n5. **\u5fae\u670d\u52a1 vs \u5355\u4f53\u51b3\u7b56**\uff1a\u6839\u636e\u4e1a\u52a1\u590d\u6742\u5ea6\u51b3\u5b9a\u67b6\u6784\u6a21\u5f0f\uff0c\u907f\u514d\u8fc7\u5ea6\u8bbe\u8ba1\u3002\n6. **\u9886\u57df\u9a71\u52a8\u8bbe\u8ba1\uff08DDD\uff09**\uff1a\u5212\u5206\u9650\u754c\u4e0a\u4e0b\u6587\uff0c\u786e\u4fdd\u4e1a\u52a1\u903b\u8f91\u4e0e\u4ee3\u7801\u7ed3\u6784\u4e00\u81f4\u3002\n7. **API \u8bbe\u8ba1\u89c4\u8303**\uff1a\u91c7\u7528 RESTful \u6216 GraphQL \u6807\u51c6\uff0c\u5b9a\u4e49\u6e05\u6670\u7684\u63a5\u53e3\u5951\u7ea6\u3002\n8. **\u6570\u636e\u6a21\u578b\u8bbe\u8ba1**\uff1a\u8bbe\u8ba1\u89c4\u8303\u5316\u6570\u636e\u5e93\u7ed3\u6784\uff0c\u907f\u514d\u5197\u4f59\uff0c\u786e\u4fdd\u6570\u636e\u4e00\u81f4\u6027\u3002\n9. **\u7f13\u5b58\u7b56\u7565\u89c4\u5212**\uff1a\u786e\u5b9a\u7f13\u5b58\u5c42\u7ea7\uff08\u672c\u5730\u3001Redis\u3001CDN\uff09\uff0c\u8bbe\u5b9a\u5931\u6548\u7b56\u7565\u3002\n10. **\u5f02\u6b65\u901a\u4fe1\u673a\u5236**\uff1a\u5f15\u5165\u6d88\u606f\u961f\u5217\uff08\u5982 Kafka\u3001RabbitMQ\uff09\u89e3\u8026\u9ad8\u8017\u65f6\u4efb\u52a1\u3002\n11. **\u5b89\u5168\u67b6\u6784\u8bbe\u8ba1**\uff1a\u89c4\u5212\u8eab\u4efd\u8ba4\u8bc1\uff08OAuth2/JWT\uff09\u3001\u6388\u6743\uff08RBAC/ABAC\uff09\u548c\u6570\u636e\u52a0\u5bc6\u65b9\u6848\u3002\n12. **\u5bb9\u9519\u4e0e\u964d\u7ea7\u7b56\u7565**\uff1a\u8bbe\u8ba1\u7194\u65ad\u5668\uff08Circuit Breaker\uff09\u548c\u964d\u7ea7\u65b9\u6848\uff0c\u9632\u6b62\u96ea\u5d29\u6548\u5e94\u3002\n13. **\u65e5\u5fd7\u4e0e\u76d1\u63a7\u4f53\u7cfb**\uff1a\u89c4\u5212\u7ed3\u6784\u5316\u65e5\u5fd7\u683c\u5f0f\uff08JSON\uff09\u548c\u76d1\u63a7\u6307\u6807\uff08Prometheus/Grafana\uff09\u3002\n14. **\u914d\u7f6e\u7ba1\u7406\u65b9\u6848**\uff1a\u4f7f\u7528\u914d\u7f6e\u4e2d\u5fc3\uff08\u5982 Nacos\u3001Consul\uff09\u5b9e\u73b0\u52a8\u6001\u914d\u7f6e\u66f4\u65b0\u3002\n15. **\u4f9d\u8d56\u7ba1\u7406\u7b56\u7565**\uff1a\u660e\u786e\u7b2c\u4e09\u65b9\u5e93\u7248\u672c\u9501\u5b9a\uff0c\u907f\u514d\u4f9d\u8d56\u51b2\u7a81\u3002\n16. **\u591a\u73af\u5883\u9694\u79bb**\uff1a\u8bbe\u8ba1\u5f00\u53d1\u3001\u6d4b\u8bd5\u3001\u9884\u53d1\u5e03\u3001\u751f\u4ea7\u73af\u5883\u7684\u9694\u79bb\u673a\u5236\u3002\n17. **\u707e\u5907\u65b9\u6848\u8bbe\u8ba1**\uff1a\u89c4\u5212\u6570\u636e\u5907\u4efd\u3001\u5f02\u5730\u5bb9\u707e\u548c\u6545\u969c\u5207\u6362\u673a\u5236\u3002\n18",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 52,
+          "prompt_ms": 158.6,
+          "prompt_per_token_ms": 3.05,
+          "prompt_per_second": 327.9,
+          "predicted_n": 512,
+          "predicted_ms": 3301.1,
+          "predicted_per_token_ms": 6.447,
+          "predicted_per_second": 155.1,
+          "draft_n": 466,
+          "draft_n_accepted": 302
+        },
+        "usage": {
+          "prompt_tokens": 52,
+          "completion_tokens": 512,
+          "total_tokens": 564,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "finish_reason": "length",
+        "wall_s": 3.4764044519979507,
+        "first_content_s": 0.17612069798633456
+      }
+    ]
+  },
+  "correct": true,
+  "status": {
+    "service": "strata",
+    "model": "qwen3.8-flash-swift-iq3-xxs",
+    "loaded": true,
+    "auto_load": true,
+    "structured_output": {
+      "formats": [
+        "json_object",
+        "json_schema"
+      ],
+      "method": "prompt_and_validate",
+      "constrained_decoding": false,
+      "stream_buffered": true
+    },
+    "engine": "0.1.41",
+    "started": 1791645580,
+    "uptime_s": 0,
+    "cache_max_tokens": 262144,
+    "context": {
+      "native": 262144,
+      "max_positions": 262144
+    },
+    "concurrency": {
+      "serving": 1,
+      "requested": 1
+    },
+    "dialects": [
+      "/v1/chat/completions",
+      "/v1/messages",
+      "/v1/responses"
+    ],
+    "vision": {
+      "enabled": true,
+      "available": true,
+      "error": null
+    },
+    "activity": {
+      "requests": 0,
+      "in_flight": 0,
+      "last_request_at": null
+    },
+    "last_timings": null,
+    "vram": {
+      "elastic": false
+    },
+    "machine": {
+      "at": 1791645581,
+      "gpu": null,
+      "ram": {
+        "used_gib": 133.9,
+        "total_gib": 1007.3
+      }
+    }
+  },
+  "recall": {
+    "text": "### The Five Secret Codes\n\n1.  **CEDAR-712**\n2.  **ORBIT-935**\n3.  **MANGO-246**\n4.  **RIVER-508**\n5.  **TULIP-163**\n\n***\n\n### Detailed Explanation of Indexing Rules\n\nBased on the provided records, the indexing system follows a **two-dimensional coordinate structure** (Row:Column) with specific rules for data storage and checkpoint placement.\n\n#### 1. The Coordinate System (Row:Column)\nThe records are organized using a `Row:Index` format (e.g., `Record 0:15`).\n*   **The First Number (Row):** Represents the \"Block\" or \"Group\" of data. There are 5 distinct rows (0 through 4).\n*   **The Second Number (Index):** Represents the sequential position of the record within that specific row.\n\n#### 2. Row Capacity and Boundaries\nThe capacity of each row varies, creating a specific boundary for the data:\n*   **Row 0:** Contains records from index `0` to `400` (401 records total",
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 31566,
+      "prompt_ms": 6936.4,
+      "prompt_per_token_ms": 0.22,
+      "prompt_per_second": 4550.8,
+      "predicted_n": 256,
+      "predicted_ms": 1706.5,
+      "predicted_per_token_ms": 6.666,
+      "predicted_per_second": 150.0,
+      "draft_n": 206,
+      "draft_n_accepted": 154
+    },
+    "usage": {
+      "prompt_tokens": 31566,
+      "completion_tokens": 256,
+      "total_tokens": 31822,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "finish_reason": "length",
+    "wall_s": 8.676983949029818,
+    "first_content_s": 6.975943624973297
+  },
+  "rates": {
+    "english": [
+      146.8,
+      149.6,
+      151.7
+    ],
+    "code": [
+      175.5,
+      176.4,
+      182.1
+    ],
+    "chinese": [
+      148.4,
+      156.2,
+      155.1
+    ]
+  }
+}

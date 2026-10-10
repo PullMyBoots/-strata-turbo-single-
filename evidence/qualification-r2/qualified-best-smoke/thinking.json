@@ -1,0 +1,55 @@
+{
+  "request": {
+    "model": "qwen3.8 flash",
+    "messages": [
+      {
+        "role": "user",
+        "content": "计算17*23，检查一次，只给简短结论。"
+      }
+    ],
+    "max_tokens": 2048,
+    "temperature": 0,
+    "reasoning_effort": "low",
+    "cache_prompt": false,
+    "seed": 20261008
+  },
+  "response": {
+    "id": "chatcmpl-a6b913254e3144a6b339ecec",
+    "object": "chat.completion",
+    "created": 1791488265,
+    "model": "qwen3.8 flash",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "17 × 23 = **391**（已验证：391 ÷ 23 = 17 ✓）",
+          "reasoning_content": "用户要求计算17*23，检查一次，只给简短结论。\n\n17*23 = 17*20 + 17*3 = 340 + 51 = 391\n\n检查：391/23 = 17 ✓，391/17 = 23 ✓\n\n简短结论即可。\n"
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 55,
+      "completion_tokens": 115,
+      "total_tokens": 170,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 55,
+      "prompt_ms": 261.1,
+      "prompt_per_token_ms": 4.747,
+      "prompt_per_second": 210.6,
+      "predicted_n": 115,
+      "predicted_ms": 493.2,
+      "predicted_per_token_ms": 4.289,
+      "predicted_per_second": 233.2,
+      "draft_n": 119,
+      "draft_n_accepted": 91
+    }
+  },
+  "http_status": 200
+}

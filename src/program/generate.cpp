@@ -4526,6 +4526,11 @@ int main(int argc, char** argv) {
         vh.slot_off = xcache.slot_offsets();   // E-6: the device plan's pointers
         vh.n_slots = xcache.slots();
         vh.static_residency = o.no_prefill_borrow && o.adapt_swaps == 0;
+        // Only this single-session loop owns the loan/refill lifecycle. Split, peer and IPC engines
+        // retain their original static-residency requirement; adaptive exchanges remain forbidden.
+        const char* restore_env = std::getenv("STRATA_VERIFY_PREFILL_RESTORE");
+        vh.prefill_restore = restore_env && std::string(restore_env) == "1" && o.adapt_swaps == 0
+                             && !multi_gpu && !peer.valid() && !strata::core::shared_weights_enabled();
         vh.peer = peer.valid() ? &peer : nullptr;
         // Layer split: `ver` runs layers [0, K1) and hands its residual to the next stage's verifier, and so on; the
         // last runs the head.  The hand-offs are mapped pinned memory, portable: a stage on another GPU reads it.
@@ -4826,6 +4831,17 @@ int main(int argc, char** argv) {
         drive.d.plan = ver.plan_sink();
         drive.d.pcie_num = std::max(0, std::min(256, (int) (o.pcie_frac * 256.0 + 0.5)));
         if (o.adapt_every > 0 && o.adapt_swaps > 0) drive.d.usage.assign((size_t) (g.n_layers * g.n_expert), 0.0f);
+        // A native media request must not inherit the expert placement learned
+        // from an unrelated text request. Keep its numerical backend placement
+        // reproducible while retaining adaptive caching for ordinary text.
+        const char* media_profile_env = std::getenv("STRATA_MEDIA_FIXED_PROFILE");
+        const bool media_fixed_profile = media_profile_env && media_profile_env[0]=='1' && o.vision && !multi_gpu &&
+                                         !peer.valid() && !strata::core::shared_weights_enabled();
+        const std::vector<int32_t> media_residency = media_fixed_profile ? host_res : std::vector<int32_t>{};
+        // A compact RAM complement has exchanged its own ownership with the
+        // GPU. Without a full immutable arena, keep that profile fixed for all
+        // requests instead of rewriting its GPU slots behind the RAM planner.
+        if (media_fixed_profile && srcp != &arena_src) drive.d.usage.clear();
         // #477 --expert-profile-save: what the adaptive tier learned, kept across restarts (opt-in; off: `heat` stays
         // empty and nothing below runs).  It needs the adaptive tier's counts and the residency table.
         std::vector<double> heat;
@@ -5730,7 +5746,9 @@ int main(int argc, char** argv) {
                                  std::chrono::duration<double, std::milli>(Clock::now() - t_rf).count());
                     std::fflush(stderr);
                 }
-                return true;
+                // fill_slot_queued has completed and res_upload restored every original slot. The verifier
+                // checks the device table before it allows the unchanged device-only graphs to run again.
+                return !vh.prefill_restore || ver.set_cache_lent(false, e);
             };
             // lend the slots `tokens` batched prompt tokens need: the prompt path's buffers for min(chunk, tokens
             // rounded up to 256), laid out in the last of the slots it may borrow - per participant, out of that
@@ -5748,6 +5766,7 @@ int main(int argc, char** argv) {
                     e = "prefill: cannot lend buffers for an empty request segment";
                     return false;
                 }
+                if (vh.prefill_restore && !ver.set_cache_lent(true, e)) return false;
                 bool any = false;
                 for (PfPart& p : pf_parts) {
                     if (p.first < 0) continue;
@@ -5786,6 +5805,31 @@ int main(int argc, char** argv) {
                 return true;
             };
             apply_pending(true);
+            if (geni && media_fixed_profile && host_res != media_residency) {
+                const auto restore_start = Clock::now();
+                int64_t restored = 0;
+                for (size_t i = 0; i < media_residency.size(); ++i) {
+                    const int32_t slot = media_residency[i];
+                    if (slot < 0 || host_res[i] == slot) continue;
+                    const int64_t layer = (int64_t)i / g.n_expert;
+                    const uint8_t* blob = srcp->blob(layer, (int64_t)i % g.n_expert);
+                    if (!blob || !xcache.fill_slot_queued(slot, blob, err,
+                            (int64_t)strata::kernels::cpu::expert_layout().blob_bytes(layer))) {
+                        std::printf("ERR restoring media expert profile: %s\n",err.c_str());return 1;
+                    }
+                    ++restored;
+                }
+                // Publish the restored mapping only after all original bytes
+                // have landed. Decode and borrowed prefill use the same table.
+                if (!xcache.sync_queued(err)) {
+                    std::printf("ERR restoring media expert profile: %s\n",err.c_str());return 1;
+                }
+                std::copy(media_residency.begin(),media_residency.end(),host_res.begin());
+                res_upload();
+                std::fill(drive.d.usage.begin(),drive.d.usage.end(),0.0f);
+                std::fprintf(stderr,"strata serve: restored %lld media-profile slots in %.1f ms\n",
+                    (long long)restored,std::chrono::duration<double,std::milli>(Clock::now()-restore_start).count());
+            }
             // per-request sampling for the verify window's head (greedy when temperature is absent)
             strata::kernels::SamplerParams req_sp;
             req_sp.greedy = req_temperature <= 0.0f;
@@ -5892,7 +5936,8 @@ int main(int argc, char** argv) {
             std::vector<int32_t> drafts((size_t) S, 0), window((size_t) S), outv((size_t) S);
             std::vector<float> dprob((size_t) S, 0.0f);
             static const bool adaptive_mtp_on=[] { const char* v=std::getenv("STRATA_MTP_ADAPTIVE");return v&&v[0]=='1'; }();
-            const bool adaptive_mtp=adaptive_mtp_on && S_mtp>=2 && !req_spec_explicit;
+            // Multi-token verification is not qualified for non-scalar media positions.
+            const bool adaptive_mtp=adaptive_mtp_on && S_mtp>=2 && !req_spec_explicit && !geni;
             static const bool ple_overlap=[]{const char* v=std::getenv("STRATA_PLE_PREFETCH");return v&&v[0]=='1';}();
             if(ple_overlap)mtp.set_proposal_hook([&](int32_t token,std::string& e){return ver.ple_prefetch_append(token,e);});
             strata::spec::AdaptiveLookahead lookahead(S_mtp,req_adaptive_policy);
@@ -5942,19 +5987,19 @@ int main(int argc, char** argv) {
             if (cancelled) finish = "cancel";
             while (!cancelled && produced_n < max_new) {
                 int T = S_mtp;
-                const bool from_recycle=recycled_drafts>0;
+                const bool from_recycle=!geni && recycled_drafts>0;
                 if(from_recycle){T=recycled_drafts+1;recycled_drafts=0;}
                 else if (adaptive_mtp) T=lookahead.choose(dprob.data(),available_drafts);
                 else if (req_spec_min_p > 0.0) {
                     T = 1;
                     while (T < S_mtp && dprob[(size_t) T - 1] >= (float) req_spec_min_p) ++T;
                 }
-                if (first_window) T = 1;
+                if (first_window || geni) T = 1;
                 // a repeat of earlier context (prompt lookup) where the MTP's own first guess agrees: the policy takes it
                 // when its expected tokens per ms, from the measured acceptance and window costs, beat the MTP window's
                 bool from_sfx = false;
                 int sfx_match = 0;
-                if (o.suffix_draft > 0 && !first_window && !from_recycle) {
+                if (o.suffix_draft > 0 && !first_window && !from_recycle && !geni) {
                     const int k = sfx.propose(S - 1, sbuf.data());
                     sfx_match = sfx.last_match();
                     if (k > 0 && sbuf[0] == drafts[0]) {
@@ -6009,7 +6054,7 @@ int main(int argc, char** argv) {
                 const Clock::time_point tw1 = Clock::now();
                 std::thread adapt_thr;   // the adaptive tier beside the commit and the draft (as in generate)
                 bool adapt_ok = true;
-                if (!drive.d.usage.empty() && ((rounds + 1) % o.adapt_every) == 0)
+                if (!(geni && media_fixed_profile) && !drive.d.usage.empty() && ((rounds + 1) % o.adapt_every) == 0)
                     adapt_thr = std::thread([&] { adapt_ok = adapt(); });
                 if (!ver.commit(a + 1, err)) {
                     if (adapt_thr.joinable()) adapt_thr.join();

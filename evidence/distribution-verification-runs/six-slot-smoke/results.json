@@ -1,0 +1,1116 @@
+{
+  "passed": true,
+  "context": 262144,
+  "concurrency": 6,
+  "protocol": "One service start per arm, one warm batch and two measured batches; 6 requests x 256 tokens; no prompt cache. Not an ABBA speed qualification.",
+  "official": {
+    "status": {
+      "service": "strata",
+      "model": "qwen3.8-flash-iq2-xs",
+      "loaded": true,
+      "auto_load": true,
+      "structured_output": {
+        "formats": [
+          "json_object",
+          "json_schema"
+        ],
+        "method": "prompt_and_validate",
+        "constrained_decoding": false,
+        "stream_buffered": true
+      },
+      "engine": "0.1.41",
+      "started": 1791637581,
+      "uptime_s": 0,
+      "cache_max_tokens": 262144,
+      "context": {
+        "native": 262144,
+        "max_positions": 262144
+      },
+      "concurrency": {
+        "serving": 6,
+        "requested": 6
+      },
+      "dialects": [
+        "/v1/chat/completions",
+        "/v1/messages",
+        "/v1/responses"
+      ],
+      "vision": {
+        "enabled": true,
+        "available": true,
+        "error": null
+      },
+      "activity": {
+        "requests": 0,
+        "in_flight": 0,
+        "last_request_at": null
+      },
+      "last_timings": null,
+      "vram": {
+        "elastic": false
+      },
+      "machine": {
+        "at": 1791637581,
+        "gpu": null,
+        "ram": {
+          "used_gib": 98.3,
+          "total_gib": 1007.3
+        }
+      }
+    },
+    "batches": [
+      {
+        "requests": [
+          {
+            "text": "REQUEST_KEY_0_0_8417\n\n1. Define the primary business objective and scope of the software project.\n2. Identify all key stakeholders, including end-users, developers, and management.\n3. Conduct a thorough requirements gathering phase using interviews and surveys.\n4. Document functional requirements in a structured requirements specification document.\n5. Document non-functional requirements such as performance, security, and scalability.\n6. Create user personas to represent different types of end-users.\n7. Develop user stories that describe features from the user's perspective.\n8. Prioritize features based on business value and technical feasibility.\n9. Select an appropriate software development methodology (e.g., Agile, Waterfall, DevOps).\n10. Establish a project timeline with clear milestones and deliverables.\n11. Assign roles and responsibilities to team members.\n12. Set up a version control system (e.g., Git) for code management.\n13. Choose a programming language suitable for the project requirements.\n14. Select a framework or library that aligns with the chosen language.\n15. Define the architecture pattern (e.g., Microservices, Monolithic, Serverless).\n16. Design the database",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 163.3,
+              "prompt_per_token_ms": 3.711,
+              "prompt_per_second": 269.4,
+              "predicted_n": 256,
+              "predicted_ms": 8852.4,
+              "predicted_per_token_ms": 35.269,
+              "predicted_per_second": 28.4,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 9.413891750853509
+          },
+          {
+            "text": "REQUEST_KEY_1_0_8417\n\n1. Define the primary business objective and scope of the software project.\n2. Identify all key stakeholders, including end-users, developers, and project managers.\n3. Conduct a thorough requirements gathering phase using interviews and surveys.\n4. Document functional requirements in a structured requirements specification document.\n5. Document non-functional requirements such as performance, security, and scalability.\n6. Create user personas to represent different types of end-users.\n7. Develop user stories that describe features from the user's perspective.\n8. Prioritize requirements using a method like MoSCoW or Kano model.\n9. Define the technology stack, including programming languages and frameworks.\n10. Select appropriate database systems based on data structure and volume.\n11. Choose infrastructure providers for hosting and deployment.\n12. Establish coding standards and style guides for the development team.\n13. Design the overall system architecture, choosing between monolithic or microservices.\n14. Define API contracts using OpenAPI or GraphQL schemas.\n15. Create high-level component diagrams showing system interactions.\n16. Design the database schema, including tables, relationships, and indexes.\n17",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 155.3,
+              "prompt_per_token_ms": 3.53,
+              "prompt_per_second": 283.3,
+              "predicted_n": 256,
+              "predicted_ms": 8740.7,
+              "predicted_per_token_ms": 34.143,
+              "predicted_per_second": 29.3,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 9.595917107071728
+          },
+          {
+            "text": "REQUEST_KEY_2_0_8417\n\n1. Define the primary business objective and scope of the software project.\n2. Identify all key stakeholders, including end-users, developers, and project managers.\n3. Conduct a thorough requirements gathering phase using interviews and surveys.\n4. Document functional requirements in a structured requirements specification document.\n5. Document non-functional requirements such as performance, security, and scalability.\n6. Create user personas to represent different types of end-users.\n7. Develop user stories that describe specific features from the user's perspective.\n8. Prioritize features based on business value and technical feasibility.\n9. Select an appropriate software development methodology (e.g., Agile, Waterfall, DevOps).\n10. Establish a project timeline with clear milestones and deliverables.\n11. Assign roles and responsibilities to team members.\n12. Set up a version control system (e.g., Git) for code management.\n13. Choose a programming language suitable for the project's needs.\n14. Select a framework or library that aligns with the chosen language.\n15. Define the architecture pattern (e.g., Microservices, Monolithic, Serverless).\n16.",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 143.0,
+              "prompt_per_token_ms": 3.25,
+              "prompt_per_second": 307.7,
+              "predicted_n": 256,
+              "predicted_ms": 8506.9,
+              "predicted_per_token_ms": 33.23,
+              "predicted_per_second": 30.1,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 9.640153377084062
+          },
+          {
+            "text": "REQUEST_KEY_3_0_8417\n\n1. Define the primary business objective and scope of the software project.\n2. Identify all key stakeholders, including end-users, developers, and project managers.\n3. Conduct a thorough requirements gathering phase using interviews and surveys.\n4. Document functional requirements in a structured requirements specification document.\n5. Document non-functional requirements such as performance, security, and scalability.\n6. Create user personas to represent different types of end-users.\n7. Develop user stories that describe features from the user's perspective.\n8. Prioritize features using a method like MoSCoW or RICE scoring.\n9. Define the technology stack, including programming languages and frameworks.\n10. Select appropriate database technologies based on data structure needs.\n11. Choose infrastructure providers for hosting and deployment.\n12. Establish coding standards and style guides for the development team.\n13. Set up version control systems, typically Git, for source code management.\n14. Define branching strategies, such as GitFlow or trunk-based development.\n15. Create a project directory structure that is logical and scalable.\n16. Design the high-level system architecture, such as microservices or",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 138.4,
+              "prompt_per_token_ms": 3.145,
+              "prompt_per_second": 317.9,
+              "predicted_n": 256,
+              "predicted_ms": 8275.2,
+              "predicted_per_token_ms": 32.325,
+              "predicted_per_second": 30.9,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 9.69452954386361
+          },
+          {
+            "text": "REQUEST_KEY_4_0_8417\n\n1. Define the primary business objective and scope of the software project.\n2. Identify all key stakeholders, including end-users, developers, and project managers.\n3. Conduct a thorough requirements gathering phase using interviews and surveys.\n4. Document functional requirements in a structured requirements specification document.\n5. Document non-functional requirements such as performance, security, and scalability.\n6. Create user personas to represent different types of end-users.\n7. Develop user stories that describe features from the user's perspective.\n8. Prioritize requirements using a method like MoSCoW or Kano model.\n9. Define the technology stack, including programming languages and frameworks.\n10. Select appropriate database systems based on data structure and volume.\n11. Choose infrastructure providers for hosting and deployment.\n12. Establish coding standards and style guides for the development team.\n13. Define the software architecture pattern, such as microservices or monolithic.\n14. Design the high-level system architecture diagram.\n15. Break down the system into logical components or modules.\n16. Define interfaces between components using API specifications.\n17. Design the database schema,",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 140.4,
+              "prompt_per_token_ms": 3.191,
+              "prompt_per_second": 313.4,
+              "predicted_n": 256,
+              "predicted_ms": 8021.2,
+              "predicted_per_token_ms": 31.333,
+              "predicted_per_second": 31.9,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 9.723237867932767
+          },
+          {
+            "text": "REQUEST_KEY_5_0_8417\n\n1. Define the primary business objective and scope of the software project.\n2. Identify all key stakeholders, including end-users, developers, and project managers.\n3. Conduct a thorough requirements gathering phase using interviews and surveys.\n4. Document functional requirements in a structured requirements specification document.\n5. Document non-functional requirements such as performance, security, and scalability.\n6. Create user personas to represent different types of end-users.\n7. Develop user stories that describe features from the user's perspective.\n8. Prioritize requirements using a method like MoSCoW or Kano model.\n9. Define the technology stack, including programming languages and frameworks.\n10. Select appropriate database systems based on data structure and volume.\n11. Choose infrastructure providers, such as cloud services or on-premise servers.\n12. Establish coding standards and style guides for the development team.\n13. Define the software architecture pattern, such as microservices or monolithic.\n14. Design the high-level system architecture diagram.\n15. Break down the system into logical components or modules.\n16. Define API contracts for internal and external communication.\n1",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 132.1,
+              "prompt_per_token_ms": 3.002,
+              "prompt_per_second": 333.1,
+              "predicted_n": 256,
+              "predicted_ms": 7772.1,
+              "predicted_per_token_ms": 30.36,
+              "predicted_per_second": 32.9,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 9.750743116950616
+          }
+        ],
+        "wall_s": 9.761867173947394,
+        "aggregate_tps": 157.3469473236942
+      },
+      {
+        "requests": [
+          {
+            "text": "REQUEST_KEY_0_1_8417\n\n1. Define the project scope and objectives clearly before starting any coding.\n2. Identify all stakeholders and their specific requirements.\n3. Conduct a thorough market research to understand user needs.\n4. Create a high-level architecture diagram for the system.\n5. Choose the appropriate programming language based on project requirements.\n6. Select a suitable framework or library for development.\n7. Establish a version control system, such as Git, for code management.\n8. Define coding standards and style guides for the team.\n9. Set up a continuous integration (CI) pipeline for automated testing.\n10. Design the database schema based on data requirements.\n11. Normalize the database to reduce redundancy and improve integrity.\n12. Choose the appropriate database type (SQL, NoSQL, etc.).\n13. Implement data indexing strategies for performance optimization.\n14. Define API endpoints and their request/response structures.\n15. Use RESTful principles for API design if applicable.\n16. Consider GraphQL for complex data queries if needed.\n17. Implement authentication and authorization mechanisms.\n18. Use OAuth or JWT for secure token-based authentication.\n1",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 144.7,
+              "prompt_per_token_ms": 3.289,
+              "prompt_per_second": 304.1,
+              "predicted_n": 256,
+              "predicted_ms": 8476.2,
+              "predicted_per_token_ms": 33.24,
+              "predicted_per_second": 30.1,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 8.901585411978886
+          },
+          {
+            "text": "REQUEST_KEY_1_1_8417\n\n1. Define the primary business objective and scope of the software project.\n2. Identify all key stakeholders, including end-users, developers, and project managers.\n3. Conduct a thorough requirements gathering session with all stakeholders.\n4. Document functional requirements in a structured format.\n5. Document non-functional requirements, such as performance, security, and scalability.\n6. Create user personas to represent different types of end-users.\n7. Develop user stories for each major feature.\n8. Prioritize features using a method like MoSCoW or RICE.\n9. Define the technology stack, including programming languages and frameworks.\n10. Select appropriate database technologies based on data structure needs.\n11. Choose infrastructure providers, such as AWS, Azure, or GCP.\n12. Establish coding standards and style guides for the development team.\n13. Define the architecture pattern, such as microservices, monolith, or serverless.\n14. Design the high-level system architecture diagram.\n15. Define API contracts using OpenAPI or GraphQL schemas.\n16. Design the database schema, including tables, indexes, and relationships.\n17",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 129.1,
+              "prompt_per_token_ms": 2.934,
+              "prompt_per_second": 340.8,
+              "predicted_n": 256,
+              "predicted_ms": 8284.0,
+              "predicted_per_token_ms": 32.359,
+              "predicted_per_second": 30.9,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 8.952309004962444
+          },
+          {
+            "text": "REQUEST_KEY_2_1_8417\n\n1. Define the primary business objective and scope of the software project.\n2. Identify all key stakeholders, including end-users, developers, and project managers.\n3. Conduct a thorough requirements gathering session with all stakeholders.\n4. Document functional requirements in a structured format.\n5. Document non-functional requirements, such as performance, security, and scalability.\n6. Create user personas to represent different types of end-users.\n7. Develop user stories for each major feature.\n8. Prioritize features using a method like MoSCoW or RICE.\n9. Define the technology stack, including programming languages and frameworks.\n10. Select appropriate database technologies based on data structure needs.\n11. Choose infrastructure providers, such as AWS, Azure, or GCP.\n12. Establish coding standards and style guides for the development team.\n13. Define the architecture pattern, such as microservices, monolith, or serverless.\n14. Design the high-level system architecture diagram.\n15. Define API contracts using OpenAPI or GraphQL schemas.\n16. Design the database schema, including tables, relationships, and indexes.\n17",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 127.9,
+              "prompt_per_token_ms": 2.907,
+              "prompt_per_second": 344.0,
+              "predicted_n": 256,
+              "predicted_ms": 7838.0,
+              "predicted_per_token_ms": 30.617,
+              "predicted_per_second": 32.7,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 8.996738919056952
+          },
+          {
+            "text": "REQUEST_KEY_3_1_8417\n\n1. Define the primary business objective and scope of the software project.\n2. Identify all key stakeholders, including end-users, developers, and project managers.\n3. Conduct a thorough requirements gathering phase using interviews and surveys.\n4. Document functional requirements in a structured requirements specification document.\n5. Document non-functional requirements such as performance, security, and scalability.\n6. Create user personas to represent different types of end-users.\n7. Develop user stories that describe features from the user's perspective.\n8. Prioritize features based on business value and technical feasibility.\n9. Select an appropriate software development methodology (e.g., Agile, Waterfall, DevOps).\n10. Establish a project timeline with clear milestones and deliverables.\n11. Assign roles and responsibilities within the development team.\n12. Choose a technology stack that aligns with the project requirements.\n13. Select a programming language suitable for the application domain.\n14. Choose a database system (SQL or NoSQL) based on data structure needs.\n15. Define the architecture pattern (e.g., Microservices, Monolithic, Serverless).\n16. Design the",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 129.4,
+              "prompt_per_token_ms": 2.941,
+              "prompt_per_second": 340.0,
+              "predicted_n": 256,
+              "predicted_ms": 8060.1,
+              "predicted_per_token_ms": 31.485,
+              "predicted_per_second": 31.8,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 8.973916120827198
+          },
+          {
+            "text": "REQUEST_KEY_4_1_8417\n\n1. Define the primary business objective and scope of the software project.\n2. Identify all key stakeholders, including end-users, developers, and project managers.\n3. Conduct a thorough requirements gathering phase using interviews and surveys.\n4. Document functional requirements in a structured requirements specification document.\n5. Document non-functional requirements such as performance, security, and scalability.\n6. Create user personas to represent different types of end-users.\n7. Develop user stories that describe features from the user's perspective.\n8. Prioritize features based on business value and technical feasibility.\n9. Select an appropriate software development methodology (e.g., Agile, Waterfall, DevOps).\n10. Establish a project timeline with clear milestones and deliverables.\n11. Assign roles and responsibilities within the development team.\n12. Choose a version control system (e.g., Git) for source code management.\n13. Set up a continuous integration (CI) pipeline for automated testing.\n14. Define coding standards and style guides for the development team.\n15. Select the primary programming language(s) for the backend.\n16. Select the primary programming language(s",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 128.5,
+              "prompt_per_token_ms": 2.92,
+              "prompt_per_second": 342.4,
+              "predicted_n": 256,
+              "predicted_ms": 7605.3,
+              "predicted_per_token_ms": 29.708,
+              "predicted_per_second": 33.7,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 9.00650502112694
+          },
+          {
+            "text": "REQUEST_KEY_5_1_8417\n\n1. Define the primary business objective and scope of the software project.\n2. Identify all key stakeholders, including end-users, developers, and project managers.\n3. Conduct a thorough requirements gathering phase using interviews and surveys.\n4. Document functional requirements in a structured requirements specification document.\n5. Document non-functional requirements such as performance, security, and scalability.\n6. Create user personas to represent different types of end-users.\n7. Develop user stories that describe features from the user's perspective.\n8. Prioritize requirements using a method like MoSCoW or Kano model.\n9. Define the technology stack, including programming languages and frameworks.\n10. Select appropriate database systems based on data structure and volume.\n11. Choose infrastructure providers, such as cloud services or on-premise servers.\n12. Establish coding standards and style guides for the development team.\n13. Define the software architecture pattern, such as microservices or monolithic.\n14. Design the high-level system architecture diagram.\n15. Break down the system into logical components or modules.\n16. Define API contracts for internal and external communication.\n1",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 126.3,
+              "prompt_per_token_ms": 2.87,
+              "prompt_per_second": 348.4,
+              "predicted_n": 256,
+              "predicted_ms": 7364.4,
+              "predicted_per_token_ms": 28.767,
+              "predicted_per_second": 34.8,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 9.018188045127317
+          }
+        ],
+        "wall_s": 9.025208724895492,
+        "aggregate_tps": 170.18996976358417
+      },
+      {
+        "requests": [
+          {
+            "text": "REQUEST_KEY_0_2_8417\n\n1. Define the primary business objective and scope of the software project.\n2. Identify all key stakeholders, including end-users, developers, and management.\n3. Conduct a thorough requirements gathering phase using interviews and surveys.\n4. Document functional requirements in a structured requirements specification document.\n5. Document non-functional requirements such as performance, security, and scalability.\n6. Create user personas to represent different types of end-users.\n7. Develop user stories that describe features from the user's perspective.\n8. Prioritize features based on business value and technical feasibility.\n9. Select an appropriate software development methodology (e.g., Agile, Waterfall, DevOps).\n10. Establish a project timeline with clear milestones and deliverables.\n11. Assign roles and responsibilities to team members.\n12. Set up a version control system (e.g., Git) for code management.\n13. Choose a programming language suitable for the project requirements.\n14. Select a framework or library that aligns with the chosen language.\n15. Define the architecture pattern (e.g., Microservices, Monolithic, Serverless).\n16. Design the database",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 147.1,
+              "prompt_per_token_ms": 3.343,
+              "prompt_per_second": 299.1,
+              "predicted_n": 256,
+              "predicted_ms": 7665.5,
+              "predicted_per_token_ms": 30.061,
+              "predicted_per_second": 33.3,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 8.103648846969008
+          },
+          {
+            "text": "REQUEST_KEY_1_2_8417\n\n1. Define the project scope and objectives clearly.\n2. Identify all stakeholders involved in the project.\n3. Conduct a thorough requirements gathering phase.\n4. Document functional requirements in detail.\n5. Document non-functional requirements (performance, security, etc.).\n6. Create user personas to understand end-user needs.\n7. Develop user stories for each feature.\n8. Prioritize features using MoSCoW or similar methods.\n9. Select the appropriate software architecture pattern.\n10. Choose the primary programming language.\n11. Select the database technology (SQL, NoSQL, etc.).\n12. Define the data model and schema.\n13. Design the API structure (REST, GraphQL, gRPC).\n14. Establish naming conventions for code and variables.\n15. Set up version control systems (Git).\n16. Define branching strategies (GitFlow, Trunk-based).\n17. Create a coding style guide.\n18. Implement linting tools for code quality.\n19. Set up Continuous Integration (CI) pipelines.\n20. Define unit testing standards.\n21. Implement integration testing",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 128.4,
+              "prompt_per_token_ms": 2.918,
+              "prompt_per_second": 342.7,
+              "predicted_n": 256,
+              "predicted_ms": 7232.0,
+              "predicted_per_token_ms": 28.25,
+              "predicted_per_second": 35.4,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 8.149198658997193
+          },
+          {
+            "text": "REQUEST_KEY_2_2_8417\n\n1. Define the primary business objective and scope of the software project.\n2. Identify all key stakeholders, including end-users, developers, and management.\n3. Conduct a thorough requirements gathering phase using interviews and surveys.\n4. Document functional requirements in a structured format.\n5. Document non-functional requirements such as performance, security, and scalability.\n6. Create user personas to represent different types of users.\n7. Develop user stories for each major feature.\n8. Prioritize features based on business value and technical feasibility.\n9. Define the technology stack, including programming languages and frameworks.\n10. Select appropriate database systems based on data structure needs.\n11. Choose infrastructure providers for hosting and deployment.\n12. Establish coding standards and style guides for the development team.\n13. Define the software architecture pattern (e.g., microservices, monolithic).\n14. Design the high-level system architecture diagram.\n15. Break down the system into logical components or modules.\n16. Define API contracts for internal and external communication.\n17. Design the database schema, including tables, indexes, and relationships.\n18.",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 127.3,
+              "prompt_per_token_ms": 2.893,
+              "prompt_per_second": 345.6,
+              "predicted_n": 256,
+              "predicted_ms": 7455.3,
+              "predicted_per_token_ms": 29.122,
+              "predicted_per_second": 34.3,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 8.128425795119256
+          },
+          {
+            "text": "REQUEST_KEY_3_2_8417\n\n1. Define the primary business objective and scope of the software project.\n2. Identify all key stakeholders, including end-users, developers, and project managers.\n3. Conduct a thorough requirements gathering phase using interviews and surveys.\n4. Document functional requirements in a structured format.\n5. Document non-functional requirements such as performance, security, and scalability.\n6. Create user personas to represent different types of users.\n7. Develop user stories for each major feature.\n8. Prioritize features based on business value and technical feasibility.\n9. Define the technology stack, including programming languages and frameworks.\n10. Select appropriate database systems based on data structure needs.\n11. Choose infrastructure providers for hosting and deployment.\n12. Establish coding standards and style guides for the development team.\n13. Define the architecture pattern, such as microservices or monolithic.\n14. Design the high-level system architecture diagram.\n15. Break down the system into logical components or modules.\n16. Define API contracts for internal and external communication.\n17. Design the database schema, including tables, indexes, and relationships.\n18. Plan",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 129.4,
+              "prompt_per_token_ms": 2.941,
+              "prompt_per_second": 340.0,
+              "predicted_n": 256,
+              "predicted_ms": 6756.0,
+              "predicted_per_token_ms": 26.391,
+              "predicted_per_second": 37.9,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 8.17752661393024
+          },
+          {
+            "text": "REQUEST_KEY_4_2_8417\n\n1. Define the primary business objective and scope of the software project.\n2. Identify all key stakeholders, including end-users, developers, and project managers.\n3. Conduct a thorough requirements gathering session with all stakeholders.\n4. Document functional requirements in a structured format.\n5. Document non-functional requirements, such as performance, security, and scalability.\n6. Create user personas to represent different types of end-users.\n7. Develop user stories for each major feature.\n8. Prioritize features based on business value and technical feasibility.\n9. Define the technology stack, including programming languages and frameworks.\n10. Select appropriate database systems based on data structure and volume.\n11. Choose infrastructure providers, such as cloud services or on-premise servers.\n12. Establish coding standards and style guides for the development team.\n13. Define the software architecture pattern, such as microservices or monolithic.\n14. Design the high-level system architecture diagram.\n15. Break down the system into distinct modules or services.\n16. Define API contracts for internal and external communication.\n17. Design the database schema, including tables, relationships",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 129.3,
+              "prompt_per_token_ms": 2.939,
+              "prompt_per_second": 340.3,
+              "predicted_n": 256,
+              "predicted_ms": 6515.9,
+              "predicted_per_token_ms": 25.453,
+              "predicted_per_second": 39.3,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 8.187236032215878
+          },
+          {
+            "text": "REQUEST_KEY_5_2_8417\n\n1. Define the primary business objective and scope of the software project.\n2. Identify all key stakeholders, including end-users, developers, and project managers.\n3. Conduct a thorough requirements gathering phase using interviews and surveys.\n4. Document functional requirements in a structured requirements specification document.\n5. Document non-functional requirements such as performance, security, and scalability.\n6. Create user personas to represent different types of end-users.\n7. Develop user stories that describe specific features from the user's perspective.\n8. Prioritize features based on business value and technical feasibility.\n9. Select an appropriate software development methodology (e.g., Agile, Waterfall, DevOps).\n10. Establish a project timeline with clear milestones and deliverables.\n11. Assign roles and responsibilities to team members.\n12. Set up a version control system (e.g., Git) for code management.\n13. Choose a programming language suitable for the project requirements.\n14. Select a framework or library that aligns with the chosen language.\n15. Define the architecture pattern (e.g., Microservices, Monolithic, Serverless).\n16. Design",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 132.1,
+              "prompt_per_token_ms": 3.002,
+              "prompt_per_second": 333.1,
+              "predicted_n": 256,
+              "predicted_ms": 6992.1,
+              "predicted_per_token_ms": 27.313,
+              "predicted_per_second": 36.6,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 8.161059089004993
+          }
+        ],
+        "wall_s": 8.193005125969648,
+        "aggregate_tps": 187.4769973146103
+      }
+    ],
+    "seventh_request_queue_passed": true,
+    "isolation_passed": true,
+    "image": {
+      "passed": true,
+      "answer": "The dominant color is red."
+    },
+    "video": {
+      "passed": true,
+      "answer": "The dominant color throughout this video is **red**.",
+      "fps": 8
+    }
+  },
+  "turbo": {
+    "status": {
+      "service": "strata",
+      "model": "qwen3.8-flash-iq2-xs",
+      "loaded": true,
+      "auto_load": true,
+      "structured_output": {
+        "formats": [
+          "json_object",
+          "json_schema"
+        ],
+        "method": "prompt_and_validate",
+        "constrained_decoding": false,
+        "stream_buffered": true
+      },
+      "engine": "0.1.41",
+      "started": 1791637650,
+      "uptime_s": 0,
+      "cache_max_tokens": 262144,
+      "context": {
+        "native": 262144,
+        "max_positions": 262144
+      },
+      "concurrency": {
+        "serving": 6,
+        "requested": 6
+      },
+      "dialects": [
+        "/v1/chat/completions",
+        "/v1/messages",
+        "/v1/responses"
+      ],
+      "vision": {
+        "enabled": true,
+        "available": true,
+        "error": null
+      },
+      "activity": {
+        "requests": 0,
+        "in_flight": 0,
+        "last_request_at": null
+      },
+      "last_timings": null,
+      "vram": {
+        "elastic": false
+      },
+      "machine": {
+        "at": 1791637650,
+        "gpu": null,
+        "ram": {
+          "used_gib": 98.6,
+          "total_gib": 1007.3
+        }
+      }
+    },
+    "batches": [
+      {
+        "requests": [
+          {
+            "text": "REQUEST_KEY_0_0_8417\n\n1. Define the primary business objective and scope of the software project.\n2. Identify all key stakeholders, including end-users, developers, and management.\n3. Conduct a thorough requirements gathering phase using interviews and surveys.\n4. Document functional requirements in a structured format.\n5. Document non-functional requirements such as performance, security, and scalability.\n6. Create user personas to represent different types of users.\n7. Develop user stories for each major feature.\n8. Prioritize features based on business value and technical feasibility.\n9. Select the appropriate software development methodology (e.g., Agile, Waterfall).\n10. Establish a project timeline with clear milestones.\n11. Assign roles and responsibilities to team members.\n12. Choose the primary programming language(s) for the backend.\n13. Choose the primary programming language(s) for the frontend.\n14. Select a suitable database system (SQL or NoSQL).\n15. Define the architecture pattern (e.g., Microservices, Monolith, Serverless).\n16. Design the high-level system architecture diagram.\n17. Define the API contract between frontend and backend services.",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 175.6,
+              "prompt_per_token_ms": 3.991,
+              "prompt_per_second": 250.6,
+              "predicted_n": 256,
+              "predicted_ms": 9389.9,
+              "predicted_per_token_ms": 36.823,
+              "predicted_per_second": 27.2,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 9.920500254025683
+          },
+          {
+            "text": "REQUEST_KEY_1_0_8417\n\n1. Define the primary business objective and scope of the software project.\n2. Identify all key stakeholders, including end-users, developers, and project managers.\n3. Conduct a thorough requirements gathering phase using interviews and surveys.\n4. Document functional requirements in a structured format.\n5. Document non-functional requirements such as performance, security, and scalability.\n6. Create user personas to represent different types of users.\n7. Develop user stories for each feature based on personas.\n8. Prioritize features using a MoSCoW method or similar prioritization framework.\n9. Define the technology stack, including programming languages and frameworks.\n10. Select appropriate database systems based on data structure and volume.\n11. Choose infrastructure providers for hosting and deployment.\n12. Establish coding standards and style guides for the development team.\n13. Define the architecture pattern, such as microservices, monolithic, or serverless.\n14. Design the high-level system architecture diagram.\n15. Break down the system into logical components or modules.\n16. Define API contracts for internal and external communication.\n17. Design the database schema, including",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 147.6,
+              "prompt_per_token_ms": 3.355,
+              "prompt_per_second": 298.1,
+              "predicted_n": 256,
+              "predicted_ms": 9432.1,
+              "predicted_per_token_ms": 36.844,
+              "predicted_per_second": 27.1,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 10.259882868034765
+          },
+          {
+            "text": "REQUEST_KEY_2_0_8417\n\n1. Define the primary business objective and scope of the software project.\n2. Identify all key stakeholders, including end-users, developers, and project managers.\n3. Conduct a thorough requirements gathering phase using interviews and surveys.\n4. Document functional requirements in a structured requirements specification document.\n5. Document non-functional requirements such as performance, security, and scalability.\n6. Create user personas to represent different types of end-users.\n7. Develop user stories that describe features from the user's perspective.\n8. Prioritize requirements using a method like MoSCoW or Kano model.\n9. Define the technology stack, including programming languages and frameworks.\n10. Select appropriate database systems based on data structure and volume.\n11. Choose infrastructure providers for hosting and deployment.\n12. Establish coding standards and style guides for the development team.\n13. Design the overall system architecture, choosing between monolithic or microservices.\n14. Define API contracts using OpenAPI or GraphQL schemas.\n15. Create high-level component diagrams showing system interactions.\n16. Design data models and entity-relationship diagrams for the database.\n17.",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 151.4,
+              "prompt_per_token_ms": 3.441,
+              "prompt_per_second": 290.6,
+              "predicted_n": 256,
+              "predicted_ms": 9266.1,
+              "predicted_per_token_ms": 36.196,
+              "predicted_per_second": 27.6,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 10.397263216087595
+          },
+          {
+            "text": "REQUEST_KEY_3_0_8417\n\n1. Define the primary business objective and scope of the software project.\n2. Identify all key stakeholders, including end-users, developers, and project managers.\n3. Conduct a thorough requirements gathering phase using interviews and surveys.\n4. Document functional requirements in a structured requirements specification document.\n5. Document non-functional requirements such as performance, security, and scalability.\n6. Create user personas to represent different types of end-users.\n7. Develop user stories that describe features from the user's perspective.\n8. Prioritize requirements using a method like MoSCoW or Kano model.\n9. Define the technology stack, including programming languages and frameworks.\n10. Select appropriate database systems based on data structure and volume.\n11. Choose infrastructure providers (cloud, on-premise, hybrid) based on cost and compliance.\n12. Establish coding standards and style guides for the development team.\n13. Define the software architecture pattern (e.g., microservices, monolithic, serverless).\n14. Design the high-level system architecture diagram.\n15. Define API contracts using OpenAPI/Swagger specifications.\n16. Design the",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 139.2,
+              "prompt_per_token_ms": 3.164,
+              "prompt_per_second": 316.1,
+              "predicted_n": 256,
+              "predicted_ms": 8823.8,
+              "predicted_per_token_ms": 34.468,
+              "predicted_per_second": 29.0,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 10.253354981075972
+          },
+          {
+            "text": "REQUEST_KEY_4_0_8417\n\n1. Define the primary business objective and scope of the software project.\n2. Identify all key stakeholders, including end-users, developers, and project managers.\n3. Conduct a thorough requirements gathering phase using interviews and surveys.\n4. Document functional requirements in a structured requirements specification document.\n5. Document non-functional requirements such as performance, security, and scalability.\n6. Create user personas to represent different types of end-users.\n7. Develop user stories that describe features from the user's perspective.\n8. Prioritize requirements using a method like MoSCoW or Kano model.\n9. Define the technology stack, including programming languages and frameworks.\n10. Select appropriate database systems based on data structure and volume.\n11. Choose infrastructure providers for hosting and deployment.\n12. Establish coding standards and style guides for the development team.\n13. Define the software architecture pattern, such as microservices or monolithic.\n14. Design the high-level system architecture diagram.\n15. Break down the system into logical components or modules.\n16. Define interfaces between components using API specifications.\n17. Design the database schema,",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 144.6,
+              "prompt_per_token_ms": 3.286,
+              "prompt_per_second": 304.3,
+              "predicted_n": 256,
+              "predicted_ms": 8697.1,
+              "predicted_per_token_ms": 33.973,
+              "predicted_per_second": 29.4,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 10.43234973703511
+          },
+          {
+            "text": "REQUEST_KEY_5_0_8417\n\n1. Define the primary business objective and scope of the software project.\n2. Identify all key stakeholders, including end-users, developers, and project managers.\n3. Conduct a thorough requirements gathering phase using interviews and surveys.\n4. Document functional requirements in a structured requirements specification document.\n5. Document non-functional requirements such as performance, security, and scalability.\n6. Create user personas to represent different types of end-users.\n7. Develop user stories that describe features from the user's perspective.\n8. Prioritize requirements using a method like MoSCoW or Kano model.\n9. Define the technology stack, including programming languages and frameworks.\n10. Select appropriate database systems based on data structure and volume.\n11. Choose infrastructure providers, such as cloud services or on-premise servers.\n12. Establish coding standards and style guides for the development team.\n13. Define the software architecture pattern, such as microservices or monolithic.\n14. Design the high-level system architecture diagram.\n15. Break down the system into logical components or modules.\n16. Define API contracts for internal and external communication.\n1",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 142.1,
+              "prompt_per_token_ms": 3.23,
+              "prompt_per_second": 309.6,
+              "predicted_n": 256,
+              "predicted_ms": 8351.9,
+              "predicted_per_token_ms": 32.625,
+              "predicted_per_second": 30.7,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 10.390543038025498
+          }
+        ],
+        "wall_s": 10.439371088985354,
+        "aggregate_tps": 147.13530028840944
+      },
+      {
+        "requests": [
+          {
+            "text": "REQUEST_KEY_0_1_8417\n\n1. Define the project scope and objectives clearly before starting any coding.\n2. Identify all stakeholders and their specific requirements.\n3. Conduct a thorough market research to understand user needs.\n4. Create a high-level architecture diagram for the system.\n5. Choose the appropriate programming language based on project requirements.\n6. Select a suitable framework or library for development.\n7. Establish a version control system, such as Git, for code management.\n8. Define coding standards and style guides for the team.\n9. Set up a continuous integration (CI) pipeline for automated testing.\n10. Configure a continuous deployment (CD) pipeline for automated releases.\n11. Design the database schema based on data requirements.\n12. Choose the appropriate database type (SQL, NoSQL, etc.).\n13. Implement data normalization to reduce redundancy.\n14. Define API endpoints and their request/response structures.\n15. Use RESTful principles for API design where applicable.\n16. Consider GraphQL for complex data queries if necessary.\n17. Implement authentication and authorization mechanisms.\n18. Use OAuth2 or JWT for secure token-based authentication.",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 134.8,
+              "prompt_per_token_ms": 3.064,
+              "prompt_per_second": 326.4,
+              "predicted_n": 256,
+              "predicted_ms": 8642.9,
+              "predicted_per_token_ms": 33.761,
+              "predicted_per_second": 29.6,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 9.352143208030611
+          },
+          {
+            "text": "REQUEST_KEY_1_1_8417\n\n1. Define the primary business objective and scope of the software project.\n2. Identify all key stakeholders, including end-users, developers, and project managers.\n3. Conduct a thorough requirements gathering phase using interviews and surveys.\n4. Document functional requirements in a structured requirements specification document.\n5. Document non-functional requirements such as performance, security, and scalability.\n6. Create user personas to represent different types of end-users.\n7. Develop user stories that describe features from the user's perspective.\n8. Prioritize features based on business value and technical feasibility.\n9. Select an appropriate software development methodology (e.g., Agile, Waterfall, DevOps).\n10. Establish a project timeline with clear milestones and deliverables.\n11. Assign roles and responsibilities to team members.\n12. Set up a version control system (e.g., Git) for code management.\n13. Choose a programming language suitable for the project requirements.\n14. Select a framework or library that aligns with the chosen language.\n15. Define the architecture pattern (e.g., Microservices, Monolithic, Serverless).\n16. Design the",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 146.1,
+              "prompt_per_token_ms": 3.32,
+              "prompt_per_second": 301.2,
+              "predicted_n": 256,
+              "predicted_ms": 8898.8,
+              "predicted_per_token_ms": 34.897,
+              "predicted_per_second": 28.7,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 9.33639553701505
+          },
+          {
+            "text": "REQUEST_KEY_2_1_8417\n\n1. Define the primary business objective and scope of the software project.\n2. Identify all key stakeholders, including end-users, developers, and project managers.\n3. Conduct a thorough requirements gathering session with all stakeholders.\n4. Document functional requirements in a structured format.\n5. Document non-functional requirements, such as performance, security, and scalability.\n6. Create user personas to represent different types of end-users.\n7. Develop user stories for each major feature.\n8. Prioritize features using a method like MoSCoW or RICE.\n9. Define the technology stack, including programming languages and frameworks.\n10. Select appropriate database technologies based on data structure needs.\n11. Choose infrastructure providers, such as AWS, Azure, or GCP.\n12. Establish coding standards and style guides for the development team.\n13. Define the architecture pattern, such as microservices, monolith, or serverless.\n14. Design the high-level system architecture diagram.\n15. Define API contracts using OpenAPI or GraphQL schemas.\n16. Design the database schema, including tables, relationships, and indexes.\n17",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 140.4,
+              "prompt_per_token_ms": 3.191,
+              "prompt_per_second": 313.4,
+              "predicted_n": 256,
+              "predicted_ms": 8294.0,
+              "predicted_per_token_ms": 32.398,
+              "predicted_per_second": 30.9,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 9.557344807079062
+          },
+          {
+            "text": "REQUEST_KEY_3_1_8417\n\n1. Define the primary business objective and scope of the software project.\n2. Identify all key stakeholders, including end-users, developers, and project managers.\n3. Conduct a thorough requirements gathering phase using interviews and surveys.\n4. Document functional requirements in a structured requirements specification document.\n5. Document non-functional requirements such as performance, security, and scalability.\n6. Create user personas to represent different types of end-users.\n7. Develop user stories that describe specific features from the user's perspective.\n8. Prioritize features based on business value and technical feasibility.\n9. Select an appropriate software development methodology (e.g., Agile, Waterfall, DevOps).\n10. Establish a project timeline with clear milestones and deliverables.\n11. Assign roles and responsibilities to team members.\n12. Set up a version control system (e.g., Git) for code management.\n13. Choose a programming language suitable for the project requirements.\n14. Select a framework or library that aligns with the chosen language.\n15. Define the architecture pattern (e.g., Microservices, Monolithic, Serverless).\n16. Design",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 143.6,
+              "prompt_per_token_ms": 3.264,
+              "prompt_per_second": 306.4,
+              "predicted_n": 256,
+              "predicted_ms": 8511.5,
+              "predicted_per_token_ms": 33.248,
+              "predicted_per_second": 30.1,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 9.478168599074706
+          },
+          {
+            "text": "REQUEST_KEY_4_1_8417\n\n1. Define the primary business objective and scope of the software project.\n2. Identify all key stakeholders, including end-users, developers, and project managers.\n3. Conduct a thorough requirements gathering phase using interviews and surveys.\n4. Document functional requirements in a structured requirements specification document.\n5. Document non-functional requirements such as performance, security, and scalability.\n6. Create user personas to represent different types of end-users.\n7. Develop user stories that describe specific features from the user's perspective.\n8. Prioritize features based on business value and technical feasibility.\n9. Select an appropriate software development methodology (e.g., Agile, Waterfall, DevOps).\n10. Establish a project timeline with clear milestones and deliverables.\n11. Assign roles and responsibilities to team members.\n12. Set up a version control system (e.g., Git) for code management.\n13. Choose a programming language suitable for the project requirements.\n14. Select a framework or library that aligns with the chosen language.\n15. Define the architecture pattern (e.g., Microservices, Monolithic, Serverless).\n16. Design",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 141.5,
+              "prompt_per_token_ms": 3.216,
+              "prompt_per_second": 311.0,
+              "predicted_n": 256,
+              "predicted_ms": 7753.5,
+              "predicted_per_token_ms": 30.287,
+              "predicted_per_second": 33.0,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 9.621364417020231
+          },
+          {
+            "text": "REQUEST_KEY_5_1_8417\n\n1. Define the primary business objective and scope of the software project.\n2. Identify all key stakeholders, including end-users, developers, and project managers.\n3. Conduct a thorough requirements gathering session with all stakeholders.\n4. Document functional requirements in a structured format.\n5. Document non-functional requirements, such as performance, security, and scalability.\n6. Create user personas to represent different types of end-users.\n7. Develop user stories for each major feature.\n8. Prioritize features based on business value and technical feasibility.\n9. Define the technology stack, including programming languages and frameworks.\n10. Select appropriate database technologies based on data structure needs.\n11. Choose infrastructure providers, such as cloud services or on-premise servers.\n12. Establish coding standards and style guides for the development team.\n13. Define the software architecture pattern, such as microservices or monolithic.\n14. Design the high-level system architecture diagram.\n15. Identify all external integrations and third-party APIs.\n16. Define data flow diagrams for core business processes.\n17. Create entity-relationship diagrams for the database schema.",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 138.2,
+              "prompt_per_token_ms": 3.141,
+              "prompt_per_second": 318.4,
+              "predicted_n": 256,
+              "predicted_ms": 8060.4,
+              "predicted_per_token_ms": 31.486,
+              "predicted_per_second": 31.8,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 9.624331807019189
+          }
+        ],
+        "wall_s": 9.630911645945162,
+        "aggregate_tps": 159.48645948244078
+      },
+      {
+        "requests": [
+          {
+            "text": "REQUEST_KEY_0_2_8417\n\n1. Define the primary business objective and scope of the software project.\n2. Identify all key stakeholders, including end-users, developers, and management.\n3. Conduct a thorough requirements gathering phase using interviews and surveys.\n4. Document functional requirements in a structured requirements specification document.\n5. Document non-functional requirements such as performance, security, and scalability.\n6. Create user personas to represent different types of end-users.\n7. Develop user stories that describe specific features from the user's perspective.\n8. Prioritize features based on business value and technical feasibility.\n9. Select an appropriate software development methodology (e.g., Agile, Waterfall, DevOps).\n10. Establish a project timeline with clear milestones and deliverables.\n11. Assign roles and responsibilities to team members clearly.\n12. Set up a version control system (e.g., Git) for code management.\n13. Choose a programming language suitable for the project's needs.\n14. Select a framework or library that aligns with the chosen language.\n15. Define the architecture pattern (e.g., Microservices, Monolithic, Serverless).\n16.",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 134.2,
+              "prompt_per_token_ms": 3.05,
+              "prompt_per_second": 327.9,
+              "predicted_n": 256,
+              "predicted_ms": 8175.1,
+              "predicted_per_token_ms": 32.059,
+              "predicted_per_second": 31.2,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 8.609114659950137
+          },
+          {
+            "text": "REQUEST_KEY_1_2_8417\n\n1. Define the project scope and objectives clearly.\n2. Identify all stakeholders involved in the project.\n3. Conduct a thorough requirements gathering phase.\n4. Document functional requirements in detail.\n5. Document non-functional requirements (performance, security, etc.).\n6. Create user personas to understand end-user needs.\n7. Develop user stories for each feature.\n8. Prioritize features using MoSCoW or similar methods.\n9. Select the appropriate technology stack.\n10. Choose a suitable architecture pattern (e.g., microservices, monolith).\n11. Design the high-level system architecture.\n12. Create data flow diagrams.\n13. Define the database schema.\n14. Choose the appropriate database type (SQL, NoSQL, etc.).\n15. Design API endpoints and contracts.\n16. Define authentication and authorization mechanisms.\n17. Plan for data encryption at rest and in transit.\n18. Design the user interface (UI) wireframes.\n19. Create high-fidelity UI mockups.\n20. Define the user experience (UX) flow.\n21. Establish coding",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 135.7,
+              "prompt_per_token_ms": 3.084,
+              "prompt_per_second": 324.2,
+              "predicted_n": 256,
+              "predicted_ms": 7739.4,
+              "predicted_per_token_ms": 30.232,
+              "predicted_per_second": 33.1,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 8.44140965002589
+          },
+          {
+            "text": "REQUEST_KEY_2_2_8417\n\n1. Define the primary business objective and scope of the software project.\n2. Identify all key stakeholders, including end-users, developers, and project managers.\n3. Conduct a thorough requirements gathering phase using interviews and surveys.\n4. Document functional requirements in a structured requirements specification document.\n5. Document non-functional requirements such as performance, security, and scalability.\n6. Create user personas to represent different types of end-users.\n7. Develop user stories that describe features from the user's perspective.\n8. Prioritize features based on business value and technical feasibility.\n9. Select an appropriate software development methodology (e.g., Agile, Waterfall, DevOps).\n10. Establish a project timeline with clear milestones and deliverables.\n11. Define the technology stack, including programming languages and frameworks.\n12. Choose a database system that fits the data structure and query patterns.\n13. Select an operating system and server environment for deployment.\n14. Design the high-level system architecture (e.g., microservices, monolithic, serverless).\n15. Define the communication protocols between system components (e.g., REST, GraphQL, gRPC",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 134.0,
+              "prompt_per_token_ms": 3.045,
+              "prompt_per_second": 328.4,
+              "predicted_n": 256,
+              "predicted_ms": 7560.4,
+              "predicted_per_token_ms": 29.533,
+              "predicted_per_second": 33.9,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 8.539142518071458
+          },
+          {
+            "text": "REQUEST_KEY_3_2_8417\n\n1. Define the primary business objective and scope of the software project.\n2. Identify all key stakeholders, including end-users, developers, and project managers.\n3. Conduct a thorough requirements gathering phase using interviews and surveys.\n4. Document functional requirements in a structured requirements specification document.\n5. Document non-functional requirements such as performance, security, and scalability.\n6. Create user personas to represent different types of end-users.\n7. Develop user stories that describe features from the user's perspective.\n8. Prioritize features based on business value and technical feasibility.\n9. Select an appropriate software development methodology (e.g., Agile, Waterfall, DevOps).\n10. Establish a project timeline with clear milestones and deliverables.\n11. Assign roles and responsibilities within the development team.\n12. Choose a technology stack that aligns with the project requirements.\n13. Select a programming language suitable for the application domain.\n14. Choose a database system (SQL, NoSQL, or hybrid) based on data structure needs.\n15. Define the architecture pattern (e.g., Microservices, Monolithic, Serverless).\n16",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 129.4,
+              "prompt_per_token_ms": 2.941,
+              "prompt_per_second": 340.0,
+              "predicted_n": 256,
+              "predicted_ms": 7422.3,
+              "predicted_per_token_ms": 28.993,
+              "predicted_per_second": 34.5,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 8.67994858790189
+          },
+          {
+            "text": "REQUEST_KEY_4_2_8417\n\n1. Define the primary business objective and scope of the software project.\n2. Identify all key stakeholders, including end-users, developers, and project managers.\n3. Conduct a thorough requirements gathering session with all stakeholders.\n4. Document functional requirements in a structured format.\n5. Document non-functional requirements, such as performance, security, and scalability.\n6. Create user personas to represent different types of end-users.\n7. Develop user stories for each major feature.\n8. Prioritize features using a method like MoSCoW or RICE.\n9. Define the technology stack, including programming languages and frameworks.\n10. Select appropriate database technologies based on data structure needs.\n11. Choose infrastructure providers, such as AWS, Azure, or GCP.\n12. Establish coding standards and style guides for the development team.\n13. Define the architecture pattern, such as microservices, monolith, or serverless.\n14. Design the high-level system architecture diagram.\n15. Define API contracts using OpenAPI or GraphQL schemas.\n16. Design the database schema, including tables, indexes, and relationships.\n17",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 131.6,
+              "prompt_per_token_ms": 2.991,
+              "prompt_per_second": 334.3,
+              "predicted_n": 256,
+              "predicted_ms": 6923.5,
+              "predicted_per_token_ms": 27.045,
+              "predicted_per_second": 37.0,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 8.747431597905234
+          },
+          {
+            "text": "REQUEST_KEY_5_2_8417\n\n1. Define the primary business objective and scope of the software project.\n2. Identify all key stakeholders, including end-users, developers, and project managers.\n3. Conduct a thorough requirements gathering session with all stakeholders.\n4. Document functional requirements in a clear, unambiguous manner.\n5. Document non-functional requirements such as performance, security, and scalability.\n6. Create user personas to represent different types of end-users.\n7. Develop user stories that describe how users will interact with the system.\n8. Define acceptance criteria for each user story.\n9. Establish a high-level system architecture diagram.\n10. Choose the appropriate programming language based on project needs.\n11. Select the appropriate framework or library for the backend.\n12. Select the appropriate framework or library for the frontend.\n13. Define the database schema and data model.\n14. Choose the appropriate database technology (SQL vs. NoSQL).\n15. Design the API structure and endpoints.\n16. Define authentication and authorization mechanisms.\n17. Implement role-based access control (RBAC).\n18. Design the user interface (UI) wireframes",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 44,
+              "prompt_ms": 135.5,
+              "prompt_per_token_ms": 3.08,
+              "prompt_per_second": 324.7,
+              "predicted_n": 256,
+              "predicted_ms": 7187.2,
+              "predicted_per_token_ms": 28.075,
+              "predicted_per_second": 35.6,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 44,
+              "completion_tokens": 256,
+              "total_tokens": 300,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 8.745493526104838
+          }
+        ],
+        "wall_s": 8.758613219950348,
+        "aggregate_tps": 175.37022830295817
+      }
+    ],
+    "seventh_request_queue_passed": true,
+    "isolation_passed": true,
+    "image": {
+      "passed": true,
+      "answer": "The dominant color is red."
+    },
+    "video": {
+      "passed": true,
+      "answer": "The dominant color throughout this video is **red**.",
+      "fps": 8
+    }
+  }
+}

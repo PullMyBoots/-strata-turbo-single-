@@ -1,0 +1,228 @@
+{
+  "schema": 1,
+  "version": "0.2.2",
+  "created_utc": "2026-10-10T15:33:21.832311+00:00",
+  "status": "Fresh per-device qualification with guarded IQ2_XS prefill and request-scoped Swift media profile restoration",
+  "optimization": "Guarded expert-cache prefill loans, original-slot refill, residency validation; unchanged decode graphs",
+  "invariants": {
+    "native_context": 262144,
+    "kv": "int8",
+    "full_experts": true,
+    "main_weights_changed": false,
+    "numerical_kernels_changed": false,
+    "audio_input": false,
+    "one_visible_gpu": true
+  },
+  "binaries": {
+    "turbo": {
+      "path": "engine/distribution/strata-turbo",
+      "bytes": 62740888,
+      "sha256": "a7a467411ecdd0e39c489b1c8897fe4d12fde9fcc9750bc766536c68c448cbf9"
+    },
+    "official": {
+      "path": "engine/distribution/strata-official",
+      "bytes": 65016024,
+      "sha256": "d53542400023e94a7866bd7816a58668b774ce165f39e453af7047fac3caddae"
+    },
+    "official_media": {
+      "path": "engine/distribution/strata-upstream-media",
+      "bytes": 65024216,
+      "sha256": "54bf7a29420294216f78fb72e1c46f7496fb54ec809a5c5c464b9d4607a9acb9"
+    },
+    "vision": {
+      "path": "engine/distribution/strata-vision",
+      "bytes": 209057984,
+      "sha256": "e2fdf5537e8770a31960f9b5d412e88c3ac875413a2094e10ec7839b72d7d2e5"
+    }
+  },
+  "scope": "Large-GPU, single-session IQ2_XS; other model/concurrency prefill settings unchanged",
+  "protocol": "ABBA; 3 task families x 3 requests x 2 service starts per arm; no prompt cache",
+  "native_window_samples_per_arm": 1,
+  "final_iq2_xs": {
+    "official": {
+      "short_output_tps": 194.98355630570526,
+      "task_output_medians": {
+        "english": 184.25,
+        "code": 229.25,
+        "chinese": 175.5,
+        "native_long": 137.3
+      },
+      "recall_prefill_tps": 4534.25,
+      "native_long": {
+        "prompt_tokens": 256013,
+        "output_tokens": 512,
+        "prefill_s": 60.0181,
+        "prefill_tps": 4265.6,
+        "output_tps": 137.3,
+        "wall_s": 63.93141343793832,
+        "first_content_s": 60.208629347151145,
+        "cache_n": 0
+      },
+      "checks": {
+        "correct": true,
+        "image": {
+          "passed": true,
+          "answer": "The dominant color is red."
+        },
+        "video": {
+          "passed": true,
+          "answer": "The dominant color throughout this video is **red**.",
+          "fps": 8
+        },
+        "tools": {
+          "passed": true,
+          "calls": [
+            {
+              "id": "call_0f4f35407f5e4faca5128efc",
+              "type": "function",
+              "function": {
+                "name": "lookup_weather",
+                "arguments": "{\"city\":\"Sydney\"}"
+              }
+            }
+          ]
+        },
+        "anthropic": {
+          "passed": true
+        }
+      }
+    },
+    "turbo": {
+      "short_output_tps": 212.13978187101694,
+      "task_output_medians": {
+        "english": 200.45,
+        "code": 257.1,
+        "chinese": 185.25,
+        "native_long": 170.7
+      },
+      "recall_prefill_tps": 4318.0,
+      "native_long": {
+        "prompt_tokens": 256013,
+        "output_tokens": 512,
+        "prefill_s": 62.174,
+        "prefill_tps": 4117.7,
+        "output_tps": 170.7,
+        "wall_s": 65.7760217890609,
+        "first_content_s": 62.77457014704123,
+        "cache_n": 0
+      },
+      "checks": {
+        "correct": true,
+        "image": {
+          "passed": true,
+          "answer": "The dominant color is red."
+        },
+        "video": {
+          "passed": true,
+          "answer": "The dominant color throughout this video is **red**.",
+          "fps": 8
+        },
+        "tools": {
+          "passed": true,
+          "calls": [
+            {
+              "id": "call_0bdcee294322403f98a8dbf6",
+              "type": "function",
+              "function": {
+                "name": "lookup_weather",
+                "arguments": "{\"city\":\"Sydney\"}"
+              }
+            }
+          ]
+        },
+        "anthropic": {
+          "passed": true
+        }
+      }
+    }
+  },
+  "incumbent_improvement": {
+    "short_output_ratio": 1.0029313271078926,
+    "recall_prefill_ratio": 1.7948291628564301,
+    "native_prefill_ratio": 2.069377874995979,
+    "native_request_ratio": 2.0091515367844917,
+    "native_output_ratio": 0.9726495726495726
+  },
+  "profiles": {
+    "iq2_xs": {
+      "selection": "turbo",
+      "qualification_state": "qualified",
+      "reason": "At least 3% output gain, no output-family regression over 3%, tested-prefill regression within the recorded tolerance.",
+      "fallback_validated": true,
+      "gpu_uuid": "GPU-c9ae835b-bc1e-8d6c-f85f-e415defc30bc",
+      "native_long_checked": true,
+      "prefill_ratios": {
+        "recall": 0.9523074378342614,
+        "native_long": 0.9653272693173293
+      },
+      "evidence": "evidence/prefill-upgrade-runs/iq2_xs",
+      "official_short_tps": 194.98355630570526,
+      "turbo_short_tps": 212.13978187101694,
+      "short_gain_percent": 8.79880636622159
+    },
+    "swift": {
+      "selection": "turbo",
+      "qualification_state": "qualified",
+      "reason": "At least 3% output gain, no output-family regression over 3%, tested-prefill regression within the recorded tolerance.",
+      "fallback_validated": true,
+      "gpu_uuid": "GPU-c9ae835b-bc1e-8d6c-f85f-e415defc30bc",
+      "native_long_checked": false,
+      "prefill_ratios": {
+        "recall": 0.9170990681974593
+      },
+      "evidence": "evidence/prefill-upgrade-runs/swift",
+      "official_short_tps": 159.98084574253835,
+      "turbo_short_tps": 176.43854044292033,
+      "short_gain_percent": 10.287290721582876
+    },
+    "iq3_s": {
+      "selection": "turbo",
+      "qualification_state": "qualified",
+      "reason": "At least 3% output gain, no output-family regression over 3%, tested-prefill regression within the recorded tolerance.",
+      "fallback_validated": true,
+      "gpu_uuid": "GPU-d198f84d-7195-2312-a5c8-39263b88d546",
+      "native_long_checked": false,
+      "prefill_ratios": {
+        "recall": 0.9151361833013864
+      },
+      "evidence": "evidence/prefill-upgrade-runs/iq3_s",
+      "official_short_tps": 97.48422975267033,
+      "turbo_short_tps": 115.22246469448515,
+      "short_gain_percent": 18.196004612047446
+    }
+  },
+  "launcher": {
+    "passed": true,
+    "entrypoint": "./start.sh",
+    "service_stopped": true,
+    "repeat_cached_tokens": 31559,
+    "repeat_prompt_ms": 25.1,
+    "append_cached_tokens": 16384
+  },
+  "checks": {
+    "cpu_unit_tests_passed": 34,
+    "fresh_native_window_recall_passed": true,
+    "iq2_xs_image_video_tools_anthropic_passed": true,
+    "short_incumbent_outputs_exactly_matched_in_pilot": 9
+  },
+  "rejected": [
+    "Swift 32k prefill video response failed; not promoted",
+    "Swift v0.2.1 dynamic-profile video failed; preserved as the failing control",
+    "Whole-service fixed Swift profile passed media but failed the speed gate; not promoted"
+  ],
+  "swift_control": {
+    "incumbent_binary_sha256": "147346e6112af5d9fd855c876569e430bbbb474f80ae0c6e00594a5ac6b7656b",
+    "incumbent_replay_passed": true,
+    "new_binary_video_failure_root_cause": "Adaptive cache-history sensitivity; request-scoped original-profile restoration validated; detailed low-level cause unresolved",
+    "repair_evidence": "evidence/swift-video-fix.json"
+  },
+  "source_patch": "evidence/prefill-upgrade-source.patch",
+  "source_patch_sha256": "2da37880eecc37e18c44105f8c392ba04edc99918a4951c787d7c81fc00e3b6e",
+  "limits": [
+    "One full-window sample per arm; no confidence interval for long timing.",
+    "Long text can change with prefill batching; checkpoint recall is not a comprehensive intelligence evaluation.",
+    "Full-request latency is reported separately; faster decode does not imply faster prefill.",
+    "Only L40S physically tested; concurrency and smaller GPU policy retain historical evidence.",
+    "Measurement reports are not activation certificates."
+  ]
+}

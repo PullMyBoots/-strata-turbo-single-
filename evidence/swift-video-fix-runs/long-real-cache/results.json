@@ -1,0 +1,91 @@
+{
+  "binary_sha256": "ad261927cc55c1b90ce69f8542c49d73de014d857ba89280026196de3922ddfb",
+  "cases": [
+    {
+      "case": "video-first",
+      "passed": false,
+      "error": "Video smoke failed: expected red frames; received '0:00'"
+    },
+    {
+      "case": "image",
+      "passed": true,
+      "result": {
+        "passed": true,
+        "answer": "Based on the image provided, here is a detailed analysis of its color composition.\n\nThe image is a solid, uniform square with no gradients, patterns, or other colors present. The entire visual field is filled with a single, vibrant hue.\n\n- **Color Identification**: The color is a bright, saturated shade of red.\n- **Hex Code**: In digital color formats, this specific shade of pure red is represented by the hex code `#FF0000`. This indicates maximum intensity for the red channel (FF) and zero intensity for the green (00) and blue (00) channels.\n- **RGB Values**: In the RGB color model, the values are Red: 255, Green: 0, Blue: 0.\n\n---\n\nThe dominant color is **red**."
+      }
+    },
+    {
+      "case": "video-after-image",
+      "passed": true,
+      "result": {
+        "passed": true,
+        "answer": "Based on the visual information provided in the video frames, the analysis is as follows:\n\n- The video consists of a series of frames.\n- Each frame, from the beginning at 0m0.00s to the end, displays a solid, uniform color.\n- This color fills the entire visible area of the screen in every frame.\n\nThe dominant color throughout this video is red.",
+        "fps": 8
+      }
+    },
+    {
+      "case": "video-repeat",
+      "passed": true,
+      "result": {
+        "passed": true,
+        "answer": "Based on the visual information provided in the video frames, the analysis is as follows:\n\n- The video consists of a series of frames.\n- Each frame displays a solid, uniform color filling the entire screen area between the top and bottom black bars.\n- This color is a bright, saturated red.\n- There are no other colors present in the main content of the video.\n\nTherefore, the dominant color throughout this video is **red**.",
+        "fps": 8
+      }
+    }
+  ],
+  "long_prefix": {
+    "text": "### The Five Secret Codes\n\n1.  **CEDAR-712**\n2.  **ORBIT-935**\n3.  **MANGO-246**\n4.  **RIVER-508**\n5.  **TULIP-163**\n\n***\n\n### Detailed Explanation of Indexing Rules\n\nBased on the provided records, the indexing system follows a **two-dimensional coordinate structure** (Row:Column) with specific rules for data storage and checkpoint placement.\n\n#### 1. The Coordinate System (Row:Column)\nThe records are organized using a `Row:Index` format (e.g., `Record 0:15`).\n*   **The First Number (Row):** Represents the \"Block\" or \"Group\" of data. There are 5 distinct rows (0 through 4).\n*   **The Second Number (Index):** Represents the sequential position of the record within that specific row.\n\n#### 2. Row Capacity and Boundaries\nThe capacity of each row is determined by the highest index number present in the text:\n*   **Row 0:** Contains indices `0` through `400`. (Total: 40",
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 31566,
+      "prompt_ms": 12542.1,
+      "prompt_per_token_ms": 0.397,
+      "prompt_per_second": 2516.8,
+      "predicted_n": 256,
+      "predicted_ms": 2258.9,
+      "predicted_per_token_ms": 8.824,
+      "predicted_per_second": 113.3,
+      "draft_n": 228,
+      "draft_n_accepted": 174
+    },
+    "usage": {
+      "prompt_tokens": 31566,
+      "completion_tokens": 256,
+      "total_tokens": 31822,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "finish_reason": "length",
+    "wall_s": 14.90931797400117,
+    "first_content_s": 12.674326586071402
+  },
+  "post_media_text": {
+    "text": "4",
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 26,
+      "prompt_ms": 5196.3,
+      "prompt_per_token_ms": 199.858,
+      "prompt_per_second": 5.0,
+      "predicted_n": 2,
+      "predicted_ms": 44.1,
+      "predicted_per_token_ms": 22.05,
+      "predicted_per_second": 45.4,
+      "draft_n": 4,
+      "draft_n_accepted": 4
+    },
+    "usage": {
+      "prompt_tokens": 26,
+      "completion_tokens": 2,
+      "total_tokens": 28,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "finish_reason": "stop",
+    "wall_s": 5.254629006143659,
+    "first_content_s": 5.2164088289719075
+  },
+  "stopped": true
+}

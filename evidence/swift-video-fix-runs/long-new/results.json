@@ -1,0 +1,83 @@
+{
+  "binary_sha256": "df762841e56a7ac4c1b6dcb6a9aa6918aa689ec840588ffbff5fa6eaa1588838",
+  "cases": [
+    {
+      "case": "video-first",
+      "passed": false,
+      "error": "Video smoke failed: expected red frames; received '0:00'"
+    },
+    {
+      "case": "image",
+      "passed": true,
+      "result": {
+        "passed": true,
+        "answer": "Based on the visual information provided in the image, here is a logical analysis to determine the dominant color:\n\n1.  **Visual Inspection**: The image consists of a single, uniform square. There are no gradients, patterns, text, or other objects present.\n2.  **Color Identification**: The entire area of the square is filled with a bright, saturated hue. This hue corresponds to the primary color red.\n3.  **Dominance Calculation**: Since 100% of the pixels in the image are this specific color, it is overwhelmingly the dominant color.\n\n**Conclusion:**\n\nThe dominant color is **Red**."
+      }
+    },
+    {
+      "case": "video-after-image",
+      "passed": false,
+      "error": "Video smoke failed: expected red frames; received '0:00'"
+    },
+    {
+      "case": "video-repeat",
+      "passed": false,
+      "error": "Video smoke failed: expected red frames; received '0:00'"
+    }
+  ],
+  "long_prefix": {
+    "text": "### The Five Secret Codes\n\n1.  **CEDAR-712**\n2.  **ORBIT-935**\n3.  **MANGO-246**\n4.  **RIVER-508**\n5.  **TULIP-163**\n\n***\n\n### Detailed Explanation of Indexing Rules\n\nBased on the provided records, the indexing system follows a **two-dimensional coordinate structure** (Row:Column) with specific rules for data storage and checkpoint placement.\n\n#### 1. The Coordinate System (Row:Column)\nThe records are organized using a `Row:Index` format (e.g., `Record 0:15`).\n*   **The First Number (Row):** Represents the \"Block\" or \"Group\" of data. There are 5 distinct rows (0 through 4).\n*   **The Second Number (Index):** Represents the sequential position of the record within that specific row.\n\n#### 2. Row Capacity and Boundaries\nThe capacity of each row is determined by the highest index number present in the text:\n*   **Row 0:** Contains indices `0` through `400`. (Total: 40",
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 31566,
+      "prompt_ms": 7522.2,
+      "prompt_per_token_ms": 0.238,
+      "prompt_per_second": 4196.4,
+      "predicted_n": 256,
+      "predicted_ms": 3547.8,
+      "predicted_per_token_ms": 13.859,
+      "predicted_per_second": 72.2,
+      "draft_n": 216,
+      "draft_n_accepted": 167
+    },
+    "usage": {
+      "prompt_tokens": 31566,
+      "completion_tokens": 256,
+      "total_tokens": 31822,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "finish_reason": "length",
+    "wall_s": 11.173520671902224,
+    "first_content_s": 7.666062711970881
+  },
+  "post_media_text": {
+    "text": "4",
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 26,
+      "prompt_ms": 127.9,
+      "prompt_per_token_ms": 4.919,
+      "prompt_per_second": 203.3,
+      "predicted_n": 2,
+      "predicted_ms": 41.1,
+      "predicted_per_token_ms": 20.55,
+      "predicted_per_second": 48.7,
+      "draft_n": 4,
+      "draft_n_accepted": 4
+    },
+    "usage": {
+      "prompt_tokens": 26,
+      "completion_tokens": 2,
+      "total_tokens": 28,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "finish_reason": "stop",
+    "wall_s": 0.17995513509958982,
+    "first_content_s": 0.14567179000005126
+  },
+  "stopped": true
+}

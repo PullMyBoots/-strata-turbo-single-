@@ -73,6 +73,8 @@ def main() -> None:
             if expert % 64 == 0:
                 print(f"{args.format}: {expert + 1}/{ne} experts in {time.monotonic() - t0:.1f}s", flush=True)
     for name in ["dense.bin", "dense.txt", "draft_vocab.bin"]:
+        if name == "draft_vocab.bin" and not (args.base / name).exists():
+            continue  # A newly prepared full-vocabulary runtime has no cropped vocabulary.
         (args.out / name).symlink_to((args.base / name).resolve(strict=True))
     # Write metadata last: a partial run must never look like a usable native runtime.
     (args.out / "experts-native.txt").write_text(f"strata-mtp-native 1 {qtype.value} {qtype.value} {h} {ff} {ne}\n")

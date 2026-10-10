@@ -1,0 +1,50 @@
+{
+  "name": "iq3_s-single-native262144-dynamic",
+  "context": 262144,
+  "validation_state": "single-request-performance-checked",
+  "draft_vocab": "full",
+  "args": {
+    "--prefill": "auto",
+    "--spec": "8",
+    "--spec-min-p": "0.3",
+    "--mtp": "{assets}/data/mtp/native-q5-full",
+    "--kv-resident": "32768",
+    "--vram-reserve-mib": "700",
+    "--pool-workers": "32"
+  },
+  "env": {
+    "STRATA_SPLIT_ASYNC_COMMIT": "1",
+    "STRATA_RESIDENT_PLAN_PARALLEL": "1",
+    "STRATA_GR_DOWN_MAX4": "1",
+    "STRATA_TOPK_PARALLEL": "1",
+    "STRATA_DECODE_TIMING": "1",
+    "STRATA_TOPK_COOPERATIVE": "1",
+    "STRATA_MTP_HNORM_STREAM": "1",
+    "STRATA_SH_OVERLAP": "1",
+    "STRATA_RESIDENT_COMBINE": "1",
+    "STRATA_MTP_SPARSE": "1",
+    "STRATA_PLE_PREFETCH": "1",
+    "STRATA_GR_EXACT_T": "1",
+    "STRATA_GR_UP_MAX4": "1",
+    "STRATA_GR_UP_COLS": "8",
+    "STRATA_GDN_AB_WARPS": "2",
+    "STRATA_GR_EXACT_T8": "1",
+    "STRATA_GR_QFUSE": "1",
+    "STRATA_MMVQ_ROWS": "2",
+    "STRATA_CUDA_EXPERT_FUSED": "1",
+    "STRATA_MTP_HEAD_ROUTER": "{assets}/data/mtp/head-router-iq3_s-full-r128-k8192",
+    "STRATA_MTP_ROUTER_INDEXED": "1",
+    "STRATA_MTP_ROUTER_FUSED_QUERY": "1",
+    "STRATA_MTP_ROUTER_SORT_BEGIN_BIT": "16",
+    "STRATA_VERIFY_DEVICE_PLAN": "1",
+    "STRATA_MTP_ADAPTIVE": "1",
+    "STRATA_MTP_COST_ROBUST": "1"
+  },
+  "evidence": {
+    "directory": "/home/student_su/qwen/release/three-weight-tuning-20261010",
+    "fresh_short_tps": 163.0590592816517,
+    "fresh_official_short_tps": 118.9514331390058,
+    "native_context_long_tps": 123.3,
+    "scope": "9 short requests per fresh engine; one cold256013-token long request; concurrency not qualified"
+  }
+}

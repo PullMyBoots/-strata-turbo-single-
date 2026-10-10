@@ -1,0 +1,96 @@
+{
+  "passed": true,
+  "python_environment": "fresh Python 3.13 venv; pip installed from cached official wheels",
+  "assets": "fresh reconstructed IQ2 runtime; adopted target GGUFs",
+  "path_contains_spaces": true,
+  "status": {
+    "service": "strata",
+    "model": "qwen3.8-flash-iq2-xs",
+    "loaded": true,
+    "auto_load": true,
+    "structured_output": {
+      "formats": [
+        "json_object",
+        "json_schema"
+      ],
+      "method": "prompt_and_validate",
+      "constrained_decoding": false,
+      "stream_buffered": true
+    },
+    "engine": "0.1.41",
+    "started": 1791637366,
+    "uptime_s": 21,
+    "cache_max_tokens": 262144,
+    "context": {
+      "native": 262144,
+      "max_positions": 262144
+    },
+    "concurrency": {
+      "serving": 1,
+      "requested": 1
+    },
+    "dialects": [
+      "/v1/chat/completions",
+      "/v1/messages",
+      "/v1/responses"
+    ],
+    "vision": {
+      "enabled": true,
+      "available": true,
+      "error": null
+    },
+    "activity": {
+      "requests": 0,
+      "in_flight": 0,
+      "last_request_at": null
+    },
+    "last_timings": null,
+    "vram": {
+      "elastic": false
+    },
+    "machine": {
+      "at": 1791637387,
+      "gpu": null,
+      "ram": {
+        "used_gib": 126.3,
+        "total_gib": 1007.3
+      }
+    }
+  },
+  "arithmetic": {
+    "text": "42",
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 28,
+      "prompt_ms": 200.1,
+      "prompt_per_token_ms": 7.146,
+      "prompt_per_second": 139.9,
+      "predicted_n": 3,
+      "predicted_ms": 57.3,
+      "predicted_per_token_ms": 19.1,
+      "predicted_per_second": 52.4,
+      "draft_n": 3,
+      "draft_n_accepted": 3
+    },
+    "usage": {
+      "prompt_tokens": 28,
+      "completion_tokens": 3,
+      "total_tokens": 31,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "finish_reason": "stop",
+    "wall_s": 0.26916319597512484
+  },
+  "image": {
+    "passed": true,
+    "answer": "The dominant color is red."
+  },
+  "video": {
+    "passed": true,
+    "answer": "The dominant color throughout this video is **red**.",
+    "fps": 8
+  },
+  "compiler_configure_path_with_spaces": true
+}

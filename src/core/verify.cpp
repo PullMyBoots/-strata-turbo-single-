@@ -451,8 +451,8 @@ bool Verifier::init(const WeightTable& wt, const ModelGeometry& g, SessionState&
         if(peer_requested && (!requested || !hits.peer || lb_!=0 || le_!=g.n_layers || g_test_stall!=0)) {
             err="verify: GPU peer dispatch requires --peer-device, device-only planning and an unsplit model";return false;
         }
-        if (requested && !hits.static_residency) {
-            err = "verify: device-only planning requires --adapt-swaps 0 and --no-prefill-borrow";
+        if (requested && !hits.static_residency && !hits.prefill_restore) {
+            err = "verify: device-only planning requires static residency or guarded single-session prefill restoration";
             return false;
         }
         if (requested && g_test_stall == 0) {
@@ -468,6 +468,7 @@ bool Verifier::init(const WeightTable& wt, const ModelGeometry& g, SessionState&
                     const int32_t slot = residency[(size_t) l * g.n_expert + e];
                     if (slot < 0 || slot >= hits.n_slots) device_only_ = false;
                 }
+            if (device_only_ && hits.prefill_restore) restored_residency_ = residency;
             device_plan_ = true;
             if(peer_requested) {
                 peer_decode_=std::make_unique<PeerDecode>();
@@ -477,7 +478,9 @@ bool Verifier::init(const WeightTable& wt, const ModelGeometry& g, SessionState&
             std::fprintf(stderr, "strata verify: CUDA%d layers %lld-%lld device-only planning %s\n",
                          device_, (long long) lb_, (long long) (le_ - 1),
                          peer_decode_ ? "enabled (experts jointly resident on both GPUs)" :
-                         device_only_ ? "enabled (all experts permanently resident)" : "disabled (partial residency)");
+                         device_only_ ? (hits.prefill_restore ? "enabled (guarded prefill restoration)"
+                                                             : "enabled (all experts permanently resident)")
+                                      : "disabled (partial residency)");
         }
     }
     if (device_plan_) {
@@ -1224,6 +1227,7 @@ bool Verifier::run(int T, const int32_t* tokens, int64_t pos0, PoolMultiFn pool,
     using namespace strata::kernels;
     const OnDevice on_device(device_);
     if (T < 1 || T > max_t_) { err = "verify: window size out of range"; return false; }
+    if (cache_lent_) { err = "verify: expert-cache slots are lent to prefill; restore them before running a window"; return false; }
     if (released_.load()) { err = "verify: an earlier window never finished on the GPU (#267); restart the engine"; return false; }
     const ModelGeometry& g = *g_;
     SessionState& ss = *ss_;
@@ -1604,6 +1608,31 @@ bool Verifier::wait_commit(std::string& err) {
         if (se != cudaSuccess) { err = std::string("verify: commit: ") + cudaGetErrorString(se); return false; }
     }
     return next_ == nullptr || next_->wait_commit(err);
+}
+
+bool Verifier::set_cache_lent(bool lent, std::string& err) {
+    if (cache_lent_ == lent) return true;
+    if (lent) {
+        // A previous asynchronous commit must finish before another stream overwrites expert slots.
+        if (!wait_commit(err)) return false;
+        cache_lent_ = true;
+        return true;
+    }
+    if (!restored_residency_.empty()) {
+        const OnDevice on_device(device_);
+        std::vector<int32_t> actual(restored_residency_.size());
+        if (cudaMemcpy(actual.data(), hits_.d_res, actual.size() * sizeof(int32_t),
+                       cudaMemcpyDeviceToHost) != cudaSuccess) {
+            err = "verify: cannot validate restored expert residency";
+            return false;
+        }
+        if (actual != restored_residency_) {
+            err = "verify: prefill did not restore the original expert-cache mapping";
+            return false;
+        }
+    }
+    cache_lent_ = false;
+    return true;
 }
 
 bool Verifier::copy_logits(int t, float* host) const {

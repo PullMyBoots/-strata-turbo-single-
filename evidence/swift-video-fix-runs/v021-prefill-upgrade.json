@@ -1,0 +1,221 @@
+{
+  "schema": 1,
+  "version": "0.2.1",
+  "created_utc": "2026-10-10T14:28:50.104291+00:00",
+  "status": "IQ2_XS prefill upgrade and unchanged IQ3_S profile qualified; Swift requires validated upstream fallback on the tested device",
+  "optimization": "Guarded expert-cache prefill loans, original-slot refill, residency validation; unchanged decode graphs",
+  "invariants": {
+    "native_context": 262144,
+    "kv": "int8",
+    "full_experts": true,
+    "main_weights_changed": false,
+    "numerical_kernels_changed": false,
+    "audio_input": false,
+    "one_visible_gpu": true
+  },
+  "binaries": {
+    "turbo": {
+      "path": "engine/distribution/strata-turbo",
+      "bytes": 62740336,
+      "sha256": "df762841e56a7ac4c1b6dcb6a9aa6918aa689ec840588ffbff5fa6eaa1588838"
+    },
+    "official": {
+      "path": "engine/distribution/strata-official",
+      "bytes": 65016024,
+      "sha256": "d53542400023e94a7866bd7816a58668b774ce165f39e453af7047fac3caddae"
+    },
+    "official_media": {
+      "path": "engine/distribution/strata-upstream-media",
+      "bytes": 65024216,
+      "sha256": "54bf7a29420294216f78fb72e1c46f7496fb54ec809a5c5c464b9d4607a9acb9"
+    },
+    "vision": {
+      "path": "engine/distribution/strata-vision",
+      "bytes": 209057984,
+      "sha256": "e2fdf5537e8770a31960f9b5d412e88c3ac875413a2094e10ec7839b72d7d2e5"
+    }
+  },
+  "scope": "Large-GPU, single-session IQ2_XS; other model/concurrency prefill settings unchanged",
+  "protocol": "ABBA; 3 task families x 3 requests x 2 service starts per arm; no prompt cache",
+  "native_window_samples_per_arm": 1,
+  "final_iq2_xs": {
+    "official": {
+      "short_output_tps": 194.8042138782795,
+      "task_output_medians": {
+        "english": 184.1,
+        "code": 229.0,
+        "chinese": 175.35000000000002,
+        "native_long": 137.8
+      },
+      "recall_prefill_tps": 4509.15,
+      "native_long": {
+        "prompt_tokens": 256013,
+        "output_tokens": 512,
+        "prefill_s": 60.1255,
+        "prefill_tps": 4258.0,
+        "output_tps": 137.8,
+        "wall_s": 64.02342209685594,
+        "first_content_s": 60.314000700833276,
+        "cache_n": 0
+      },
+      "checks": {
+        "correct": true,
+        "image": {
+          "passed": true,
+          "answer": "The dominant color is red."
+        },
+        "video": {
+          "passed": true,
+          "answer": "The dominant color throughout this video is **red**.",
+          "fps": 8
+        },
+        "tools": {
+          "passed": true,
+          "calls": [
+            {
+              "id": "call_f869980b039d42a994368645",
+              "type": "function",
+              "function": {
+                "name": "lookup_weather",
+                "arguments": "{\"city\":\"Sydney\"}"
+              }
+            }
+          ]
+        },
+        "anthropic": {
+          "passed": true
+        }
+      }
+    },
+    "turbo": {
+      "short_output_tps": 211.33597618007286,
+      "task_output_medians": {
+        "english": 198.5,
+        "code": 257.45,
+        "chinese": 184.7,
+        "native_long": 169.8
+      },
+      "recall_prefill_tps": 4310.3,
+      "native_long": {
+        "prompt_tokens": 256013,
+        "output_tokens": 512,
+        "prefill_s": 62.136199999999995,
+        "prefill_tps": 4120.2,
+        "output_tps": 169.8,
+        "wall_s": 65.74629581812769,
+        "first_content_s": 62.72883581300266,
+        "cache_n": 0
+      },
+      "checks": {
+        "correct": true,
+        "image": {
+          "passed": true,
+          "answer": "The dominant color is red."
+        },
+        "video": {
+          "passed": true,
+          "answer": "The dominant color throughout this video is **red**.",
+          "fps": 8
+        },
+        "tools": {
+          "passed": true,
+          "calls": [
+            {
+              "id": "call_b9d7ddbbaff04bbb80f6d551",
+              "type": "function",
+              "function": {
+                "name": "lookup_weather",
+                "arguments": "{\"city\":\"Sydney\"}"
+              }
+            }
+          ]
+        },
+        "anthropic": {
+          "passed": true
+        }
+      }
+    }
+  },
+  "incumbent_improvement": {
+    "short_output_ratio": 0.9991311822164192,
+    "recall_prefill_ratio": 1.7916285643029346,
+    "native_prefill_ratio": 2.0706367624669677,
+    "native_request_ratio": 2.0100599374698795,
+    "native_output_ratio": 0.9675213675213676
+  },
+  "profiles": {
+    "iq2_xs": {
+      "selection": "turbo",
+      "qualification_state": "qualified",
+      "reason": "At least 3% output gain, no output-family regression over 3%, tested-prefill regression within the recorded tolerance.",
+      "fallback_validated": true,
+      "gpu_uuid": "GPU-c9ae835b-bc1e-8d6c-f85f-e415defc30bc",
+      "native_long_checked": true,
+      "prefill_ratios": {
+        "recall": 0.9559007795260749,
+        "native_long": 0.9676373884452795
+      },
+      "evidence": "evidence/prefill-upgrade-runs/iq2_xs",
+      "official_short_tps": 194.8042138782795,
+      "turbo_short_tps": 211.33597618007286,
+      "short_gain_percent": 8.486347380618241
+    },
+    "swift": {
+      "selection": "official",
+      "qualification_state": "failed",
+      "reason": "Video smoke failed: expected red frames; received '0:00'",
+      "fallback_validated": true,
+      "gpu_uuid": "GPU-d198f84d-7195-2312-a5c8-39263b88d546",
+      "native_long_checked": false,
+      "prefill_ratios": {},
+      "evidence": "evidence/prefill-upgrade-runs/swift"
+    },
+    "iq3_s": {
+      "selection": "turbo",
+      "qualification_state": "qualified",
+      "reason": "At least 3% output gain, no output-family regression over 3%, tested-prefill regression within the recorded tolerance.",
+      "fallback_validated": true,
+      "gpu_uuid": "GPU-c9ae835b-bc1e-8d6c-f85f-e415defc30bc",
+      "native_long_checked": false,
+      "prefill_ratios": {
+        "recall": 0.9172075192521101
+      },
+      "evidence": "evidence/prefill-upgrade-runs/iq3_s",
+      "official_short_tps": 144.1890465922786,
+      "turbo_short_tps": 163.54060490253286,
+      "short_gain_percent": 13.420962803765812
+    }
+  },
+  "launcher": {
+    "passed": true,
+    "entrypoint": "./start.sh",
+    "service_stopped": true,
+    "repeat_cached_tokens": 31559,
+    "repeat_prompt_ms": 25.5,
+    "append_cached_tokens": 16384
+  },
+  "checks": {
+    "cpu_unit_tests_passed": 34,
+    "fresh_native_window_recall_passed": true,
+    "iq2_xs_image_video_tools_anthropic_passed": true,
+    "short_incumbent_outputs_exactly_matched_in_pilot": 9
+  },
+  "rejected": [
+    "Swift 32k prefill video response failed; not promoted",
+    "Swift unchanged default video failed in fresh qualification; use validated official fallback on that device"
+  ],
+  "swift_control": {
+    "incumbent_binary_sha256": "147346e6112af5d9fd855c876569e430bbbb474f80ae0c6e00594a5ac6b7656b",
+    "incumbent_replay_passed": true,
+    "new_binary_video_failure_root_cause": "unresolved; not promoted"
+  },
+  "source_patch": "evidence/prefill-upgrade-source.patch",
+  "source_patch_sha256": "d277cc579c1f80e504e0b7890bd400d76003bd2d102d0a9cffa2183bdb83df43",
+  "limits": [
+    "One full-window sample per arm; no confidence interval for long timing.",
+    "Long text can change with prefill batching; checkpoint recall is not a comprehensive intelligence evaluation.",
+    "The 512-token native-window request remains slightly slower than upstream end to end.",
+    "Only L40S physically tested; concurrency and smaller GPU policy retain historical evidence.",
+    "Measurement reports are not activation certificates."
+  ]
+}

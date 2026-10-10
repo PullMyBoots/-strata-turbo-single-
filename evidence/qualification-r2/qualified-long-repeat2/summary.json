@@ -1,0 +1,167 @@
+{
+  "status_before": {
+    "service": "strata",
+    "model": "qwen3.8-flash-next-ud-q3-k-xl",
+    "loaded": true,
+    "auto_load": true,
+    "structured_output": {
+      "formats": [
+        "json_object",
+        "json_schema"
+      ],
+      "method": "prompt_and_validate",
+      "constrained_decoding": false,
+      "stream_buffered": true
+    },
+    "engine": "0.1.38",
+    "started": 1791488529,
+    "uptime_s": 2,
+    "cache_max_tokens": 262144,
+    "context": {
+      "native": 262144,
+      "max_positions": 262144
+    },
+    "concurrency": {
+      "serving": 1,
+      "requested": 1,
+      "active": 0,
+      "queued": 0,
+      "mode": "single_session",
+      "prefill": "single_workspace"
+    },
+    "dialects": [
+      "/v1/chat/completions",
+      "/v1/messages"
+    ],
+    "vision": {
+      "enabled": true,
+      "available": true,
+      "error": null
+    },
+    "activity": {
+      "requests": 0,
+      "in_flight": 0,
+      "last_request_at": null
+    },
+    "last_timings": null,
+    "machine": {
+      "at": 1791488532,
+      "gpu": {
+        "name": "NVIDIA L40S",
+        "used_mib": 45436.0,
+        "total_mib": 46068.0,
+        "util_pct": 0,
+        "temp_c": 52,
+        "power_w": 93.305
+      },
+      "ram": {
+        "used_gib": 106.3,
+        "total_gib": 1007.3
+      }
+    }
+  },
+  "short": {},
+  "long": [
+    {
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 256013,
+        "prompt_ms": 134321.1,
+        "prompt_per_token_ms": 0.525,
+        "prompt_per_second": 1906.0,
+        "predicted_n": 512,
+        "predicted_ms": 3237.3,
+        "predicted_per_token_ms": 6.323,
+        "predicted_per_second": 158.2,
+        "draft_n": 528,
+        "draft_n_accepted": 322
+      },
+      "usage": {
+        "prompt_tokens": 256013,
+        "completion_tokens": 512,
+        "total_tokens": 256525,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "wall_s": 138.3166873799637,
+      "exact_reference_text": true,
+      "retrieval_all": true
+    }
+  ],
+  "long_median": 158.2,
+  "status_after": {
+    "service": "strata",
+    "model": "qwen3.8-flash-next-ud-q3-k-xl",
+    "loaded": true,
+    "auto_load": true,
+    "structured_output": {
+      "formats": [
+        "json_object",
+        "json_schema"
+      ],
+      "method": "prompt_and_validate",
+      "constrained_decoding": false,
+      "stream_buffered": true
+    },
+    "engine": "0.1.38",
+    "started": 1791488529,
+    "uptime_s": 140,
+    "cache_max_tokens": 262144,
+    "context": {
+      "native": 262144,
+      "max_positions": 262144
+    },
+    "concurrency": {
+      "serving": 1,
+      "requested": 1,
+      "active": 0,
+      "queued": 0,
+      "mode": "single_session",
+      "prefill": "single_workspace"
+    },
+    "dialects": [
+      "/v1/chat/completions",
+      "/v1/messages"
+    ],
+    "vision": {
+      "enabled": true,
+      "available": true,
+      "error": null
+    },
+    "activity": {
+      "requests": 1,
+      "in_flight": 0,
+      "last_request_at": 1791488670
+    },
+    "last_timings": {
+      "cache_n": 0,
+      "prompt_n": 256013,
+      "prompt_ms": 134321.1,
+      "prompt_per_token_ms": 0.525,
+      "prompt_per_second": 1906.0,
+      "predicted_n": 512,
+      "predicted_ms": 3237.3,
+      "predicted_per_token_ms": 6.323,
+      "predicted_per_second": 158.2,
+      "draft_n": 528,
+      "draft_n_accepted": 322,
+      "at": 1791488670
+    },
+    "machine": {
+      "at": 1791488670,
+      "gpu": {
+        "name": "NVIDIA L40S",
+        "used_mib": 45490.0,
+        "total_mib": 46068.0,
+        "util_pct": 98,
+        "temp_c": 72,
+        "power_w": 308.641
+      },
+      "ram": {
+        "used_gib": 107.0,
+        "total_gib": 1007.3
+      }
+    }
+  }
+}

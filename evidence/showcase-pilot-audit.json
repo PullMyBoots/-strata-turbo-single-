@@ -1,0 +1,50 @@
+{
+  "reason": "Cross-GPU inference suites overlapped and can share host CPU/memory. Do not infer an engine advantage from the contaminated pilot.",
+  "excluded_and_repeated": [
+    "iq2_xs-official-*",
+    "iq2_xs-turbo-*",
+    "swift-official-*",
+    "all pilot pelican trials"
+  ],
+  "retained_after_agent_suite_ended": [
+    "iq3_s-official-c1",
+    "iq3_s-official-c2",
+    "iq3_s-official-c4",
+    "iq3_s-official-c6",
+    "iq3_s-official-curves",
+    "iq3_s-turbo-c1",
+    "iq3_s-turbo-c2",
+    "iq3_s-turbo-c4",
+    "iq3_s-turbo-c6",
+    "iq3_s-turbo-curves",
+    "swift-turbo-c1",
+    "swift-turbo-c2",
+    "swift-turbo-c4",
+    "swift-turbo-c6",
+    "swift-turbo-curves"
+  ],
+  "throughput_and_agent_reruns": "Sequential; project-wide advisory lock added.",
+  "excluded_pilot_agent_windows": [
+    {
+      "trial": "0-official",
+      "ready_utc": "2026-10-10T15:49:49.939899+00:00",
+      "complete_utc": "2026-10-10T15:55:10.667632+00:00"
+    },
+    {
+      "trial": "1-turbo",
+      "ready_utc": "2026-10-10T15:55:45.519974+00:00",
+      "complete_utc": "2026-10-10T15:58:47.237096+00:00"
+    },
+    {
+      "trial": "2-turbo",
+      "ready_utc": "2026-10-10T15:59:31.064680+00:00",
+      "complete_utc": "2026-10-10T16:02:30.617298+00:00"
+    },
+    {
+      "trial": "3-official",
+      "ready_utc": "2026-10-10T16:02:55.659688+00:00",
+      "complete_utc": "2026-10-10T16:10:29.808440+00:00"
+    }
+  ],
+  "retention_check": "Retained measurements began after the last pilot agent trial completed."
+}

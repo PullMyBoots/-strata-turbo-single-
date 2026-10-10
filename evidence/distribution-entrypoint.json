@@ -1,0 +1,55 @@
+{
+  "passed": true,
+  "selected_binary": "strata-turbo",
+  "qualification_reused": true,
+  "context": 262144,
+  "serving": 1,
+  "arithmetic": {
+    "text": "42",
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 28,
+      "prompt_ms": 174.9,
+      "prompt_per_token_ms": 6.246,
+      "prompt_per_second": 160.1,
+      "predicted_n": 3,
+      "predicted_ms": 28.2,
+      "predicted_per_token_ms": 9.4,
+      "predicted_per_second": 106.4,
+      "draft_n": 5,
+      "draft_n_accepted": 5
+    },
+    "usage": {
+      "prompt_tokens": 28,
+      "completion_tokens": 3,
+      "total_tokens": 31,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "finish_reason": "stop",
+    "wall_s": 0.21314371190965176
+  },
+  "tools": {
+    "passed": true,
+    "calls": [
+      {
+        "id": "call_38a870fd6679424188dc3523",
+        "type": "function",
+        "function": {
+          "name": "lookup_weather",
+          "arguments": "{\"city\":\"Sydney\"}"
+        }
+      }
+    ]
+  },
+  "image": {
+    "passed": true,
+    "answer": "The dominant color is red."
+  },
+  "video": {
+    "passed": true,
+    "answer": "The dominant color throughout this video is **red**.",
+    "fps": 8
+  }
+}

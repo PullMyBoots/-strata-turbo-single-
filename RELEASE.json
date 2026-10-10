@@ -1,31 +1,179 @@
 {
-  "name": "strata-single-GPU",
-  "version": "0.1.0",
-  "created_utc": "2026-10-08T12:03:49.593201+00:00",
-  "scope": "local source and Linux sm89 binary release; no remote destination selected",
-  "default_single_engine": "strata-single-built",
-  "default_model": "GSQ-RCO IQ2_XS",
+  "name": "strata-turbo-single",
+  "version": "0.2.2",
+  "scope": "GitHub source distribution; local Linux NVIDIA source and sm89 runtime archives are generated separately.",
   "context": 262144,
+  "kv_precision": "int8",
+  "target_weights_requantized": false,
+  "full_experts": true,
   "one_visible_gpu": true,
-  "python": {
-    "version": "3.13.9 | packaged by Anaconda, Inc. | (main, Oct 21 2025, 19:16:10) [GCC 11.2.0]",
-    "executable": "/home/student_su/qwen/release/strata-single-GPU/.venv/bin/python"
+  "weights": [
+    "iq2_xs",
+    "swift",
+    "iq3_s"
+  ],
+  "max_concurrency": 6,
+  "input_modalities": [
+    "text",
+    "image",
+    "video"
+  ],
+  "audio_input": false,
+  "entrypoint": "setup.sh then start.sh",
+  "binary_manifest": "distribution/build.json",
+  "qualification": "On-device ABBA required before Turbo selection; per-host certificates excluded from archives.",
+  "default_weight": "iq2_xs",
+  "verification": "evidence/prefill-upgrade.json",
+  "prefill_upgrade": "Guarded single-session IQ2_XS prefill loans on large GPUs; auto:16384, unchanged decode preset and native context.",
+  "historical_development_release": {
+    "name": "strata-single-GPU",
+    "version": "0.1.1",
+    "created_utc": "2026-10-08T12:03:49.593201+00:00",
+    "scope": "local source and Linux sm89 binary release; no remote destination selected",
+    "default_single_engine": "strata-single-built",
+    "default_model": "GSQ-RCO IQ2_XS",
+    "context": 262144,
+    "one_visible_gpu": true,
+    "python": {
+      "version": "3.13.9 | packaged by Anaconda, Inc. | (main, Oct 21 2025, 19:16:10) [GCC 11.2.0]",
+      "executable": "/home/student_su/qwen/release/strata-single-GPU/.venv/bin/python"
+    },
+    "driver": "580.173.02",
+    "source_build_and_actual_model_validated": true,
+    "historical_gpu1_short": [
+      203.14520091247024,
+      200.86001635854606
+    ],
+    "historical_gpu1_cold_long": [
+      162.3,
+      161.6
+    ],
+    "new_build_gpu0_short": [
+      208.68668946258595,
+      207.77622611995957
+    ],
+    "new_build_gpu0_cold_long": 158.3,
+    "main_weights_bundled": false,
+    "shared_assets": "models and runtime data only; attach_assets.py",
+    "runtime_archive_without_model_assets": true,
+    "independent_entrypoint_verified": true,
+    "test_server_stopped": true,
+    "updated_utc": "2026-10-10T11:52:48.076671+00:00",
+    "short_relative_gain": [
+      1.0424364385523825,
+      1.0364459498353937
+    ],
+    "qualification": "evidence/qualification-r2.json",
+    "target_280_300_achieved": false,
+    "fresh_service_long_repeats": [
+      158.3,
+      158.2,
+      159.0
+    ],
+    "fresh_service_long_control": [
+      154.8,
+      154.9,
+      155.4
+    ],
+    "historical_protocol_warm_service_long": 165.5,
+    "historical_protocol_control_long": 161.1,
+    "historical_protocol_long_repeats": 1,
+    "target_long_cold_start_minimum_guaranteed": false,
+    "actual_default_launcher_short_tps": 209.90426293695222,
+    "three_weight_tuning": {
+      "date": "2026-10-10",
+      "evidence": "evidence/three-weight-tuning-20261010.json",
+      "weights": [
+        "iq2_xs",
+        "swift",
+        "iq3_s"
+      ],
+      "context": 262144,
+      "max_concurrency": 6,
+      "tested_concurrency": [
+        1,
+        2,
+        4,
+        6
+      ],
+      "default_single_engine_unchanged": true,
+      "native_batch_media_sha256": "c787787fb1f357025207090da1bd423ce1392e41510795faa871c3026b01370f",
+      "single_short_tps": {
+        "iq2_xs": 206.35305319712074,
+        "swift": 174.60091243918805,
+        "iq3_s": 163.0590592816517
+      },
+      "single_long_tps": {
+        "iq2_xs": 174.3,
+        "swift": 140.4,
+        "iq3_s": 123.3
+      },
+      "concurrency_routing": "native batch for Swift/IQ3_S2..6 and IQ2_XS2..4; retained IPC for IQ2_XS5..6"
+    }
   },
-  "driver": "580.173.02",
-  "source_build_and_actual_model_validated": true,
-  "historical_gpu1_short": [
-    203.14520091247024,
-    200.86001635854606
-  ],
-  "historical_gpu1_cold_long": [
-    162.3,
-    161.6
-  ],
-  "new_build_gpu0_short": 202.22431637506287,
-  "new_build_gpu0_cold_long": 162.0,
-  "main_weights_bundled": false,
-  "shared_assets": "models and runtime data only; attach_assets.py",
-  "runtime_archive_without_model_assets": true,
-  "independent_entrypoint_verified": true,
-  "test_server_stopped": true
+  "verification_passed": true,
+  "updated_utc": "2026-10-10T15:33:21.832311+00:00",
+  "historical_distribution_0_2_0": {
+    "verification": "evidence/distribution-verification.json",
+    "short_gain_percent": {
+      "swift": 19.213653570745983,
+      "iq3_s": 13.272225891638655,
+      "iq2_xs": 8.522650358574978
+    }
+  },
+  "single_session_results": {
+    "iq2_xs": {
+      "selection": "turbo",
+      "qualification_state": "qualified",
+      "reason": "At least 3% output gain, no output-family regression over 3%, tested-prefill regression within the recorded tolerance.",
+      "fallback_validated": true,
+      "gpu_uuid": "GPU-c9ae835b-bc1e-8d6c-f85f-e415defc30bc",
+      "native_long_checked": true,
+      "prefill_ratios": {
+        "recall": 0.9523074378342614,
+        "native_long": 0.9653272693173293
+      },
+      "evidence": "evidence/prefill-upgrade-runs/iq2_xs",
+      "official_short_tps": 194.98355630570526,
+      "turbo_short_tps": 212.13978187101694,
+      "short_gain_percent": 8.79880636622159
+    },
+    "swift": {
+      "selection": "turbo",
+      "qualification_state": "qualified",
+      "reason": "At least 3% output gain, no output-family regression over 3%, tested-prefill regression within the recorded tolerance.",
+      "fallback_validated": true,
+      "gpu_uuid": "GPU-c9ae835b-bc1e-8d6c-f85f-e415defc30bc",
+      "native_long_checked": false,
+      "prefill_ratios": {
+        "recall": 0.9170990681974593
+      },
+      "evidence": "evidence/prefill-upgrade-runs/swift",
+      "official_short_tps": 159.98084574253835,
+      "turbo_short_tps": 176.43854044292033,
+      "short_gain_percent": 10.287290721582876
+    },
+    "iq3_s": {
+      "selection": "turbo",
+      "qualification_state": "qualified",
+      "reason": "At least 3% output gain, no output-family regression over 3%, tested-prefill regression within the recorded tolerance.",
+      "fallback_validated": true,
+      "gpu_uuid": "GPU-d198f84d-7195-2312-a5c8-39263b88d546",
+      "native_long_checked": false,
+      "prefill_ratios": {
+        "recall": 0.9151361833013864
+      },
+      "evidence": "evidence/prefill-upgrade-runs/iq3_s",
+      "official_short_tps": 97.48422975267033,
+      "turbo_short_tps": 115.22246469448515,
+      "short_gain_percent": 18.196004612047446
+    }
+  },
+  "swift_media_repair": "Request-scoped original-profile restoration; adaptive text caching retained; see evidence/swift-video-fix.json.",
+  "repository": "https://github.com/PullMyBoots/-strata-turbo-single-",
+  "readme_showcase": {
+    "pelican": "evidence/showcase/pelican-summary.json",
+    "throughput": "evidence/showcase/benchmark-summary.json",
+    "methodology": "docs/benchmark-methodology.md"
+  }
 }

@@ -14,12 +14,43 @@ import sys
 ROOT=Path(__file__).resolve().parents[1]
 CONTEXT=262144
 STEM='Qwen3.8-Flash-Next-GSQ-RCO-IQ2_XS'
+WEIGHTS={
+    'iq2_xs': ('IQ2_XS', STEM, 'iq2_xs', 2, 'models/IQ2_XS/mmproj-Qwen3.8-Flash-Next-BF16.gguf'),
+    'swift': ('Swift-1.5-IQ3_XXS', 'Swift-Qwen3.8-Flash-Next-GSQ-RCO-IQ3_XXS',
+              'swift-1.5-iq3_xxs', 1, 'models/Swift-1.5-IQ3_XXS/mmproj-Swift-Qwen3.8-Flash-Next-BF16.gguf'),
+    'iq3_s': ('IQ3_S', 'Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S', 'iq3_s', 2, 'models/Vision/mmproj-F16.gguf'),
+}
 
 def gpu_inventory():
-    raw=subprocess.check_output(['nvidia-smi','--query-gpu=index,uuid,pci.bus_id,name,memory.total',
-                                 '--format=csv,noheader,nounits'],text=True)
+    try:
+        raw=subprocess.check_output(['nvidia-smi','--query-gpu=index,uuid,pci.bus_id,name,memory.total',
+                                     '--format=csv,noheader,nounits'],text=True,stderr=subprocess.DEVNULL)
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        return cuda_inventory()
     return [dict(index=int(row[0]),uuid=row[1].strip(),pci=row[2].strip(),name=row[3].strip(),
                  memory_mib=int(row[4])) for row in csv.reader(io.StringIO(raw))]
+
+def cuda_inventory():
+    """Read physical device identity without NVML or allocating a CUDA context."""
+    import ctypes as c
+    import uuid
+    cuda=c.CDLL('libcuda.so.1')
+    def checked(name,*args):
+        code=getattr(cuda,name)(*args)
+        if code:raise ValueError(f'CUDA inventory: {name} failed ({code}).')
+    checked('cuInit',0);count=c.c_int();checked('cuDeviceGetCount',c.byref(count))
+    devices=[]
+    for index in range(count.value):
+        device=c.c_int();checked('cuDeviceGet',c.byref(device),index)
+        name=c.create_string_buffer(256);pci=c.create_string_buffer(32)
+        identity=(c.c_ubyte*16)();total=c.c_size_t()
+        checked('cuDeviceGetName',name,256,device)
+        checked('cuDeviceGetPCIBusId',pci,32,device)
+        checked('cuDeviceGetUuid',c.byref(identity),device)
+        checked('cuDeviceTotalMem_v2',c.byref(total),device)
+        devices.append(dict(index=index,uuid='GPU-'+str(uuid.UUID(bytes=bytes(identity))),
+                            pci=pci.value.decode(),name=name.value.decode(),memory_mib=total.value//2**20))
+    return devices
 
 def select_gpu(value, inventory):
     found=[g for g in inventory if value in (str(g['index']),g['uuid'])]
@@ -35,23 +66,29 @@ def numa_node(gpu):
 def expand(value, assets):
     return str(value).format(root=ROOT,assets=assets)
 
-def build_config(assets, gpu, concurrency=1, engine='built', port=8090, host='127.0.0.1'):
+def build_config(assets, gpu, concurrency=1, engine='built', port=8090, host='127.0.0.1', weights='iq2_xs'):
     if type(concurrency) is not int or not 1<=concurrency<=6:raise ValueError('Concurrency must be an integer from 1 to 6.')
     if engine not in ('validated','built'):raise ValueError('Unknown engine selection.')
-    if concurrency>1 and engine!='validated':raise ValueError('The fresh source build is validated for single-request mode; use --engine validated for concurrent mode.')
+    if weights not in WEIGHTS:raise ValueError('Unknown model weights.')
+    if weights!='iq2_xs' and (engine!='built' or concurrency!=1):
+        raise ValueError('Swift/IQ3_S use the built engine for single requests or --engine native-batch for concurrency.')
+    if concurrency>1 and engine!='validated':raise ValueError('Use --engine native-batch for native concurrency, or --engine validated for the retained IQ2 IPC pool.')
     assets=Path(assets).absolute()
-    preset=json.loads((ROOT/'configs/iq2-single.json').read_text())
-    native=assets/'models/IQ2_XS'/(STEM+'-00001-of-00002.gguf')
-    ple=assets/'models/IQ2_XS'/(STEM+'-00002-of-00002.gguf')
-    pack=assets/'data/packs/iq2_xs'
+    preset_name='iq2-single-validated.json' if engine=='validated' else 'iq2-single.json'
+    if weights!='iq2_xs':preset_name=weights+'-single.json'
+    preset=json.loads((ROOT/'configs'/preset_name).read_text())
+    folder,stem,pack_name,ple_shard,mmproj=WEIGHTS[weights]
+    native=assets/'models'/folder/(stem+'-00001-of-00002.gguf')
+    ple=assets/'models'/folder/(stem+f'-0000{ple_shard}-of-00002.gguf')
+    pack=assets/'data/packs'/pack_name
     env={key:expand(value,assets) for key,value in preset['env'].items()}
     options={key:expand(value,assets) for key,value in preset['args'].items()}
     binary='strata-single-validated' if engine=='validated' else 'strata-single-built'
     cfg={'exe':str(ROOT/'engine'/binary),'cwd':str(ROOT),'gpu':[gpu['index']],
          'gpus_asked':True,'layer_split':'auto','backend':'cuda','host':host,'port':port,
          'model_name':'qwen3.8-flash-next-ud-q3-k-xl',
-         'aliases':['qwen3.8 flash','Qwen3.8-Flash-Next',STEM],
-         'draft_vocab':'cjk',
+         'aliases':['qwen3.8 flash','Qwen3.8-Flash-Next',stem],
+         'draft_vocab':preset.get('draft_vocab','cjk'),
          'sampling':{'temperature':0.3,'top_p':0.95,'top_k':20,'min_p':0.0,
                      'presence_penalty':0.0,'repetition_penalty':1.0},
          'tokenizer':str(pack/'tokenizer'),'log':str(ROOT/'runtime/engine.log'),
@@ -70,14 +107,14 @@ def build_config(assets, gpu, concurrency=1, engine='built', port=8090, host='12
     env['CUDA_VISIBLE_DEVICES']=gpu['uuid'];cfg['env']=env
     cfg['args']=['--pack',str(pack),'--native',str(native),'--ple-gguf',str(ple),
         '--expert-profile',str(assets/'data/expert-profile.bin'),'--expert-cache','auto',
-        '--max-context',str(CONTEXT),'--kv','int8','--vision','--adapt-swaps','0',
-        '--rope-scaling','none','--no-prefill-borrow']
+        '--max-context',str(CONTEXT),'--kv','int8','--vision','--rope-scaling','none']
+    if weights=='iq2_xs':cfg['args']+=['--adapt-swaps','0','--no-prefill-borrow']
     for flag,value in options.items():cfg['args'].extend([flag,str(value)])
     cfg['vision']={'exe':str(ROOT/'engine/strata-vision-native'),
-        'mmproj':str(assets/'models/IQ2_XS/mmproj-Qwen3.8-Flash-Next-BF16.gguf'),
+        'mmproj':str(assets/mmproj),
         'model':str(native),'gpu':True,'cuda_device':gpu['uuid'],'threads':32,
         'max_tokens':0,'flash_attn':'on','native_video':{'fps':8.0,'timestamp_interval_ms':5000}}
-    cfg['deployment']={'project':'strata-single-GPU','weights':'iq2_xs','context':CONTEXT,
+    cfg['deployment']={'project':'strata-single-GPU','weights':weights,'context':CONTEXT,
         'physical_gpus':[gpu['index']],'gpu_uuids':[gpu['uuid']],
         'max_concurrent_requests':concurrency,'main_weights_changed':False,
         'input_modalities':['text','image','video'],'audio_input':False,
@@ -112,13 +149,22 @@ def clean_environment():
     for key in ('CUDA_VISIBLE_DEVICES','CUDA_MPS_PIPE_DIRECTORY','CUDA_MPS_LOG_DIRECTORY',
                 'CUDA_MPS_ACTIVE_THREAD_PERCENTAGE','CUDA_DEVICE_MAX_CONNECTIONS'):os.environ.pop(key,None)
 
+def native_batch_is_default(weights, concurrency):
+    path=ROOT/'experimental/native-batch/manifest.json'
+    if not path.is_file():return False
+    qualification=json.loads(path.read_text()).get('qualification',{})
+    counts=qualification.get('preferred_counts',{}).get(weights,range(2,7))
+    return bool(qualification.get('passed',False) and weights in qualification.get('weights',[])
+                and concurrency in counts)
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--assets',type=Path,default=Path(os.environ.get('STRATA_ASSET_DIR',ROOT/'assets')))
     parser.add_argument('--gpu',default='0',help='Exactly one physical index or full UUID (default: 0).')
+    parser.add_argument('--weights',choices=WEIGHTS,default='iq2_xs',help='Model-specific single-GPU preset.')
     parser.add_argument('--max-concurrency',type=int,choices=range(1,7),default=1)
-    parser.add_argument('--engine',choices=['validated','built'],default=None,
-                        help='Single request: built by default; concurrent mode: validated by default.')
+    parser.add_argument('--engine',choices=['validated','built','native-batch'],default=None,
+                        help='Default: built for one request; measured model-specific backend for concurrency.')
     parser.add_argument('--port',type=int,default=8090)
     parser.add_argument('--host',default='127.0.0.1')
     parser.add_argument('--api-key',default=os.environ.get('STRATA_API_KEY',''))
@@ -126,12 +172,23 @@ def main():
     parser.add_argument('--prepare',action='store_true',help='Validate assets and save config without starting.')
     args=parser.parse_args()
     try:
+        batch_ready=native_batch_is_default(args.weights,args.max_concurrency)
+        if args.engine=='native-batch' or (args.engine is None and args.max_concurrency>1 and batch_ready):
+            if args.max_concurrency<2:raise ValueError('Native batch requires --max-concurrency 2..6.')
+            command=[sys.executable,str(ROOT/'experimental/native-batch/launch.py'),
+                     '--assets',str(args.assets),'--weights',args.weights,'--gpu',args.gpu,
+                     '--max-concurrency',str(args.max_concurrency),'--port',str(args.port),'--host',args.host]
+            if args.dry_run:command.append('--dry-run')
+            if args.prepare:command.append('--prepare')
+            if args.api_key:os.environ['STRATA_API_KEY']=args.api_key
+            os.execv(command[0],command)
         if not 1<=args.port<=65535:raise ValueError('Invalid port.')
         if args.host not in ('127.0.0.1','localhost','::1') and not args.api_key:
             raise ValueError('A non-loopback listener requires an API key.')
+        clean_environment()
         gpu=select_gpu(args.gpu,gpu_inventory())
         engine=args.engine or ('built' if args.max_concurrency==1 else 'validated')
-        cfg=build_config(args.assets,gpu,args.max_concurrency,engine,args.port,args.host)
+        cfg=build_config(args.assets,gpu,args.max_concurrency,engine,args.port,args.host,args.weights)
         if args.dry_run:
             print(json.dumps(cfg,ensure_ascii=False,indent=2));return 0
         check_assets(cfg)

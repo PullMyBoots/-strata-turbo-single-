@@ -1,0 +1,975 @@
+{
+  "protocol": "Fresh service per slot count/arm/model; 64-token warm-up; three mixed English/code/Chinese batches; 256 tokens per request; thinking and KV-prefix cache disabled; aggregate includes prefill/admission.",
+  "rows": [
+    {
+      "wave": 0,
+      "count": 6,
+      "wall_s": 10.918555121170357,
+      "aggregate_e2e_tps": 140.67795445038306,
+      "requests": [
+        {
+          "text": "Here is a comprehensive, detailed guide to organizing and reviewing a software project. This list covers the entire lifecycle from initial setup to final deployment and maintenance, structured into logical phases for clarity.\n\n### Phase 1: Project Initialization & Governance (Items 1–15)\n\n1.  **Define the Project Charter**: Create a document outlining the project’s purpose, scope, objectives, and key stakeholders. *Example: \"Project Alpha: A mobile app for tracking local food waste, targeting users in Seattle, launching Q3 2024.\"*\n2.  **Identify Key Stakeholders**: List all individuals involved, including product owners, developers, QA, DevOps, and end-users. Assign roles (e.g., RACI matrix).\n3.  **Establish Communication Channels**: Set up dedicated Slack channels, Microsoft Teams groups, or Discord servers for real-time communication. *Example: `#proj-alpha-dev`, `#proj-alpha-design`, `#proj-alpha-standups`.*\n4.  **Select the Project Management Tool**: Choose a tool like Jira, Trello, Asana, or Linear. Configure workflows (e.g., To Do → In Progress → Code Review → QA → Done).\n5. ",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 39,
+            "prompt_ms": 133.5,
+            "prompt_per_token_ms": 3.423,
+            "prompt_per_second": 292.1,
+            "predicted_n": 256,
+            "predicted_ms": 9911.6,
+            "predicted_per_token_ms": 38.717,
+            "predicted_per_second": 25.8,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 39,
+            "completion_tokens": 256,
+            "total_tokens": 295,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "length",
+          "wall_s": 10.739747953834012,
+          "first_content_s": 0.699201522860676,
+          "family": "english"
+        },
+        {
+          "text": "```python\n\"\"\"\nAsyncio Task Scheduler with Concurrency Limits, Retries, Cancellation, and Structured Logging.\n\nFeatures:\n- Concurrency limiting via semaphore\n- Exponential backoff retries\n- Task cancellation support\n- Structured JSON logging\n- Graceful shutdown\n- Runnable demonstration\n\"\"\"\n\nimport asyncio\nimport json\nimport logging\nimport random\nimport time\nimport uuid\nfrom dataclasses import dataclass, field\nfrom enum import Enum\nfrom typing import Any, Callable, Coroutine, Dict, List, Optional, Set\n\n\n# ---------------------------------------------------------------------------\n# Structured Logging\n# ---------------------------------------------------------------------------\n\nclass StructuredFormatter(logging.Formatter):\n    \"\"\"JSON formatter for structured logging.\"\"\"\n\n    def format(self, record: logging.LogRecord) -> str:\n        log_data = {\n            \"timestamp\": self.formatTime(record, self.datefmt),\n            \"level\": record.levelname,\n            \"logger\": record.name,\n            \"message\": record.getMessage(),\n        }\n        if record.exc_info:\n            log_data[\"exception\"] = self.formatException(record.exc_info)\n        # Include extra fields passed via `extra`\n        for key in (\"task_id\", \"attempt\", \"max_attempts\", \"",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 55,
+            "prompt_ms": 181.7,
+            "prompt_per_token_ms": 3.304,
+            "prompt_per_second": 302.7,
+            "predicted_n": 256,
+            "predicted_ms": 10113.5,
+            "predicted_per_token_ms": 39.661,
+            "predicted_per_second": 25.2,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 55,
+            "completion_tokens": 256,
+            "total_tokens": 311,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "length",
+          "wall_s": 10.647662901785225,
+          "first_content_s": 0.19903158792294562,
+          "family": "code"
+        },
+        {
+          "text": "大语言模型（LLM）的推理过程是一个高度依赖硬件资源，特别是内存带宽和计算能力的复杂工程问题。要深入理解这一过程，我们需要从底层硬件机制出发，剖析预填充（Prefill）与输出生成（Decode）两个核心阶段的差异，并探讨如何通过缓存机制和优化策略来提升推理效率。\n\n### 内存带宽与计算瓶颈\n\n在LLM推理中，最核心的瓶颈往往不是计算能力（FLOPS），而是内存带宽（Memory Bandwidth）。现代GPU拥有强大的并行计算能力，但LLM的推理过程，尤其是自回归生成阶段，具有极高的内存访问需求。\n\n以Transformer架构为例，每一层都需要加载大量的权重参数（Weights）和激活值（Activations）。在推理过程中，模型需要频繁地从显存（HBM）中读取这些权重数据，将其加载到片上缓存（SRAM）中进行矩阵乘法运算，然后再将结果写回显存。由于权重数据量巨大（例如70B参数的模型，FP16精度下权重约为140GB），而计算过程相对简单（主要是矩阵向量乘法），导致计算单元经常处于“等待数据”的状态。这种现象被称为“内存墙”（Memory Wall）。\n\n**",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 49,
+            "prompt_ms": 182.6,
+            "prompt_per_token_ms": 3.727,
+            "prompt_per_second": 268.3,
+            "predicted_n": 256,
+            "predicted_ms": 9618.2,
+            "predicted_per_token_ms": 37.571,
+            "predicted_per_second": 26.6,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 49,
+            "completion_tokens": 256,
+            "total_tokens": 305,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "length",
+          "wall_s": 10.796366156078875,
+          "first_content_s": 1.0498129650950432,
+          "family": "chinese"
+        },
+        {
+          "text": "Here is a comprehensive, detailed guide to organizing and reviewing a software project. This guide is structured chronologically, moving from initial setup and architecture to code quality, testing, documentation, deployment, and long-term maintenance.\n\n### Phase 1: Project Initialization & Architecture\n\n1.  **Define the Core Value Proposition**: Clearly articulate the problem the software solves. Example: \"This app reduces inventory tracking time by 40% for small retail shops.\"\n2.  **Identify Target Users**: Create detailed user personas. Example: \"Sarah, a 35-year-old shop owner who uses mobile devices primarily.\"\n3.  **Establish Success Metrics**: Define KPIs. Example: \"Achieve 99.9% uptime and <200ms API response time.\"\n4.  **Choose the Technology Stack**: Select languages, frameworks, and databases based on team expertise and project needs. Example: \"Use Python/Django for backend, React for frontend, and PostgreSQL for data.\"\n5.  **Set Up Version Control System**: Initialize a Git repository with a clear branching strategy. Example: \"Use GitFlow with `main`, `develop`, and feature branches.\"\n6.  **Create a `.gitignore` File**:",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 39,
+            "prompt_ms": 131.3,
+            "prompt_per_token_ms": 3.367,
+            "prompt_per_second": 297.0,
+            "predicted_n": 256,
+            "predicted_ms": 9019.8,
+            "predicted_per_token_ms": 35.234,
+            "predicted_per_second": 28.4,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 39,
+            "completion_tokens": 256,
+            "total_tokens": 295,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "length",
+          "wall_s": 10.883793189190328,
+          "first_content_s": 1.7350398460403085,
+          "family": "english"
+        },
+        {
+          "text": "```python\n\"\"\"\nAsyncio Task Scheduler with Concurrency Limits, Retries, Cancellation, and Structured Logging.\n\nFeatures:\n- Concurrency limiting via semaphore\n- Exponential backoff retries\n- Task cancellation support\n- Structured JSON logging\n- Graceful shutdown\n- Runnable demonstration\n\"\"\"\n\nimport asyncio\nimport json\nimport logging\nimport random\nimport time\nimport uuid\nfrom dataclasses import dataclass, field\nfrom enum import Enum\nfrom typing import Any, Callable, Coroutine, Dict, List, Optional, Set\n\n\n# ---------------------------------------------------------------------------\n# Structured Logging\n# ---------------------------------------------------------------------------\n\nclass StructuredFormatter(logging.Formatter):\n    \"\"\"JSON formatter for structured logging.\"\"\"\n\n    def format(self, record: logging.LogRecord) -> str:\n        log_data = {\n            \"timestamp\": self.formatTime(record, self.datefmt),\n            \"level\": record.levelname,\n            \"logger\": record.name,\n            \"message\": record.getMessage(),\n        }\n        if record.exc_info:\n            log_data[\"exception\"] = self.formatException(record.exc_info)\n        # Include extra fields passed via `extra`\n        for key in (\"task_id\", \"attempt\", \"max_attempts\", \"",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 55,
+            "prompt_ms": 166.9,
+            "prompt_per_token_ms": 3.035,
+            "prompt_per_second": 329.5,
+            "predicted_n": 256,
+            "predicted_ms": 8702.7,
+            "predicted_per_token_ms": 33.995,
+            "predicted_per_second": 29.4,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 55,
+            "completion_tokens": 256,
+            "total_tokens": 311,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "length",
+          "wall_s": 10.914922265801579,
+          "first_content_s": 2.0912511369679123,
+          "family": "code"
+        },
+        {
+          "text": "大语言模型（LLM）的推理过程是一个高度依赖硬件资源，特别是内存带宽和计算能力的复杂工程问题。要深入理解这一过程，我们需要从底层硬件机制出发，剖析预填充（Prefill）与输出生成（Decode）两个核心阶段的差异，并探讨如何通过缓存机制和优化策略来提升推理效率。\n\n### 内存带宽与缓存：推理的瓶颈所在\n\n在大语言模型推理中，最大的瓶颈往往不是计算能力（FLOPS），而是内存带宽（Memory Bandwidth）。现代GPU拥有强大的并行计算能力，但LLM的推理过程本质上是“访存密集”（Memory-bound）而非“计算密集”（Compute-bound）。\n\n以参数规模为70B（700亿参数）的模型为例，假设使用FP16精度，模型权重占用约140GB显存。在推理过程中，每生成一个Token，模型都需要加载全部权重进行一次前向传播。如果GPU的内存带宽为2TB/s，理论上每秒最多只能加载140GB数据约14次。这意味着，即使GPU的计算单元闲置，推理速度也被内存读取速度严格限制。\n\n缓存机制在此扮演了关键角色。传统的Transformer架构在推理时，每一层",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 49,
+            "prompt_ms": 180.8,
+            "prompt_per_token_ms": 3.69,
+            "prompt_per_second": 271.0,
+            "predicted_n": 256,
+            "predicted_ms": 9292.1,
+            "predicted_per_token_ms": 36.297,
+            "predicted_per_second": 27.6,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 49,
+            "completion_tokens": 256,
+            "total_tokens": 305,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "length",
+          "wall_s": 10.839176438050345,
+          "first_content_s": 1.4103604739066213,
+          "family": "chinese"
+        }
+      ]
+    },
+    {
+      "wave": 1,
+      "count": 6,
+      "wall_s": 9.716904864879325,
+      "aggregate_e2e_tps": 158.0750271160626,
+      "requests": [
+        {
+          "text": "```python\n\"\"\"\nAsyncio Task Scheduler with Concurrency Limits, Retries, Cancellation, and Structured Logging.\n\nFeatures:\n- Concurrency limiting via semaphore\n- Exponential backoff retries with jitter\n- Task cancellation support\n- Structured JSON logging\n- Graceful shutdown\n- Runnable demonstration\n\"\"\"\n\nimport asyncio\nimport json\nimport logging\nimport random\nimport time\nimport uuid\nfrom dataclasses import dataclass, field\nfrom enum import Enum\nfrom typing import Any, Callable, Coroutine, Dict, List, Optional, Set\n\n\n# ---------------------------------------------------------------------------\n# Structured Logging\n# ---------------------------------------------------------------------------\n\nclass StructuredFormatter(logging.Formatter):\n    \"\"\"Formats log records as JSON strings.\"\"\"\n\n    def format(self, record: logging.LogRecord) -> str:\n        log_data = {\n            \"timestamp\": self.formatTime(record, self.datefmt),\n            \"level\": record.levelname,\n            \"logger\": record.name,\n            \"message\": record.getMessage(),\n        }\n        # Include extra fields if present\n        for key in (\"task_id\", \"attempt\", \"max_attempts\", \"delay\", \"status\", \"error\"):\n            if hasattr(record, key):\n                log_data[key]",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 55,
+            "prompt_ms": 166.9,
+            "prompt_per_token_ms": 3.035,
+            "prompt_per_second": 329.5,
+            "predicted_n": 256,
+            "predicted_ms": 8900.2,
+            "predicted_per_token_ms": 34.766,
+            "predicted_per_second": 28.8,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 55,
+            "completion_tokens": 256,
+            "total_tokens": 311,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "length",
+          "wall_s": 9.651272859890014,
+          "first_content_s": 0.6193609440233558,
+          "family": "code"
+        },
+        {
+          "text": "大语言模型（LLM）的推理过程是一个高度依赖硬件资源，特别是内存带宽和计算能力的复杂工程问题。要深入理解这一过程，我们需要从底层硬件机制出发，剖析预填充（Prefill）与输出生成（Decode）两个核心阶段的差异，并探讨如何通过缓存机制和优化策略来提升推理效率。\n\n### 内存带宽与缓存：推理的瓶颈所在\n\n在大语言模型推理中，最大的瓶颈往往不是计算能力（FLOPS），而是内存带宽（Memory Bandwidth）。现代GPU拥有强大的并行计算能力，但LLM的推理过程，尤其是自回归生成阶段，本质上是“访存密集”（Memory-bound）而非“计算密集”（Compute-bound）的任务。\n\n当模型生成下一个token时，它需要读取模型权重（Weights）和键值缓存（KV Cache）。对于参数量巨大的模型（如70B参数），每次生成一个token都需要从显存中读取数十GB的数据。如果显存带宽不足，GPU的计算单元就会处于空闲等待状态，导致推理速度极慢。因此，理解内存层级结构至关重要。\n\n**缓存机制**在推理中扮演着关键角色。传统的CPU缓存层级（L1, L2, L3）在",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 49,
+            "prompt_ms": 162.9,
+            "prompt_per_token_ms": 3.324,
+            "prompt_per_second": 300.8,
+            "predicted_n": 256,
+            "predicted_ms": 8619.1,
+            "predicted_per_token_ms": 33.668,
+            "predicted_per_second": 29.7,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 49,
+            "completion_tokens": 256,
+            "total_tokens": 305,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "length",
+          "wall_s": 9.674283866072074,
+          "first_content_s": 0.9271016991697252,
+          "family": "chinese"
+        },
+        {
+          "text": "Here is a comprehensive, detailed guide to organizing and reviewing a software project. This list covers the entire lifecycle from initial setup to final deployment and maintenance, structured into logical phases for clarity.\n\n### Phase 1: Project Initialization & Governance\n\n1.  **Define the Project Charter**: Create a document outlining the project’s purpose, scope, objectives, and key stakeholders. *Example: \"Project Alpha: A mobile app for tracking local recycling centers, targeting users in Seattle, launching Q3 2024.\"*\n2.  **Identify Key Stakeholders**: List all individuals who have an interest in the project, including product owners, developers, QA, marketing, and end-users.\n3.  **Establish a Communication Plan**: Define how and where the team will communicate. *Example: Use Slack for daily chatter, Jira for task tracking, and weekly Zoom calls for sprint reviews.*\n4.  **Set Up Version Control System (VCS)**: Initialize a Git repository. *Example: `git init` followed by creating a remote repository on GitHub/GitLab.*\n5.  **Create a `.gitignore` File**: Prevent committing unnecessary files. *Example: Include `node_modules/`, `.env`, `dist/`,",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 39,
+            "prompt_ms": 132.6,
+            "prompt_per_token_ms": 3.4,
+            "prompt_per_second": 294.1,
+            "predicted_n": 256,
+            "predicted_ms": 9147.1,
+            "predicted_per_token_ms": 35.871,
+            "predicted_per_second": 27.9,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 39,
+            "completion_tokens": 256,
+            "total_tokens": 295,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "length",
+          "wall_s": 9.582974756136537,
+          "first_content_s": 0.15607794909738004,
+          "family": "english"
+        },
+        {
+          "text": "```python\n\"\"\"\nAsyncio Task Scheduler with Concurrency Limits, Retries, Cancellation, and Structured Logging.\n\nFeatures:\n- Concurrency limiting via semaphore\n- Exponential backoff retries\n- Task cancellation support\n- Structured JSON logging\n- Graceful shutdown\n- Runnable demonstration\n\"\"\"\n\nimport asyncio\nimport json\nimport logging\nimport random\nimport time\nimport uuid\nfrom dataclasses import dataclass, field\nfrom enum import Enum\nfrom typing import Any, Callable, Coroutine, Dict, List, Optional, Set\n\n\n# ---------------------------------------------------------------------------\n# Structured Logging\n# ---------------------------------------------------------------------------\n\nclass StructuredFormatter(logging.Formatter):\n    \"\"\"JSON-based structured log formatter.\"\"\"\n\n    def format(self, record: logging.LogRecord) -> str:\n        log_data = {\n            \"timestamp\": self.formatTime(record, self.datefmt),\n            \"level\": record.levelname,\n            \"logger\": record.name,\n            \"message\": record.getMessage(),\n        }\n        # Attach extra fields if present\n        if hasattr(record, \"extra_data\"):\n            log_data.update(record.extra_data)\n        return json.dumps(log_data, default=str)\n\n\ndef setup_logger(name: str = \"scheduler\") ->",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 55,
+            "prompt_ms": 166.9,
+            "prompt_per_token_ms": 3.035,
+            "prompt_per_second": 329.5,
+            "predicted_n": 256,
+            "predicted_ms": 7753.8,
+            "predicted_per_token_ms": 30.288,
+            "predicted_per_second": 33.0,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 55,
+            "completion_tokens": 256,
+            "total_tokens": 311,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "length",
+          "wall_s": 9.712241453118622,
+          "first_content_s": 1.8394999250303954,
+          "family": "code"
+        },
+        {
+          "text": "大语言模型（LLM）的推理过程是一个高度依赖硬件资源，特别是内存带宽和计算能力的复杂工程问题。要深入理解这一过程，我们需要从底层硬件机制出发，剖析预填充（Prefill）与输出生成（Decode）两个核心阶段的差异，并探讨如何通过缓存机制和优化策略来提升推理效率。\n\n### 内存带宽与缓存：推理的瓶颈所在\n\n在大语言模型推理中，最大的瓶颈往往不是计算能力（FLOPS），而是内存带宽（Memory Bandwidth）。现代GPU拥有强大的并行计算能力，但LLM的推理过程本质上是“访存密集”（Memory-bound）而非“计算密集”（Compute-bound）。\n\n当模型加载到显存中时，权重参数占据了巨大的空间。例如，一个70亿参数（7B）的模型，以FP16精度存储，需要约14GB显存。在推理过程中，每生成一个Token，模型都需要读取所有的权重参数。这意味着，如果内存带宽不足，GPU的计算单元就会处于闲置状态，等待数据从显存传输到计算核心。这就是所谓的“内存墙”问题。\n\n为了缓解这一问题，现代GPU引入了多级缓存机制。L1和L2缓存位于芯片内部",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 49,
+            "prompt_ms": 162.9,
+            "prompt_per_token_ms": 3.324,
+            "prompt_per_second": 300.8,
+            "predicted_n": 256,
+            "predicted_ms": 8328.1,
+            "predicted_per_token_ms": 32.532,
+            "predicted_per_second": 30.7,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 49,
+            "completion_tokens": 256,
+            "total_tokens": 305,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "length",
+          "wall_s": 9.689622060861439,
+          "first_content_s": 1.233725044876337,
+          "family": "chinese"
+        },
+        {
+          "text": "Here is a comprehensive, detailed guide to organizing and reviewing a software project. This guide is structured chronologically, moving from initial setup and architecture to code quality, testing, documentation, deployment, and long-term maintenance.\n\n### Phase 1: Project Initialization & Architecture\n\n1.  **Define the Core Value Proposition**: Clearly articulate the problem the software solves. Example: \"This app reduces inventory tracking time by 40% for small retail shops.\"\n2.  **Identify Target Users**: Create detailed user personas. Example: \"Sarah, a 35-year-old shop owner who uses mobile devices primarily.\"\n3.  **Establish Success Metrics**: Define KPIs. Example: \"Achieve 99.9% uptime and <200ms API response time.\"\n4.  **Choose the Technology Stack**: Select languages, frameworks, and databases based on team expertise and project needs. Example: \"Use Python/Django for backend, React for frontend, and PostgreSQL for data.\"\n5.  **Set Up Version Control System**: Initialize a Git repository with a clear branching strategy. Example: \"Use GitFlow with `main`, `develop`, and feature branches.\"\n6.  **Create a `.gitignore` File**:",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 39,
+            "prompt_ms": 130.7,
+            "prompt_per_token_ms": 3.351,
+            "prompt_per_second": 298.4,
+            "predicted_n": 256,
+            "predicted_ms": 8057.2,
+            "predicted_per_token_ms": 31.473,
+            "predicted_per_second": 31.8,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 39,
+            "completion_tokens": 256,
+            "total_tokens": 295,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "length",
+          "wall_s": 9.703031721059233,
+          "first_content_s": 1.5165168980602175,
+          "family": "english"
+        }
+      ]
+    },
+    {
+      "wave": 2,
+      "count": 6,
+      "wall_s": 9.489578841021284,
+      "aggregate_e2e_tps": 161.86176707444827,
+      "requests": [
+        {
+          "text": "大语言模型（LLM）的推理过程是一个高度依赖硬件资源，特别是内存带宽和计算能力的复杂工程问题。要深入理解这一过程，我们需要从底层硬件机制出发，剖析预填充（Prefill）与输出生成（Decode）两个核心阶段的差异，并探讨如何通过缓存机制和优化策略来提升推理效率。\n\n### 内存带宽与缓存：推理的瓶颈所在\n\n在大语言模型推理中，最大的瓶颈往往不是计算能力（FLOPS），而是内存带宽（Memory Bandwidth）。现代GPU拥有强大的并行计算能力，但LLM的推理过程本质上是“访存密集”（Memory-bound）而非“计算密集”（Compute-bound）。\n\n当模型加载到显存中时，权重参数占据了巨大的空间。例如，一个70亿参数（7B）的模型，以FP16精度存储，需要约14GB显存。在推理过程中，每生成一个Token，模型都需要读取所有的权重参数。这意味着，如果内存带宽不足，GPU的计算单元就会处于闲置状态，等待数据从显存传输到计算核心。这就是所谓的“内存墙”问题。\n\n为了缓解这一问题，现代GPU采用了多级缓存架构。L2缓存和共享内存（Shared Memory",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 49,
+            "prompt_ms": 158.5,
+            "prompt_per_token_ms": 3.235,
+            "prompt_per_second": 309.1,
+            "predicted_n": 256,
+            "predicted_ms": 8346.8,
+            "predicted_per_token_ms": 32.605,
+            "predicted_per_second": 30.7,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 49,
+            "completion_tokens": 256,
+            "total_tokens": 305,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "length",
+          "wall_s": 9.44481567805633,
+          "first_content_s": 0.9653112860396504,
+          "family": "chinese"
+        },
+        {
+          "text": "Here is a comprehensive, detailed guide to organizing and reviewing a software project. This list covers the entire lifecycle from initial setup to final deployment and maintenance, structured into logical phases for clarity.\n\n### Phase 1: Project Initialization & Governance\n\n1.  **Define the Project Charter**: Create a document outlining the project’s purpose, scope, objectives, and key stakeholders. *Example: \"Project Alpha: A mobile app for tracking local recycling centers, targeting users in Seattle, launching Q3 2024.\"*\n2.  **Identify Key Stakeholders**: List all individuals involved, including product owners, developers, QA, DevOps, and end-users. *Example: Create a RACI matrix (Responsible, Accountable, Consulted, Informed) for each feature.*\n3.  **Establish Communication Channels**: Set up dedicated Slack channels, Microsoft Teams groups, or Discord servers for specific topics (e.g., #dev-backend, #design-ui, #qa-testing).\n4.  **Select the Project Management Tool**: Choose a tool like Jira, Trello, Asana, or Linear. *Example: Configure Jira with a Kanban board for continuous flow.*\n5.  **Define the Tech Stack**: Document",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 39,
+            "prompt_ms": 130.8,
+            "prompt_per_token_ms": 3.354,
+            "prompt_per_second": 298.2,
+            "predicted_n": 256,
+            "predicted_ms": 8628.4,
+            "predicted_per_token_ms": 33.705,
+            "predicted_per_second": 29.7,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 39,
+            "completion_tokens": 256,
+            "total_tokens": 295,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "length",
+          "wall_s": 9.423780205892399,
+          "first_content_s": 0.656817132839933,
+          "family": "english"
+        },
+        {
+          "text": "```python\n\"\"\"\nAsyncio Task Scheduler with Concurrency Limits, Retries, Cancellation, and Structured Logging.\n\nFeatures:\n- Concurrency limiting via semaphore\n- Exponential backoff retries with jitter\n- Task cancellation support\n- Structured JSON logging\n- Graceful shutdown\n- Runnable demonstration\n\"\"\"\n\nimport asyncio\nimport json\nimport logging\nimport random\nimport time\nimport uuid\nfrom dataclasses import dataclass, field\nfrom enum import Enum\nfrom typing import Any, Callable, Coroutine, Dict, List, Optional, Set\n\n\n# ---------------------------------------------------------------------------\n# Structured Logging\n# ---------------------------------------------------------------------------\n\nclass StructuredFormatter(logging.Formatter):\n    \"\"\"JSON formatter for structured logging.\"\"\"\n\n    def format(self, record: logging.LogRecord) -> str:\n        log_data = {\n            \"timestamp\": self.formatTime(record, self.datefmt),\n            \"level\": record.levelname,\n            \"logger\": record.name,\n            \"message\": record.getMessage(),\n        }\n        # Attach extra fields if present\n        if hasattr(record, \"extra_data\"):\n            log_data.update(record.extra_data)\n        return json.dumps(log_data)\n\n\ndef setup_logger(name: str = \"scheduler\") -> logging",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 55,
+            "prompt_ms": 166.8,
+            "prompt_per_token_ms": 3.033,
+            "prompt_per_second": 329.7,
+            "predicted_n": 256,
+            "predicted_ms": 8051.8,
+            "predicted_per_token_ms": 31.452,
+            "predicted_per_second": 31.8,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 55,
+            "completion_tokens": 256,
+            "total_tokens": 311,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "length",
+          "wall_s": 9.465107684023678,
+          "first_content_s": 1.2844109698198736,
+          "family": "code"
+        },
+        {
+          "text": "大语言模型（LLM）的推理过程是一个高度依赖硬件资源，特别是内存带宽和计算能力的复杂工程问题。要深入理解这一过程，我们需要从底层硬件机制出发，剖析预填充（Prefill）与输出生成（Decode）两个核心阶段的差异，并探讨如何通过缓存机制和优化策略来提升推理效率。\n\n### 内存带宽与缓存：推理的瓶颈所在\n\n在大语言模型推理中，最大的瓶颈往往不是计算能力（FLOPS），而是内存带宽（Memory Bandwidth）。现代GPU拥有强大的并行计算能力，但LLM的推理过程本质上是“访存密集”（Memory-bound）而非“计算密集”（Compute-bound）。\n\n以参数规模为70B（700亿参数）的模型为例，假设使用FP16精度，模型权重占用约140GB显存。在推理过程中，每生成一个Token，模型都需要加载全部权重进行一次前向传播。如果GPU的内存带宽为2TB/s，理论上每秒最多只能加载140GB数据约14次。这意味着，即使GPU的计算单元闲置，推理速度也被内存读取速度严格限制。\n\n为了缓解这一瓶颈，**缓存机制**至关重要。最核心的缓存技术是**",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 49,
+            "prompt_ms": 159.3,
+            "prompt_per_token_ms": 3.251,
+            "prompt_per_second": 307.6,
+            "predicted_n": 256,
+            "predicted_ms": 7756.7,
+            "predicted_per_token_ms": 30.3,
+            "predicted_per_second": 33.0,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 49,
+            "completion_tokens": 256,
+            "total_tokens": 305,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "length",
+          "wall_s": 9.476280299015343,
+          "first_content_s": 1.5942255859263241,
+          "family": "chinese"
+        },
+        {
+          "text": "Here is a comprehensive, detailed guide to organizing and reviewing a software project. This list covers the entire lifecycle from initial setup to deployment and maintenance, structured into logical phases for clarity.\n\n### Phase 1: Project Initialization & Structure\n\n1.  **Define the Project Scope**: Clearly outline what the software will do and, crucially, what it will *not* do. Example: \"The app will handle user authentication and profile management, but will not include payment processing in v1.\"\n2.  **Select the Tech Stack**: Choose languages, frameworks, and libraries based on team expertise and project requirements. Example: \"Use React for the frontend, Node.js for the backend, and PostgreSQL for the database.\"\n3.  **Initialize Version Control**: Set up a Git repository with a clear branching strategy. Example: Use GitFlow with `main`, `develop`, `feature/*`, and `release/*` branches.\n4.  **Create a `.gitignore` File**: Prevent committing unnecessary files. Example: Exclude `node_modules/`, `.env`, `dist/`, and `.DS_Store`.\n5.  **Set Up Project Directory Structure**: Organize files logically. Example: `src/` for source code, `tests/`",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 39,
+            "prompt_ms": 130.2,
+            "prompt_per_token_ms": 3.338,
+            "prompt_per_second": 299.5,
+            "predicted_n": 256,
+            "predicted_ms": 7479.7,
+            "predicted_per_token_ms": 29.218,
+            "predicted_per_second": 34.2,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 39,
+            "completion_tokens": 256,
+            "total_tokens": 295,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "length",
+          "wall_s": 9.487288139993325,
+          "first_content_s": 1.8794307629577816,
+          "family": "english"
+        },
+        {
+          "text": "```python\n\"\"\"\nAsyncio Task Scheduler with Concurrency Limits, Retries, Cancellation, and Structured Logging.\n\nFeatures:\n- Concurrency limiting via semaphore\n- Exponential backoff retries\n- Task cancellation support\n- Structured JSON logging\n- Graceful shutdown\n- Runnable demonstration\n\"\"\"\n\nimport asyncio\nimport json\nimport logging\nimport random\nimport time\nimport uuid\nfrom dataclasses import dataclass, field\nfrom enum import Enum\nfrom typing import Any, Callable, Coroutine, Dict, List, Optional, Set\n\n\n# ---------------------------------------------------------------------------\n# Structured Logging\n# ---------------------------------------------------------------------------\n\nclass StructuredFormatter(logging.Formatter):\n    \"\"\"JSON formatter for structured logging.\"\"\"\n\n    def format(self, record: logging.LogRecord) -> str:\n        log_data = {\n            \"timestamp\": self.formatTime(record, self.datefmt),\n            \"level\": record.levelname,\n            \"logger\": record.name,\n            \"message\": record.getMessage(),\n        }\n        if record.exc_info:\n            log_data[\"exception\"] = self.formatException(record.exc_info)\n        # Include extra fields passed via `extra`\n        for key in (\"task_id\", \"attempt\", \"max_attempts\", \"",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 55,
+            "prompt_ms": 177.8,
+            "prompt_per_token_ms": 3.233,
+            "prompt_per_second": 309.3,
+            "predicted_n": 256,
+            "predicted_ms": 8856.3,
+            "predicted_per_token_ms": 34.731,
+            "predicted_per_second": 28.8,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 55,
+            "completion_tokens": 256,
+            "total_tokens": 311,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "length",
+          "wall_s": 9.3772158769425,
+          "first_content_s": 0.19419370405375957,
+          "family": "code"
+        }
+      ]
+    }
+  ],
+  "binary_sha256": "54bf7a29420294216f78fb72e1c46f7496fb54ec809a5c5c464b9d4607a9acb9",
+  "configuration": {
+    "exe": "/home/student_su/qwen/release/strata-single-GPU/engine/distribution/strata-upstream-media",
+    "cwd": "/home/student_su/qwen/release/strata-single-GPU",
+    "gpu": [
+      0
+    ],
+    "gpus_asked": true,
+    "layer_split": "auto",
+    "backend": "cuda",
+    "host": "127.0.0.1",
+    "port": 33601,
+    "model_name": "qwen3.8-flash-swift-iq3-xxs",
+    "aliases": [
+      "qwen3.8 flash",
+      "Qwen3.8-Flash-Next",
+      "Swift-Qwen3.8-Flash-Next-GSQ-RCO-IQ3_XXS",
+      "qwen3.8-flash-next-ud-q3-k-xl"
+    ],
+    "draft_vocab": "full",
+    "sampling": {
+      "temperature": 0.3,
+      "top_p": 0.95,
+      "top_k": 20,
+      "min_p": 0.0,
+      "presence_penalty": 0.0,
+      "repetition_penalty": 1.0
+    },
+    "tokenizer": "/home/student_su/qwen/release/strata-single-GPU/assets/data/packs/swift-1.5-iq3_xxs/tokenizer",
+    "log": "/home/student_su/qwen/release/strata-single-GPU/runtime/readme-benchmark-isolated-20261010/swift-official-c6/engine.log",
+    "lib_dirs": [
+      "/usr/local/cuda/lib64"
+    ],
+    "parallel_workers": 1,
+    "env": {
+      "CUDA_VISIBLE_DEVICES": "GPU-c9ae835b-bc1e-8d6c-f85f-e415defc30bc"
+    },
+    "args": [
+      "--pack",
+      "/home/student_su/qwen/release/strata-single-GPU/assets/data/packs/swift-1.5-iq3_xxs",
+      "--native",
+      "/home/student_su/qwen/release/strata-single-GPU/assets/models/Swift-1.5-IQ3_XXS/Swift-Qwen3.8-Flash-Next-GSQ-RCO-IQ3_XXS-00001-of-00002.gguf",
+      "--ple-gguf",
+      "/home/student_su/qwen/release/strata-single-GPU/assets/models/Swift-1.5-IQ3_XXS/Swift-Qwen3.8-Flash-Next-GSQ-RCO-IQ3_XXS-00001-of-00002.gguf",
+      "--expert-profile",
+      "/home/student_su/qwen/release/strata-single-GPU/assets/data/expert-profile.bin",
+      "--expert-cache",
+      "auto",
+      "--max-context",
+      "262144",
+      "--kv",
+      "int8",
+      "--rope-scaling",
+      "none",
+      "--vision",
+      "--prefill",
+      "auto",
+      "--spec",
+      "4",
+      "--spec-min-p",
+      "0.5",
+      "--mtp",
+      "/home/student_su/qwen/release/strata-single-GPU/assets/data/mtp/rt",
+      "--pool-workers",
+      "32",
+      "--kv-resident",
+      "8192",
+      "--vram-reserve-mib",
+      "1400",
+      "--prompt-cache",
+      "0"
+    ],
+    "vision": {
+      "exe": "/home/student_su/qwen/release/strata-single-GPU/engine/distribution/strata-vision",
+      "mmproj": "/home/student_su/qwen/release/strata-single-GPU/assets/models/Swift-1.5-IQ3_XXS/mmproj-Swift-Qwen3.8-Flash-Next-BF16.gguf",
+      "model": "/home/student_su/qwen/release/strata-single-GPU/assets/models/Swift-1.5-IQ3_XXS/Swift-Qwen3.8-Flash-Next-GSQ-RCO-IQ3_XXS-00001-of-00002.gguf",
+      "gpu": true,
+      "cuda_device": "GPU-c9ae835b-bc1e-8d6c-f85f-e415defc30bc",
+      "threads": 32,
+      "max_tokens": 0,
+      "flash_attn": "on",
+      "native_video": {
+        "fps": 8.0,
+        "timestamp_interval_ms": 5000
+      }
+    },
+    "deployment": {
+      "project": "strata-turbo-single",
+      "weights": "swift",
+      "context": 262144,
+      "physical_gpus": [
+        0
+      ],
+      "gpu_uuids": [
+        "GPU-c9ae835b-bc1e-8d6c-f85f-e415defc30bc"
+      ],
+      "max_concurrent_requests": 6,
+      "main_weights_changed": false,
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "audio_input": false,
+      "engine_selection": "official",
+      "numa_node": 0,
+      "resource_plan": {
+        "context": 262144,
+        "kv": "int8",
+        "workers": 32,
+        "vision_gpu": true,
+        "low_ram": false,
+        "kv_streaming": true,
+        "kv_resident": 8192,
+        "reserve_mib": 1400,
+        "large_gpu_turbo": true,
+        "concurrency": 6,
+        "full_experts": true,
+        "input_modalities": [
+          "text",
+          "image",
+          "video"
+        ],
+        "audio_input": false
+      },
+      "cpu_affinity": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        256,
+        257,
+        258,
+        259,
+        260,
+        261,
+        262,
+        263,
+        264,
+        265,
+        266,
+        267,
+        268,
+        269,
+        270,
+        271,
+        272,
+        273,
+        274,
+        275,
+        276,
+        277,
+        278,
+        279,
+        280,
+        281,
+        282,
+        283,
+        284,
+        285,
+        286,
+        287,
+        288,
+        289,
+        290,
+        291,
+        292,
+        293,
+        294,
+        295,
+        296,
+        297,
+        298,
+        299,
+        300,
+        301,
+        302,
+        303,
+        304,
+        305,
+        306,
+        307,
+        308,
+        309,
+        310,
+        311,
+        312,
+        313,
+        314,
+        315,
+        316,
+        317,
+        318,
+        319,
+        320,
+        321,
+        322,
+        323,
+        324,
+        325,
+        326,
+        327,
+        328,
+        329,
+        330,
+        331,
+        332,
+        333,
+        334,
+        335,
+        336,
+        337,
+        338,
+        339,
+        340,
+        341,
+        342,
+        343,
+        344,
+        345,
+        346,
+        347,
+        348,
+        349,
+        350,
+        351,
+        352,
+        353,
+        354,
+        355,
+        356,
+        357,
+        358,
+        359,
+        360,
+        361,
+        362,
+        363,
+        364,
+        365,
+        366,
+        367,
+        368,
+        369,
+        370,
+        371,
+        372,
+        373,
+        374,
+        375,
+        376,
+        377,
+        378,
+        379,
+        380,
+        381,
+        382,
+        383
+      ]
+    },
+    "parallel": 6,
+    "server_module": "experimental-native-api"
+  },
+  "status": {
+    "service": "strata",
+    "model": "qwen3.8-flash-swift-iq3-xxs",
+    "loaded": true,
+    "auto_load": true,
+    "structured_output": {
+      "formats": [
+        "json_object",
+        "json_schema"
+      ],
+      "method": "prompt_and_validate",
+      "constrained_decoding": false,
+      "stream_buffered": true
+    },
+    "engine": "0.1.41",
+    "started": 1791651160,
+    "uptime_s": 0,
+    "cache_max_tokens": 262144,
+    "context": {
+      "native": 262144,
+      "max_positions": 262144
+    },
+    "concurrency": {
+      "serving": 6,
+      "requested": 6
+    },
+    "dialects": [
+      "/v1/chat/completions",
+      "/v1/messages",
+      "/v1/responses"
+    ],
+    "vision": {
+      "enabled": true,
+      "available": true,
+      "error": null
+    },
+    "activity": {
+      "requests": 0,
+      "in_flight": 0,
+      "last_request_at": null
+    },
+    "last_timings": null,
+    "vram": {
+      "elastic": false
+    },
+    "machine": {
+      "at": 1791651161,
+      "gpu": null,
+      "ram": {
+        "used_gib": 97.2,
+        "total_gib": 1007.3
+      }
+    }
+  },
+  "measurement_only": true
+}
