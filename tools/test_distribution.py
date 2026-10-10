@@ -101,6 +101,25 @@ class SpeedGate(unittest.TestCase):
 
 
 class ConfigPolicy(unittest.TestCase):
+    def test_frontend_and_template_changes_invalidate_certificate(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            for relative in ('serve', 'experimental/native-batch/serve'):
+                (root / relative).mkdir(parents=True)
+                (root / relative / 'local_api.py').write_text('entrypoint')
+                (root / relative / 'frontend.py').write_text('old frontend')
+                (root / relative / 'chat_template.jinja').write_text('old template')
+            original = dist.key(dist.api_source_hashes(root))
+            for relative in ('serve', 'experimental/native-batch/serve'):
+                for name in ('frontend.py', 'chat_template.jinja'):
+                    path = root / relative / name
+                    old = path.read_text()
+                    path.write_text('changed input rendering')
+                    self.assertNotEqual(original, dist.key(dist.api_source_hashes(root)))
+                    path.write_text(old)
+            (root / 'serve' / 'test_example.py').write_text('test changes')
+            self.assertEqual(original, dist.key(dist.api_source_hashes(root)))
+
     def test_actual_prefill_and_cache_restore_options_invalidate_qualification(self):
         cfg = {'args': ['--pack', '/assets/model', '--prefill', 'auto', '--spec', '8'],
                'env': {'CUDA_VISIBLE_DEVICES': 'GPU-one', 'STRATA_VERIFY_PREFILL_RESTORE': '1'},

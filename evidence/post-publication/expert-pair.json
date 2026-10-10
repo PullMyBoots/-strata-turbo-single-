@@ -1,0 +1,52 @@
+{
+  "protocol": "Same GPU0, IQ2_XS target, native 262144 INT8 KV, two 512-token cold outputs per family; incumbent/candidate/incumbent.",
+  "arms": [
+    {
+      "index": 0,
+      "arm": "incumbent",
+      "medians": {
+        "english": 222.8,
+        "code": 245.0,
+        "chinese": 176.8
+      },
+      "mean": 214.86666666666667,
+      "native_context_medians": {},
+      "native_context_mean": null,
+      "checks": {},
+      "equal": true
+    },
+    {
+      "index": 1,
+      "arm": "expert-pair",
+      "medians": {
+        "english": 222.2,
+        "code": 241.0,
+        "chinese": 173.05
+      },
+      "mean": 212.08333333333334,
+      "native_context_medians": {},
+      "native_context_mean": null,
+      "checks": {},
+      "equal": true
+    },
+    {
+      "index": 2,
+      "arm": "incumbent",
+      "medians": {
+        "english": 218.8,
+        "code": 244.25,
+        "chinese": 176.35
+      },
+      "mean": 213.13333333333333,
+      "native_context_medians": {},
+      "native_context_mean": null,
+      "checks": {},
+      "equal": true
+    }
+  ],
+  "bracketed_control_tps": 214.0,
+  "gain_percent": -0.8956386292834795,
+  "status": "rejected; component improvement did not survive whole-engine test",
+  "binary_sha256": "3a62c69adf250ea574b77461f9db454bcc096bdb622af0a75d6c3b3b28d08f7e",
+  "installed_engine_unchanged": true
+}

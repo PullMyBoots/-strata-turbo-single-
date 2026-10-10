@@ -26,6 +26,11 @@ def main():
     p.add_argument('--gpu', default='2')
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--claude', default='claude')
+    p.add_argument('--arms', nargs='+', choices=('official', 'turbo'),
+                   default=['official', 'turbo', 'turbo', 'official'])
+    p.add_argument('--turbo-exe', type=Path)
+    p.add_argument('--turbo-server-module', choices=('serve.local_api', 'experimental-native-api'))
+    p.add_argument('--turbo-env', action='append', default=[], metavar='NAME=VALUE')
     a = p.parse_args()
     benchmark_lock = acquire()
     out = a.output.absolute()
@@ -108,15 +113,37 @@ def main():
               'claude_version': subprocess.check_output([a.claude, '--version'], text=True).strip(),
               'effort': 'max', 'output_limit_per_request': 65536, 'temperature': 0, 'seed': 20261010,
               'model_loading_included': False, 'cli_startup_thinking_tools_retries_included': True,
-              'protocol': 'ABBA, two fresh services/sessions per engine; identical warm-up; empty same workspace; prompt cache on; original HTML preserved.',
+              'arm_order': a.arms,
+              'screening_only': (a.arms != ['official', 'turbo', 'turbo', 'official']
+                                 or bool(a.turbo_exe or a.turbo_server_module or a.turbo_env)),
+              'protocol': 'Fresh services/sessions in recorded arm order; identical warm-up; empty same workspace; prompt cache on; original HTML preserved.',
               'runs': []}
     try:
-        for index, arm in enumerate(('official', 'turbo', 'turbo', 'official')):
+        for index, arm in enumerate(a.arms):
             folder = out / f'{index}-{arm}'
             folder.mkdir()
             cfg = d.build_config(a.assets.absolute(), hw, 'iq2_xs', d.resource_plan(hw, 'iq2_xs'), arm=arm)
-            cfg.update(port=q.free_port(), host='127.0.0.1', log=str(folder / 'engine.log'))
+            # Validate the released assets and binaries before optional experimental
+            # overrides. Production launchers retain strict release checksum checks.
             d.check_config(cfg)
+            if arm == 'turbo':
+                if a.turbo_exe:
+                    candidate = a.turbo_exe.absolute()
+                    if not candidate.is_file() or not os.access(candidate, os.X_OK):
+                        raise ValueError('Candidate executable must be a runnable file')
+                    cfg['exe'] = str(candidate)
+                    d.save(folder / 'experimental-binary.json', {
+                        'path': str(candidate), 'sha256': d.digest(candidate),
+                        'release_registered': False,
+                        'purpose': 'Explicit candidate screening; not a release qualification'})
+                if a.turbo_server_module:
+                    cfg['server_module'] = a.turbo_server_module
+                for entry in a.turbo_env:
+                    name, value = entry.split('=', 1)
+                    if not name.startswith('STRATA_'):
+                        raise ValueError('Candidate overrides must be STRATA_ settings')
+                    cfg['env'][name] = value
+            cfg.update(port=q.free_port(), host='127.0.0.1', log=str(folder / 'engine.log'))
             d.save(folder / 'config.json', cfg)
             state['backend'] = f"http://127.0.0.1:{cfg['port']}"
             cmd, cwd = d.server_command(cfg, folder / 'config.json')
@@ -166,7 +193,7 @@ def main():
                     d.save(folder / 'process.json', {'pid': server.pid, 'stopped': True, 'exit_code': server.returncode})
     finally:
         proxy.shutdown()
-    print('Claude Code ABBA tasks complete; all owned engines stopped.', flush=True)
+    print('Claude Code tasks complete; all owned engines stopped.', flush=True)
 
 
 if __name__ == '__main__':

@@ -197,6 +197,35 @@ def openai_to_messages(req: dict) -> tuple[list[dict], list[dict] | None, dict]:
     return _late_system_to_user(messages), tools, kwargs
 
 
+BILLING_HEADER = "x-anthropic-billing-header:"
+
+
+def pin_billing_stamp(system: str) -> str:
+    """Keep Claude Code's random client stamps from invalidating conversation KV.
+
+    Match the pinned upstream adapter. Only the leading billing header's
+    session suffix and checksum are normalized; user instructions stay intact.
+    """
+    if not system.startswith(BILLING_HEADER):
+        return system
+    chars = list(system)
+    checksum = system.find("cch=", len(BILLING_HEADER))
+    if 0 <= checksum <= 160:
+        begin, end = checksum + 4, system.find(";", checksum + 4)
+        if end > begin and end - begin <= 16:
+            chars[begin:end] = "f" * (end - begin)
+    version = system.find("cc_version=")
+    if 0 <= version <= 160:
+        begin = version + len("cc_version=")
+        end = system.find(";", begin)
+        if begin < end and end - begin <= 64:
+            parts = system[begin:end].split(".")
+            if len(parts) > 3:
+                suffix = begin + len(".".join(parts[:3])) + 1
+                chars[suffix:end] = "f" * (end - suffix)
+    return "".join(chars)
+
+
 def anthropic_to_messages(req: dict, think_unasked: bool = True) -> tuple[list[dict], list[dict] | None, dict]:
     """Anthropic Messages -> (template messages, template tools, template kwargs).  `think_unasked`: a request
     without "thinking", an effort or a budget gets the template's default (it thinks), as through 0.1.31; False
@@ -204,7 +233,7 @@ def anthropic_to_messages(req: dict, think_unasked: bool = True) -> tuple[list[d
     messages = []
     system = req.get("system")
     if system:
-        messages.append({"role": "system", "content": _text_of(system)})
+        messages.append({"role": "system", "content": pin_billing_stamp(_text_of(system))})
     for m in _object_list(req.get("messages"), "messages"):
         content = m.get("content")
         if isinstance(content, str):

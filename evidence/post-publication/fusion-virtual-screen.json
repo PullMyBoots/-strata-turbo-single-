@@ -1,0 +1,53 @@
+{
+  "protocol": "Fresh GPU0 services; same native 262144/INT8 KV/target, three task families, two cold 512-token outputs per family; no default promotion.",
+  "arms": [
+    {
+      "index": 0,
+      "arm": "incumbent",
+      "medians": {
+        "english": 149.9,
+        "code": 185.0,
+        "chinese": 139.7
+      },
+      "mean": 158.2,
+      "native_context_medians": {},
+      "native_context_mean": null,
+      "checks": {},
+      "equal": true
+    },
+    {
+      "index": 1,
+      "arm": "fusion-virtual",
+      "medians": {
+        "english": 151.95,
+        "code": 190.8,
+        "chinese": 140.05
+      },
+      "mean": 160.93333333333334,
+      "native_context_medians": {},
+      "native_context_mean": null,
+      "checks": {},
+      "equal": false
+    },
+    {
+      "index": 2,
+      "arm": "incumbent",
+      "medians": {
+        "english": 151.05,
+        "code": 193.9,
+        "chinese": 133.75
+      },
+      "mean": 159.56666666666666,
+      "native_context_medians": {},
+      "native_context_mean": null,
+      "checks": {},
+      "equal": false
+    }
+  ],
+  "bracketed_control_tps": 158.88333333333333,
+  "relative_gain_percent": {
+    "fusion-virtual": 1.2902549040176403
+  },
+  "raw_directory": "runtime/fusion-virtual-screen-iq3-20261010",
+  "installed_engine_unchanged": true
+}

@@ -1,0 +1,83 @@
+{
+  "protocol": "Fresh GPU0 services; same native 262144/INT8 KV/target, three task families, two cold 512-token outputs per family; no default promotion.",
+  "arms": [
+    {
+      "index": 0,
+      "arm": "incumbent",
+      "medians": {
+        "english": 222.5,
+        "code": 244.45,
+        "chinese": 177.5
+      },
+      "mean": 214.81666666666666,
+      "native_context_medians": {},
+      "native_context_mean": null,
+      "checks": {},
+      "equal": true
+    },
+    {
+      "index": 1,
+      "arm": "draft128",
+      "medians": {
+        "english": 185.75,
+        "code": 222.95,
+        "chinese": 142.3
+      },
+      "mean": 183.66666666666666,
+      "native_context_medians": {},
+      "native_context_mean": null,
+      "checks": {},
+      "equal": true
+    },
+    {
+      "index": 2,
+      "arm": "draft512",
+      "medians": {
+        "english": 216.45,
+        "code": 236.25,
+        "chinese": 167.35
+      },
+      "mean": 206.68333333333334,
+      "native_context_medians": {},
+      "native_context_mean": null,
+      "checks": {},
+      "equal": true
+    },
+    {
+      "index": 3,
+      "arm": "draft2048",
+      "medians": {
+        "english": 220.75,
+        "code": 239.3,
+        "chinese": 173.9
+      },
+      "mean": 211.31666666666666,
+      "native_context_medians": {},
+      "native_context_mean": null,
+      "checks": {},
+      "equal": true
+    },
+    {
+      "index": 4,
+      "arm": "incumbent",
+      "medians": {
+        "english": 223.5,
+        "code": 244.89999999999998,
+        "chinese": 176.85
+      },
+      "mean": 215.08333333333331,
+      "native_context_medians": {},
+      "native_context_mean": null,
+      "checks": {},
+      "equal": true
+    }
+  ],
+  "bracketed_control_tps": 214.95,
+  "relative_gain_percent": {
+    "draft128": -14.553772195084125,
+    "draft512": -3.845855625339223,
+    "draft2048": -1.6903155772660328
+  },
+  "raw_directory": "runtime/draft-shortlist-iq2-r2-20261010",
+  "installed_engine_unchanged": true
+}

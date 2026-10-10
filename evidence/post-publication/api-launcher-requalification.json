@@ -1,0 +1,195 @@
+{
+  "protocol": "ABBA; 3 task families x 3 requests x 2 service starts per arm; no prompt cache",
+  "scope": "Saved IQ2_XS installation only, after the API source certificate identity changed. Not qualification of the experimental decoder.",
+  "model": "iq2_xs",
+  "context": 262144,
+  "concurrency": 1,
+  "state": "qualified",
+  "selected_engine": "turbo",
+  "output_geometric_gain_percent": 8.676129657252973,
+  "task_ratios": {
+    "english": 1.0782183595871808,
+    "code": 1.1228146853146852,
+    "chinese": 1.0601997146932953
+  },
+  "task_median_tps": {
+    "official": {
+      "english": 184.1,
+      "code": 228.8,
+      "chinese": 175.25
+    },
+    "turbo": {
+      "english": 198.5,
+      "code": 256.9,
+      "chinese": 185.8
+    }
+  },
+  "task_rates": {
+    "official": {
+      "english": [
+        175.0,
+        188.8,
+        184.6,
+        174.1,
+        187.8,
+        183.6
+      ],
+      "code": [
+        230.8,
+        228.6,
+        230.8,
+        228.8,
+        226.6,
+        228.8
+      ],
+      "chinese": [
+        175.8,
+        176.8,
+        174.6,
+        174.8,
+        175.7,
+        173.4
+      ]
+    },
+    "turbo": {
+      "english": [
+        186.7,
+        197.8,
+        200.6,
+        192.7,
+        199.2,
+        203.1
+      ],
+      "code": [
+        244.3,
+        257.2,
+        256.7,
+        244.6,
+        257.3,
+        257.1
+      ],
+      "chinese": [
+        188.1,
+        185.3,
+        184.7,
+        188.0,
+        186.3,
+        185.1
+      ]
+    }
+  },
+  "prefill_ratios": {
+    "recall": 0.9548909726460634
+  },
+  "prefill_rates": {
+    "official": {
+      "recall": [
+        4529.3,
+        4482.2
+      ]
+    },
+    "turbo": {
+      "recall": [
+        4300.1,
+        4304.9
+      ]
+    }
+  },
+  "native_long_checked": false,
+  "all_timing_outputs_have_512_tokens": true,
+  "all_timing_prompts_uncached": true,
+  "capability_runs": [
+    {
+      "arm": "official",
+      "correct": true,
+      "checks_recorded": [
+        "recall",
+        "image",
+        "video",
+        "tools",
+        "anthropic"
+      ]
+    },
+    {
+      "arm": "turbo",
+      "correct": true,
+      "checks_recorded": [
+        "recall",
+        "image",
+        "video",
+        "tools",
+        "anthropic"
+      ]
+    },
+    {
+      "arm": "turbo",
+      "correct": true,
+      "checks_recorded": [
+        "recall"
+      ]
+    },
+    {
+      "arm": "official",
+      "correct": true,
+      "checks_recorded": [
+        "recall"
+      ]
+    }
+  ],
+  "processes": [
+    {
+      "arm": "official",
+      "stopped": true,
+      "exit_code": 0
+    },
+    {
+      "arm": "turbo",
+      "stopped": true,
+      "exit_code": 0
+    },
+    {
+      "arm": "turbo",
+      "stopped": true,
+      "exit_code": 0
+    },
+    {
+      "arm": "official",
+      "stopped": true,
+      "exit_code": 0
+    }
+  ],
+  "settings_unchanged": true,
+  "installed_numerical_binary_unchanged": true,
+  "installed_turbo_sha256": "a7a467411ecdd0e39c489b1c8897fe4d12fde9fcc9750bc766536c68c448cbf9",
+  "production_services_controlled": false,
+  "api_source_hashes": {
+    "serve/__init__.py": "7195d862b09ee0c290b6c28d5c1b6e7c5819212328ecbea7cd1422b4a5d4a3d6",
+    "serve/chat_template.jinja": "12827f24b742ea4e80cdc12dbcf9622227056b9f797252a3149263d4f9aaadce",
+    "serve/concurrent.py": "744a94d7a91e050dbe3530f0cf941c4505bed3f715e888a76e719633a0cbef45",
+    "serve/frontend.py": "aa2485dbc9438d0f5ab3b3f13fc1ac6fa1fff10517bf1743921053780f3f4aa2",
+    "serve/local_api.py": "98c08403832606fe06209c9226e631bd1e6cd0b5d8359a7ed22eabc93c51b1fd",
+    "serve/mcp.py": "659c8e3c7db7d51c939870f843b2350f3efcf2ce8f1ff4b4372db4631e39b77f",
+    "serve/mcp_fake_server.py": "ecc6afa3b44461e120d6901822a1b0db96bddf59324fefe8faa8f2cad48b7157",
+    "serve/native_video.py": "463480026ef44e8940ca7d52b816f3f85cf209f53a144437ec262aea3c76bcef",
+    "serve/server.py": "98181097c93c117815f21c42f0c01993dd76d0bafc09ec8e6013595a1d2c2372",
+    "serve/structured.py": "bd45a0ed7993553a208fcc1584dc4f763e97a47e2da739b4897efc025ca03fc4",
+    "serve/telemetry.py": "cc0d0aa9f6a31b1c6e51969ec3c15a4bbee62309bc620e8b02fbc1e3fe04ff1f",
+    "serve/winjob.py": "ca0ab20cee215a3d35ea69470010875af6ac59f54d98f56e6d6717c1adc9eeac",
+    "experimental/native-batch/serve/__init__.py": "7195d862b09ee0c290b6c28d5c1b6e7c5819212328ecbea7cd1422b4a5d4a3d6",
+    "experimental/native-batch/serve/chat_template.jinja": "12827f24b742ea4e80cdc12dbcf9622227056b9f797252a3149263d4f9aaadce",
+    "experimental/native-batch/serve/frontend.py": "095bbac7d49b19d815d2634457d14d216ba9bd4e98998a4e3b4288f20a25e923",
+    "experimental/native-batch/serve/local_api.py": "98c08403832606fe06209c9226e631bd1e6cd0b5d8359a7ed22eabc93c51b1fd",
+    "experimental/native-batch/serve/mcp.py": "659c8e3c7db7d51c939870f843b2350f3efcf2ce8f1ff4b4372db4631e39b77f",
+    "experimental/native-batch/serve/mcp_fake_server.py": "ecc6afa3b44461e120d6901822a1b0db96bddf59324fefe8faa8f2cad48b7157",
+    "experimental/native-batch/serve/native_video.py": "fe9373ed0930e9ba471f9be1dee2fd94ff9f3d4bcc8dba7010880789374c7e19",
+    "experimental/native-batch/serve/prometheus.py": "3b46bdfab7b02c063a54a041b457d7f15fc0f25c51addc67d63a1c147f3fd6d0",
+    "experimental/native-batch/serve/responses.py": "5215aafab91eea1b77b4c81a1405731cd175fcbdcc9b0e56aa64db701a7100f4",
+    "experimental/native-batch/serve/runconfig.py": "08c5ee5af5b599d11c25778725613948b8f6b8b74432aa6b645845e6d145bf31",
+    "experimental/native-batch/serve/server.py": "017efa1f4e76d72396738555d13eb1f9898d1c1c12730cf046d9b267b29987e5",
+    "experimental/native-batch/serve/structured.py": "cd92893b672c89c9126839729c4f0d5a787dfe81ea020005f7494c6f9fe904d3",
+    "experimental/native-batch/serve/telemetry.py": "37ecb7b550f9fdbe12ec95275f8ae093b936e143fd574fc021443fc518b722ae",
+    "experimental/native-batch/serve/winjob.py": "8fff65cf850e108b84ab06c3fb44a68b947b0f4834ce5880139ada5dfb11a749"
+  },
+  "identity_key": "6c06c5294e48cbad8c539c3f924dd098d9dc5d819fb4ea074e8ad9f8e7900171",
+  "raw_directory": "runtime/qualification-runs/20261010-213425-6c06c5294e48"
+}

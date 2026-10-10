@@ -22,7 +22,11 @@ Both engines used one NVIDIA L40S on GPU 2, native context, `--effort max` (mapp
 | Strata upstream | 128.1 s | 128.2 s | **128.2 s** | 6 / 6 | 23,650 / 23,678 |
 | Strata-Turbo-Single | 149.6 s | 148.1 s | **148.9 s** | 8 / 8 | 30,547 / 30,055 |
 
-In this four-trial **ABBA** test, Turbo's median task time was **16.2% higher**. Timing includes CLI startup, thinking, generation, tool calls, and retries through successful completion. Model loading and the identical 64-token warm-up are excluded. The first model requests match after removing session metadata.
+In this historical four-trial **ABBA** test, Turbo's median task time was **16.2% higher**. Timing includes CLI startup, thinking, generation, tool calls, and retries through successful completion. Model loading and the identical 64-token warm-up are excluded. The first wire requests match after removing session metadata, but a subsequent audit found that the adapters rendered different billing-header suffixes: **1,226 versus 1,227 prompt tokens**. This run therefore does not isolate the engine difference.
+
+After matching the actual rendered initial prompts, a fresh sequential GPU 0 ABBA rerun measured **240.7 s upstream versus 215.8 s Turbo**, or **10.4% less median completion time**. It uses the incumbent numerical engine with the adapter correction, two trials per engine, and the same highest reasoning setting. The animations above belong to the historical run; the rerun has different generated outputs and tool paths. [Corrected timing evidence](evidence/post-publication/pelican-prompt-fixed.json) · [Rendered-prompt parity](evidence/post-publication/initial-prompt-parity.json).
+
+The [decoder optimization follow-up](experimental/decode-followup-20261010/README.md) records additional kernel and proposal experiments, including losing results. Its completed six-start IQ3_S comparison found only 0.90% short-input / 2.02% long-input improvement over the incumbent, so the candidate is not promoted. The distribution's numerical presets remain v0.2.2.
 
 These are two trials per engine. Output lengths and tool paths differ, so the completion-time ratio is not a pure decoder speedup or a model-quality score. All four original HTML files are preserved without editing. Chromium checks confirm animated SVG content and no requested external dependencies; GIFs show the first six seconds at 20 fps.
 
@@ -48,7 +52,7 @@ Summary values below are arithmetic means of the three task medians, in **decode
 
 <!-- END DECODE SUMMARY TABLE -->
 
-Each chart contains English prose, Python code, and Chinese prose. The x-axis is the **actual input length**, not the configured context limit; both engines retain the **262,144-token** cap. Each point is the median of two **512-token** outputs, with their observed minimum–maximum range shaded. Thinking is disabled, temperature is zero, and EOS is ignored to measure a fixed output length. These charts measure the **output stage only**, excluding prefill.
+Each chart contains English prose, Python code, and Chinese prose. The x-axis is the **actual input length**, not the configured context limit; both engines retain the **262,144-token** cap. Each point is the median of two **512-token** outputs, with their observed minimum–maximum range shaded. Thinking is disabled and temperature is zero. Every plotted response is checked to contain all 512 requested tokens; the cores do not implement the request's `ignore_eos` hint. These charts measure the **output stage only**, excluding prefill.
 
 ![IQ2_XS decode speed by task and input length](docs/figures/decode-iq2_xs.svg)
 

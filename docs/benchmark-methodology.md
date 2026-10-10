@@ -22,6 +22,14 @@ Wire requests set temperature 0, seed 20261010, and prompt caching on. CLI `--ef
 
 The engine status verifies its 262,144-token limit. Claude Code reports a 200,000-token heuristic window for this custom model in its usage metadata. Pelican requests do not approach that window; this showcase does not validate Claude Code at the full native limit. The long-input throughput experiment exercises the native window directly through the API. The output-budget statement is checked on actual wire requests, rather than the harness's model metadata.
 
+### Post-publication prompt audit
+
+Equal wire JSON did not imply equal rendered prompts in the original pelican campaign. The upstream frontend pins the leading Claude Code billing stamp; the Turbo frontend originally retained its variable suffix. Native tokenization of the saved first request found 1,226 upstream versus 1,227 Turbo tokens. The original timings and animations are retained as historical artifacts with this limitation. This finding does not prove per-turn cache invalidation or explain every extra tool call.
+
+The Turbo frontend now applies the same bounded normalization, preserving ordinary message text. Ten frontend/API regressions pass. A new GPU 0 official/Turbo/Turbo/official campaign verifies the same rendered initial-prompt SHA256 in all four runs: `252f1b8126117343ed93b7465a9b82bbbebefff8c84efe9da2d8077342564c15`. These prompts contain 1,227 tokens; the workspace and harness environment differ from the historical campaign, so absolute times across the two campaigns are not paired comparisons.
+
+The corrected campaign measures upstream 240.151/241.344 seconds and Turbo 211.526/219.990 seconds: median 240.747 versus 215.758, a 10.38% task-time reduction. It uses the unchanged incumbent numerical binary and the corrected frontend, rather than the experimental expert kernels. Output totals and tool paths differ, and two trials per engine are insufficient for a confidence interval. [Timing record](../evidence/post-publication/pelican-prompt-fixed.json) and [four prompt hashes](../evidence/post-publication/initial-prompt-parity.json) document this follow-up. Its HTML artifacts have not yet received the browser-render checks described for the historical gallery below.
+
 Wall time starts immediately before launching Claude Code and ends at CLI exit. It includes startup, reasoning, generation, tool execution, and retries. Model loading and warm-up are excluded. Reported output-token totals are the harness's usage values across model calls; they are not independently parsed reasoning-token counts. The local API does not charge the estimated prices displayed by the harness.
 
 All four trials exit successfully and save an HTML file containing SVG. The median is calculated from two trials per arm. Original outputs are preserved byte-for-byte, with SHA256 hashes in the evidence. The ratio is task completion time, not a controlled fixed-token speed ratio. The small sample, differing output lengths, and tool paths limit generalization; no formal visual-quality ranking is inferred.
@@ -40,7 +48,7 @@ The [throughput harness](../tools/benchmark_showcase.py) runs three weights, eac
 
 Exact prompts are in the script and their SHA256 hashes are in the raw results. Background prefixes contain 0, 8,192, 65,536, or 253,952 tokens from [the recorded long-context corpus](../evidence/requests/long-256k.json), encoded with the model's native tokenizer. System and task text add roughly 100 tokens; charts use measured prompt-token counts, not padding sizes. Input plus output always fits the 262,144-token native limit.
 
-All requests use temperature 0, seed 20261010, thinking disabled, EOS ignored, and exactly 512 generated tokens. Output-stage speed is the engine's `predicted_per_second` timing, excluding prefill. Each point shows the median and observed minimum–maximum of two samples. Two samples from one process are not independent-start repetitions and do not provide a confidence interval.
+All requests use temperature 0, seed 20261010, thinking disabled, and exactly 512 generated tokens. The request contains an `ignore_eos` hint that these cores do not implement; completion-count assertions confirm that every plotted response reaches the requested length before stopping. A later 1,024-token follow-up ended early and was rejected as incomplete, rather than included in a fixed-length comparison. Output-stage speed is the engine's `predicted_per_second` timing, excluding prefill. Each point shows the median and observed minimum–maximum of two samples. Two samples from one process are not independent-start repetitions and do not provide a confidence interval.
 
 KV prefix caching is enabled. A distinct system prefix for each size makes the first request cold; its `cache_n=0` is asserted. Later tasks/repeats can reuse KV prefixes; cache hits are preserved in raw evidence. No complete generated answer is served from cache. Both arms use the same ordering and request bodies. This protocol resembles repeated work over a shared context; it is not a cold-start measurement for every plotted point.
 
@@ -54,7 +62,7 @@ Prefill is neither output throughput nor total request time. Only input-stage ti
 
 ## Concurrent throughput
 
-Each arm/model starts a fresh service for each slot count: 1, 2, 4, and 6. After the same warm-up, three batches run with a barrier so all requests start together. Task families rotate across requests and batches. Each request generates 256 tokens, with temperature 0, seed 20261010, thinking off, EOS ignored, and prefix caching off. The harness asserts zero cache hits.
+Each arm/model starts a fresh service for each slot count: 1, 2, 4, and 6. After the same warm-up, three batches run with a barrier so all requests start together. Task families rotate across requests and batches. Each request generates 256 tokens, with temperature 0, seed 20261010, thinking off, and prefix caching off. Completion counts are validated; the `ignore_eos` request hint is not implemented by these cores. The harness asserts zero cache hits.
 
 Aggregate end-to-end throughput is:
 

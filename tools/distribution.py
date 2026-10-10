@@ -394,6 +394,23 @@ def performance_options(cfg):
                        ('gpu', 'threads', 'max_tokens', 'flash_attn', 'native_video')}}
 
 
+def api_source_hashes(root=None):
+    """Include adapters and prompt templates in a performance certificate.
+
+    A stable entrypoint is insufficient: frontend changes can alter the model's
+    actual tokens or cache hits without changing the entrypoint or executable.
+    """
+    root = ROOT if root is None else Path(root)
+    hashes = {}
+    for relative in ('serve', 'experimental/native-batch/serve'):
+        folder = root / relative
+        files = [p for p in folder.glob('*.py') if not p.name.startswith('test_')]
+        files += list(folder.glob('*.jinja'))
+        for path in sorted(files):
+            hashes[str(path.relative_to(root))] = digest(path)
+    return hashes
+
+
 def identity(hw, cfg):
     files = [Path(cfg['exe']), Path(cfg['vision']['exe'])]
     assets = {}
@@ -418,6 +435,7 @@ def identity(hw, cfg):
             'plan': cfg['deployment']['resource_plan'], 'weights': cfg['deployment']['weights'],
             'execution_options': performance_options(cfg),
             'api_sha256': digest(ROOT / 'serve/local_api.py'),
+            'api_source_hashes': api_source_hashes(),
             'installer_sha256': digest(Path(__file__)),
             'qualification_sha256': digest(ROOT / 'tools/qualify_distribution.py'),
             'native_api_sha256': digest(ROOT / 'experimental/native-batch/serve/local_api.py'),

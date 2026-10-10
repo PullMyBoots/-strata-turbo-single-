@@ -1,0 +1,43 @@
+{
+  "protocol": "Corrected identical rendered initial prompts; ABBA on single L40S GPU0; maximum reasoning; same IQ2_XS target/native context.",
+  "times": {
+    "official": {
+      "times_s": [
+        240.1505701181013,
+        241.3442706509959
+      ],
+      "median_s": 240.7474203845486,
+      "calls": [
+        11,
+        7
+      ],
+      "generated_tokens": [
+        44421,
+        45386
+      ]
+    },
+    "turbo": {
+      "times_s": [
+        211.52595079294406,
+        219.98974761506543
+      ],
+      "median_s": 215.75784920400474,
+      "calls": [
+        5,
+        10
+      ],
+      "generated_tokens": [
+        45548,
+        45080
+      ]
+    }
+  },
+  "time_reduction_percent": 10.379995407895848,
+  "limitations": [
+    "Two trials per engine, no confidence interval.",
+    "Generated token counts and tool paths differ.",
+    "Uses incumbent numerical engine plus corrected API prompt rendering.",
+    "Not a new kernel speedup or a universal quality measure."
+  ],
+  "initial_prompt_sha256": "252f1b8126117343ed93b7465a9b82bbbebefff8c84efe9da2d8077342564c15"
+}

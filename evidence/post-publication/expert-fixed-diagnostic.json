@@ -1,0 +1,58 @@
+{
+  "protocol": "Single GPU0, same IQ3_S target, native 262144 INT8 KV, fixed six-token verification, cache swaps and suffix proposals disabled, three unchanged tasks, 512 output tokens each; numerical diagnostic, not consumer defaults.",
+  "arms": [
+    {
+      "index": 0,
+      "arm": "incumbent",
+      "medians": {
+        "english": 116.8,
+        "code": 149.1,
+        "chinese": 85.3
+      },
+      "mean": 117.06666666666666,
+      "equal": true
+    },
+    {
+      "index": 1,
+      "arm": "candidate-control",
+      "medians": {
+        "english": 117.0,
+        "code": 149.2,
+        "chinese": 85.4
+      },
+      "mean": 117.2,
+      "equal": true
+    },
+    {
+      "index": 2,
+      "arm": "expert-fusion",
+      "medians": {
+        "english": 120.5,
+        "code": 153.0,
+        "chinese": 87.2
+      },
+      "mean": 120.23333333333333,
+      "equal": true
+    },
+    {
+      "index": 3,
+      "arm": "incumbent",
+      "medians": {
+        "english": 116.7,
+        "code": 149.1,
+        "chinese": 85.3
+      },
+      "mean": 117.03333333333333,
+      "equal": true
+    }
+  ],
+  "bracketed_incumbent_mean": 117.05,
+  "expert_fusion_gain_percent": 2.719635483411653,
+  "all_outputs_identical": true,
+  "candidate_control_mean": 117.2,
+  "limitations": [
+    "One output per family per fresh engine.",
+    "Disabling cache swaps substantially lowers speed; absolute rates are not release-profile throughput.",
+    "The earlier adaptive screen changed generated answers, including between incumbent restarts."
+  ]
+}

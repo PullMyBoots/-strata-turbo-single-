@@ -1,0 +1,1232 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f799432..b852008 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -265,6 +265,7 @@ if(STRATA_ENABLE_CUDA OR STRATA_ENABLE_HIP)
+                           src/kernels/cuda/dequant_bf16.cu
+                           src/kernels/cuda/qsa_select.cu
+                           src/kernels/cuda/verify_kernels.cu
++                          src/kernels/cuda/gdn_pipeline.cu
+                           src/kernels/cuda/peer_decode.cu
+                           src/kernels/cuda/iq_kernels.cu
+                           src/kernels/ngram.cpp
+@@ -573,6 +574,13 @@ if(STRATA_ENABLE_CUDA OR STRATA_ENABLE_HIP)
+   # the IQ kernels that decode a weight part once for every column/entry, bitwise vs the per-column ones
+   # (GPU, synthetic, no model; --bench adds old/new timings)
+   add_executable(iq_multi_parity src/kernels/iq_multi_parity.cpp)
++  add_executable(hc_norm_down_parity src/kernels/hc_norm_down_parity.cpp)
++  target_include_directories(hc_norm_down_parity PRIVATE ${_strata_gpu_include_directories})
++  target_link_libraries(hc_norm_down_parity PRIVATE strata_kernels ${_strata_gpu_runtime_target})
++  if(STRATA_ENABLE_CUDA)
++    target_link_libraries(hc_norm_down_parity PRIVATE CUDA::cublas)
++  endif()
++  add_test(NAME hc_norm_down_parity COMMAND hc_norm_down_parity 10)
+   target_include_directories(iq_multi_parity PRIVATE ${_strata_gpu_include_directories})
+   target_link_libraries(iq_multi_parity PRIVATE strata_kernels ${_strata_gpu_runtime_target})
+   add_test(NAME iq_multi_parity COMMAND iq_multi_parity)
+@@ -713,6 +721,14 @@ if(STRATA_ENABLE_CUDA OR STRATA_ENABLE_HIP)
+   add_test(NAME cvec_parity COMMAND cvec_parity)
+ 
+   # The rewritten per-hit and grouped expert kernels vs the previous ones, bitwise (GPU, synthetic, no model).
++  add_executable(moe_mixed_parity src/kernels/moe_mixed_parity.cpp)
++  target_include_directories(moe_mixed_parity PRIVATE ${_strata_gpu_include_directories})
++  target_link_libraries(moe_mixed_parity PRIVATE strata_kernels ${_strata_gpu_runtime_target})
++  add_test(NAME moe_mixed_parity COMMAND moe_mixed_parity)
++  add_executable(mmvq_virtual2_parity src/kernels/mmvq_virtual2_parity.cpp)
++  target_include_directories(mmvq_virtual2_parity PRIVATE ${_strata_gpu_include_directories})
++  target_link_libraries(mmvq_virtual2_parity PRIVATE strata_kernels ${_strata_gpu_runtime_target})
++  add_test(NAME mmvq_virtual2_parity COMMAND mmvq_virtual2_parity)
+   # `--bench` adds previous/new timings on engine-like shapes.
+   add_executable(s2_expert_grouped_parity src/kernels/s2_expert_grouped_parity.cpp)
+   target_include_directories(s2_expert_grouped_parity PRIVATE ${_strata_gpu_include_directories})
+@@ -1098,4 +1114,6 @@ endif()
+ if(STRATA_BUILD_TESTS AND CMAKE_CUDA_COMPILER)
+   add_executable(mmvq_il_parity src/kernels/mmvq_il_parity.cpp)
+   target_link_libraries(mmvq_il_parity PRIVATE strata_kernels strata_core)
++  add_executable(gdn_pipeline_parity src/kernels/gdn_pipeline_parity.cpp)
++  target_link_libraries(gdn_pipeline_parity PRIVATE strata_kernels strata_core)
+ endif()
+diff --git a/include/strata/kernels/fused_gr.hpp b/include/strata/kernels/fused_gr.hpp
+index 3168db0..50ff913 100644
+--- a/include/strata/kernels/fused_gr.hpp
++++ b/include/strata/kernels/fused_gr.hpp
+@@ -64,5 +64,7 @@ bool fused_gr_read_multi(const FusedGrArgs* a, int n_tok, float* xn_scratch, voi
+ /// plain read unless STRATA_HC_SPLIT=1 or 2 names a variant.
+ void fused_gr_check();
+ int fused_gr_variant();
++/// Exact fused norm/down diagnostic. Configure before graph capture.
++void fused_gr_set_norm_down(bool enabled);
+ 
+ }  // namespace strata::kernels
+diff --git a/include/strata/kernels/native_mmvq.hpp b/include/strata/kernels/native_mmvq.hpp
+index 2b7392c..15c2100 100644
+--- a/include/strata/kernels/native_mmvq.hpp
++++ b/include/strata/kernels/native_mmvq.hpp
+@@ -31,6 +31,8 @@ std::size_t native_q8_1_bytes(int n_in, int ncols = 1);
+ // single-column call. Set before
+ // graph capture; captured graphs keep the kernels they captured.
+ void native_mmvq_set_multi_exact(bool exact);
++// Diagnostic control; set before capture. Virtual warps retain the exact tree.
++void native_mmvq_set_virtual2(bool on);
+ bool native_mmvq_multi_exact();
+ 
+ // One quantization may serve multiple weight matrices sharing the same input.
+diff --git a/include/strata/kernels/native_moe.hpp b/include/strata/kernels/native_moe.hpp
+index 4aa3625..5046e98 100644
+--- a/include/strata/kernels/native_moe.hpp
++++ b/include/strata/kernels/native_moe.hpp
+@@ -22,4 +22,11 @@ void native_moe_combine_multi(const float* parts, const float* weights, const fl
+ // zero + hit arithmetic while fusing the zeroing and add-hit intermediate passes.
+ void native_moe_combine_resident_multi(const float* parts,const float* weights,const float* shared,float* output,
+                                        int64_t n_embd,int64_t k,int n_tok,void* stream);
++// Fuse mapped CPU miss rows, scattered GPU hits and weighted reduction.
++// Unwritten GPU rows are never read; all-hit windows never read mapped misses.
++// dst[0..*gpu_entries) describes the rows written by native_expert_grouped.
++void native_moe_combine_mixed_multi(const float* cpu_parts, const float* hit_parts,
++                                   const int32_t* dst, const int32_t* gpu_entries,
++                                   const float* weights, const float* shared, float* output,
++                                   int64_t n_embd, int64_t k, int n_tok, void* stream);
+ }
+diff --git a/include/strata/kernels/verify_kernels.hpp b/include/strata/kernels/verify_kernels.hpp
+index 0bf2f01..718e86e 100644
+--- a/include/strata/kernels/verify_kernels.hpp
++++ b/include/strata/kernels/verify_kernels.hpp
+@@ -35,6 +35,12 @@ void gdn_ab_multi(const float* x, const uint16_t* w_alpha, const uint16_t* w_bet
+ void gdn_step_norm_multi(float* state, const float* h, int conv_channels, const float* gate, const float* beta,
+                          const float* z, const float* gamma, float eps, float* y, int h_k, int h_v, int n_tok,
+                          const int32_t* n_keep, void* stream, int t_out_begin = 0);
++/// Read-only double-buffered verification plus the incumbent native Q8_1 bytes.
++/// q8_out has (n_tok - t_out_begin) * h_v * 128 / 32 activation blocks.
++void gdn_step_norm_pipeline(float* state, const float* h, int conv_channels,
++                            const float* gate, const float* beta, const float* z,
++                            const float* gamma, float eps, float* y, int h_k,
++                            int h_v, int n_tok, int t_out_begin, void* q8_out, void* stream);
+ /// Commit the accepted prefix without computing unused outputs. State arithmetic is bitwise identical.
+ /// n_keep must point to the validated accepted count (1..kVerifyMaxT; zero is a no-op).
+ void gdn_commit_state(float* state, const float* h, int conv_channels, const float* gate, const float* beta,
+diff --git a/src/core/expert_source.cpp b/src/core/expert_source.cpp
+index c64909f..d87c9a6 100644
+--- a/src/core/expert_source.cpp
++++ b/src/core/expert_source.cpp
+@@ -2001,13 +2001,26 @@ void expert_pool_dispatch_multi(ExpertDispatch& d, const float* x_f, const int32
+         }
+     }
+     const auto c1 = std::chrono::steady_clock::now();
+-    if (native && lay.fmt[(size_t) d.layers].gu_type == 42)   // a native Q2_0 pack: the Q2_0 kernels' activations
+-        for (int64_t t = 0; t < n_tok; ++t) act_quant_any(x_f + (size_t) t * H, H, d.act_multi[(size_t) t]);
+-    else if (native)
+-        for (int64_t t = 0; t < n_tok; ++t)
++    // GPU/PCIe/peer rows never consume CPU activation images. Quantize only
++    // tokens that actually have a CPU job; retain the original quantizer and
++    // every expert. This matters for partial caches with almost all hits.
++    static const bool miss_actq = [] {
++        const char* e = std::getenv("STRATA_CPU_MISS_ACTQ");
++        return e && e[0] == '1';
++    }();
++    bool needs_cpu[MAXT]{};
++    if (miss_actq)
++        for (int64_t i = 0; i < n; ++i)
++            if (kind[i] < 0) needs_cpu[i / k] = true;
++    for (int64_t t = 0; t < n_tok; ++t) {
++        if (miss_actq && !needs_cpu[t]) continue;
++        if (native && lay.fmt[(size_t) d.layers].gu_type == 42)
++            act_quant_any(x_f + (size_t) t * H, H, d.act_multi[(size_t) t]);
++        else if (native)
+             native_quant_act(lay.fmt[(size_t) d.layers], x_f + (size_t) t * H, d.nact_multi.data() + (size_t) t * kNativeActBytes);
+-    else
+-        for (int64_t t = 0; t < n_tok; ++t) act_quant_q8_1(x_f + (size_t) t * H, H, d.act_multi[(size_t) t]);
++        else
++            act_quant_q8_1(x_f + (size_t) t * H, H, d.act_multi[(size_t) t]);
++    }
+     const auto c2 = std::chrono::steady_clock::now();
+     {   // CS-T: the experts the CPU computes, fetched together (the GGUF in place reads them on several threads)
+         static thread_local std::vector<int64_t> miss;
+diff --git a/src/core/verify.cpp b/src/core/verify.cpp
+index f2ad0bb..f7acf9f 100644
+--- a/src/core/verify.cpp
++++ b/src/core/verify.cpp
+@@ -59,11 +59,13 @@ using Clock = std::chrono::steady_clock;
+ double ms_since(Clock::time_point t) { return std::chrono::duration<double, std::milli>(Clock::now() - t).count(); }
+ inline bool g_sh_overlap() { static const bool on=[] { const char* v=std::getenv("STRATA_SH_OVERLAP"); return v&&v[0]=='1'; }(); return on; }
+ inline bool g_resident_combine() { static const bool on=[] { const char* v=std::getenv("STRATA_RESIDENT_COMBINE"); return v&&v[0]=='1'; }(); return on; }
++inline bool g_mixed_combine() { static const bool on=[] { const char* v=std::getenv("STRATA_MOE_DIRECT_COMBINE"); return v&&v[0]=='1'; }(); return on; }
+ inline bool g_mmvq_il() { static const bool on = [] { const char* v=std::getenv("STRATA_MMVQ_IL"); return v && v[0]=='1'; }(); return on; }
+ inline bool g_gr_qfuse() { static const bool on=[] {const char* v=std::getenv("STRATA_GR_QFUSE");return v&&v[0]=='1';}();return on; }
+ inline bool g_gdn_delta_commit() { static const bool on=[] {const char* v=std::getenv("STRATA_GDN_SAVED_DELTA");return v&&v[0]=='1';}();return on; }
+ inline bool g_gdn_commit_only() { static const bool on=[] {const char* v=std::getenv("STRATA_GDN_COMMIT_ONLY");return v&&v[0]=='1';}();return on; }
+ inline bool g_gdn_verify_tiled() { static const bool on=[] {const char* v=std::getenv("STRATA_GDN_VERIFY_TILED");return v&&v[0]=='1';}();return on; }
++inline bool g_gdn_pipeline() { static const bool on=[] {const char* v=std::getenv("STRATA_GDN_PIPELINE");return v&&v[0]=='1';}();return on; }
+ const bool g_dbg = std::getenv("STRATA_VERIFY_DEBUG") != nullptr;
+ #define VDBG(...) do { if (g_dbg) { std::fprintf(stderr, "verify dbg: " __VA_ARGS__); std::fflush(stderr); } } while (0)
+ 
+@@ -673,7 +675,10 @@ bool Verifier::record_window(int T, cudaStream_t cs, std::string& err) {
+                 mm(wg,z_ + (size_t) tb * ZV,(int) N,(int) ZV);
+                 stamp(l, 5, grp);
+                 // the recurrence from the untouched state over tokens [0, te); outputs only for this group's
+-                if(g_gdn_delta_commit()) {
++                if(g_gdn_pipeline()) {
++                    gdn_step_norm_pipeline(state,hb,(int)C,gate,beta,z_,(const float*)wnm->data,
++                        EPS,y_,(int)HK,(int)HV,te,tb,xq_,cs);
++                } else if(g_gdn_delta_commit()) {
+                     gdn_delta_verify(state,hb,(int)C,gate,beta,z_,(const float*)wnm->data,EPS,y_,
+                         (int)HK,(int)HV,te,tb,delta_L_+(size_t)gi*MT*HV*g.ssm_state_size,cs);
+                 } else if(g_gdn_verify_tiled()) {
+@@ -684,7 +689,7 @@ bool Verifier::record_window(int T, cudaStream_t cs, std::string& err) {
+                                     (int) HV, te, nullptr, cs, tb);
+                 }
+                 stamp(l, 6, grp);
+-                native_quantize_q8_1(y_ + (size_t) tb * ZV, xq_, (int) ZV, n, cs);
++                if(!g_gdn_pipeline())native_quantize_q8_1(y_ + (size_t) tb * ZV, xq_, (int) ZV, n, cs);
+                 il_ready=false; mm(wout,bo_ + tb * N,(int) ZV,(int) N);
+             } else {
+                 // ======================= QSA =======================
+@@ -944,6 +949,12 @@ bool Verifier::record_window(int T, cudaStream_t cs, std::string& err) {
+         } else if(g_resident_combine() && device_only_ && lay.native && native_moe_combine_enabled()) {
+             try { native_moe_combine_resident_multi(hit_out,w_+tb*K,shared_+tb*N,bo_+tb*N,N,K,n,cs); }
+             catch(const std::exception& e) {err="verify resident combine: "+std::string(e.what());return false;}
++        } else if(g_mixed_combine() && lay.native && native_moe_combine_enabled()) {
++            if (device_plan_) wait_flag_ge_or(m_flag_, ring, skip_ + grp, cs);
++            else wait_flag_ge(m_flag_, ring, cs);
++            try { native_moe_combine_mixed_multi(m_ymiss_+(size_t)tb*K*N,hit_out,
++                p_dst,p_counts+1,w_+tb*K,shared_+tb*N,bo_+tb*N,N,K,n,cs); }
++            catch(const std::exception& e) {err="verify mixed combine: "+std::string(e.what());return false;}
+         } else {
+         if (device_plan_) {   // no CPU share when the device planned the group: its rows are zeros
+             if (!device_only_) wait_flag_ge_or(m_flag_, ring, skip_ + grp, cs);
+@@ -1179,7 +1190,7 @@ bool Verifier::capture_commit(std::string& err) {
+                     gdn_delta_commit(state,h_L_+(size_t)gdn_index*MT*C,(int)C,
+                         gate_L_+(size_t)gdn_index*MT*HV,delta_L_+(size_t)gdn_index*MT*HV*g.ssm_state_size,
+                         (int)g.ssm_k_heads,(int)HV,commit_,32,cs_);
+-                } else if(g_gdn_commit_only()) {
++                } else if(g_gdn_commit_only() || g_gdn_pipeline()) {
+                     gdn_commit_state(state, h_L_ + (size_t) gdn_index * MT * C, (int) C,
+                         gate_L_ + (size_t) gdn_index * MT * HV, beta_L_ + (size_t) gdn_index * MT * HV,
+                         (int) g.ssm_k_heads, (int) HV, commit_, cs_);
+diff --git a/src/kernels/cuda/fused_gr.cu b/src/kernels/cuda/fused_gr.cu
+index 66934fd..0238b65 100644
+--- a/src/kernels/cuda/fused_gr.cu
++++ b/src/kernels/cuda/fused_gr.cu
+@@ -344,6 +344,92 @@ __global__ void __launch_bounds__(THREADS) gr_down_multi_kernel(GrMulti m) {
+     }
+ }
+ 
++// An exact two-stage HC read: each down CTA computes the original norm tree
++// locally, then consumes each normalized stream before reusing its tile.
++// It trades redundant cached input reads for the separate norm launch and
++// its device-wide dependency. Only CTA 0 exports xn/rs; all other CTAs use
++// their own identical shared-memory values, with no inter-CTA spin or race.
++template<int TOKENS>
++__global__ void __launch_bounds__(THREADS*TOKENS) gr_norm_down_exact_kernel(GrMulti m) {
++    extern __shared__ __align__(16) float tile[];
++    __shared__ float part[TOKENS][WARPS], scale[TOKENS];
++    constexpr int TQ=N/8/32;
++    const int token=threadIdx.x/THREADS, tid=threadIdx.x%THREADS;
++    const int lane=tid&31, warp=tid>>5;
++    const bool inject=blockIdx.x==DOWN_BLOCKS;
++    const int row=inject?warp:blockIdx.x*WARPS+warp;
++    const bool active=!(inject && (!m.a[0].w_inject || warp>=HC));
++    const uint16_t* wr=(inject?m.a[0].w_inject:m.a[0].w_down);
++    const uint4* w4=wr?reinterpret_cast<const uint4*>(wr+(size_t)(active?row:0)*D):nullptr;
++    const auto& a=m.a[token];
++    float acc=0.0f;
++    for(int c=0;c<HC;++c) {
++        uint4 weights[TQ];
++        if(active) {
++            #pragma unroll
++            for(int q=0;q<TQ;++q)weights[q]=__ldg(w4+c*(N/8)+lane+32*q);
++        }
++        const float gw=a.apply?2.0f*sigmoidf_(a.inj_prev[c]/(float)HC):0.0f;
++        float ss=0.0f;
++        for(int i=tid*4;i<D;i+=THREADS*4) {
++            if(i/N!=c)continue;
++            const int d=i-c*N;
++            float4 r=*reinterpret_cast<const float4*>(a.R+i);
++            if(a.apply) {
++                const float4 b=*reinterpret_cast<const float4*>(a.bo_prev+d);
++                r.x=fmaf(b.x,gw,r.x);r.y=fmaf(b.y,gw,r.y);
++                r.z=fmaf(b.z,gw,r.z);r.w=fmaf(b.w,gw,r.w);
++            }
++            const float sq=r.x*r.x+r.y*r.y+r.z*r.z+r.w*r.w;
++            ss+=sq;
++            const float4 gamma=*reinterpret_cast<const float4*>(a.w_norm+i);
++            *reinterpret_cast<float4*>(tile+(size_t)token*N+d)=
++                make_float4(__fmul_rn(r.x,gamma.x),__fmul_rn(r.y,gamma.y),
++                            __fmul_rn(r.z,gamma.z),__fmul_rn(r.w,gamma.w));
++        }
++        const float sum=warp_sum(ss);
++        if(lane==0)part[token][warp]=sum;
++        __syncthreads();
++        if(tid==0) {
++            float total=0.0f;
++            for(int w=0;w<WARPS;++w)total+=part[token][w];
++            scale[token]=rsqrtf(total/(float)N+a.eps);
++            if(blockIdx.x==0)a.rs[c]=scale[token];
++        }
++        __syncthreads();
++        const float rs=scale[token];
++        for(int d=tid;d<N;d+=THREADS) {
++            const float x=__fmul_rn(tile[(size_t)token*N+d],rs);
++            tile[(size_t)token*N+d]=x;
++            if(blockIdx.x==0)m.xn[(size_t)token*D+c*N+d]=x;
++        }
++        __syncthreads();
++        if(active) {
++            #pragma unroll
++            for(int q=0;q<TQ;++q) {
++                const auto weight=unpack8(weights[q]);
++                acc+=dot8u_ptr(weight,tile+(size_t)token*N+(lane+32*q)*8);
++            }
++        }
++        __syncthreads();
++    }
++    if(!active)return;
++    const float sum=warp_sum(acc);
++    if(lane==0) {
++        if(inject)a.inject_out[row]=sum;
++        else {
++            const float x=sum/(float)HC;
++            a.lo[row]=x/(1.0f+__expf(-x));
++        }
++    }
++}
++
++int norm_down_override=-1;
++bool norm_down_enabled() {
++    static const bool enabled=[] {const char* v=std::getenv("STRATA_GR_NORM_DOWN");return v&&v[0]=='1';}();
++    return norm_down_override>=0?norm_down_override!=0:enabled;
++}
++
+ constexpr int UPM_COLS = 16;                      // columns per block (x 4 streams = 64 rows, 8 per warp)
+ constexpr int UPM_BLOCKS = N / UPM_COLS;          // 160
+ 
+@@ -952,9 +1038,21 @@ void launch_multi(const GrMulti& m, int variant, cudaStream_t st, unsigned long
+     // 5..8 tokens are separately opt-in after actual-shape and full-output checks.
+     static const bool fixed = [] {const char* v=std::getenv("STRATA_GR_EXACT_T");return v && std::atoi(v)!=0;}();
+     static const bool fixed8 = [] {const char* v=std::getenv("STRATA_GR_EXACT_T8");return v && std::atoi(v)==1;}();
+-    if (variant >= kHcSplit) gr_norm_split_kernel<<<dim3((unsigned) n_tok, HC), THREADS, 0, st>>>(m);
+-    else gr_norm_multi_kernel<<<n_tok, THREADS, 0, st>>>(m);
++    const bool fused_norm=norm_down_enabled() && variant>=kHcSplit && n_tok<=4;
++    if(!fused_norm) {
++        if (variant >= kHcSplit) gr_norm_split_kernel<<<dim3((unsigned) n_tok, HC), THREADS, 0, st>>>(m);
++        else gr_norm_multi_kernel<<<n_tok, THREADS, 0, st>>>(m);
++    }
+     if (stamp_buf) gpu_stamp(stamp_buf, stamp_i0, (void*) st);
++    if(fused_norm) {
++        const size_t shared=(size_t)n_tok*N*sizeof(float);
++        switch(n_tok) {
++            case 1:gr_norm_down_exact_kernel<1><<<DOWN_BLOCKS+1,THREADS*1,shared,st>>>(m);break;
++            case 2:gr_norm_down_exact_kernel<2><<<DOWN_BLOCKS+1,THREADS*2,shared,st>>>(m);break;
++            case 3:gr_norm_down_exact_kernel<3><<<DOWN_BLOCKS+1,THREADS*3,shared,st>>>(m);break;
++            case 4:gr_norm_down_exact_kernel<4><<<DOWN_BLOCKS+1,THREADS*4,shared,st>>>(m);break;
++        }
++    } else {
+     const bool staged = variant >= kHcStaged;
+     int tv = 2560;
+     const int chunk_tok = down_chunk(staged, &tv);
+@@ -997,6 +1095,7 @@ void launch_multi(const GrMulti& m, int variant, cudaStream_t st, unsigned long
+             else gr_down_multi_kernel<2560><<<DOWN_BLOCKS + 1, THREADS, smem, st>>>(c);
+         }
+     }
++    }
+     if (stamp_buf) gpu_stamp(stamp_buf, stamp_i0 + 1, (void*) st);
+     static const bool up_max4 = [] {
+         const char* v = std::getenv("STRATA_GR_UP_MAX4");
+@@ -1031,6 +1130,8 @@ std::atomic<int> g_variant[64];
+ 
+ }  // namespace
+ 
++void fused_gr_set_norm_down(bool enabled) {norm_down_override=enabled?1:0;}
++
+ bool fused_gr_read_multi(const FusedGrArgs* a, int n_tok, float* xn_scratch, void* stream, unsigned long long* stamp_buf,
+                          int stamp_i0) {
+     if (n_tok < 1 || n_tok > kFusedGrMaxT || xn_scratch == nullptr) {
+diff --git a/src/kernels/cuda/iq_kernels.cu b/src/kernels/cuda/iq_kernels.cu
+index 49bd25e..1d90cd9 100644
+--- a/src/kernels/cuda/iq_kernels.cu
++++ b/src/kernels/cuda/iq_kernels.cu
+@@ -20,6 +20,7 @@
+ #include <utility>
+ #include <cstdlib>
+ #include <type_traits>
++#include <stdexcept>
+ 
+ namespace strata::kernels {
+ namespace {
+@@ -1568,35 +1569,86 @@ __global__ void __launch_bounds__(256) swiglu_q8_1_entries_kernel(const float* _
+ // existing exact 16-lane dot tree is reused; weights are decoded once per
+ // group of up to four tokens. No approximate expert selection or math.
+ #if !defined(__HIPCC__)
+-template<int TG, int NC, bool STAGE_GRID>
++// Interleave the independent gate/up sums so their identical activation reads
++// can stay in registers. Each sum retains row_dot_80_sub16's order, including
++// the explicit partial addition before its four shuffle steps.
++template<int TY, int NC, bool STAGE_GRID>
++__device__ __forceinline__ void row_dot_pair_80_sub16(
++    const uint8_t* gate, const uint8_t* up, const block_q8_1* x,
++    const int (&off)[NC], int t, float (&g)[NC], float (&u)[NC],
++    const uint32_t* s_grid) {
++    using F = Fmt<TY>;
++    using S = Split<TY>;
++    #pragma unroll
++    for (int c=0;c<NC;++c) {g[c]=0.0f;u[c]=0.0f;}
++    for (int k=t;k<80;k+=32) {
++        const int kbx=k/F::ipb, iqs=F::step*(k%F::ipb);
++        const auto wg=S::template load<STAGE_GRID>(gate,kbx,iqs,s_grid);
++        #pragma unroll
++        for (int c=0;c<NC;++c) g[c]+=S::apply(wg,x+off[c]+kbx*(F::qk/32),iqs);
++        const auto wu=S::template load<STAGE_GRID>(up,kbx,iqs,s_grid);
++        #pragma unroll
++        for (int c=0;c<NC;++c) u[c]+=S::apply(wu,x+off[c]+kbx*(F::qk/32),iqs);
++    }
++    float g16[NC],u16[NC];
++    #pragma unroll
++    for (int c=0;c<NC;++c) {g16[c]=0.0f;u16[c]=0.0f;}
++    for (int k=t+16;k<64;k+=32) {
++        const int kbx=k/F::ipb, iqs=F::step*(k%F::ipb);
++        const auto wg=S::template load<STAGE_GRID>(gate,kbx,iqs,s_grid);
++        #pragma unroll
++        for (int c=0;c<NC;++c) g16[c]+=S::apply(wg,x+off[c]+kbx*(F::qk/32),iqs);
++        const auto wu=S::template load<STAGE_GRID>(up,kbx,iqs,s_grid);
++        #pragma unroll
++        for (int c=0;c<NC;++c) u16[c]+=S::apply(wu,x+off[c]+kbx*(F::qk/32),iqs);
++    }
++    #pragma unroll
++    for (int c=0;c<NC;++c) {
++        g[c]=__fadd_rn(g[c],g16[c]);
++        u[c]=__fadd_rn(u[c],u16[c]);
++        #pragma unroll
++        for (int o=8;o>0;o>>=1) {
++            g[c]+=__shfl_xor_sync(0xffffffffu,g[c],o);
++            u[c]+=__shfl_xor_sync(0xffffffffu,u[c],o);
++        }
++    }
++}
++template<int TG, int NC, bool STAGE_GRID, int ROWS, bool PAIR>
+ __device__ __forceinline__ void cuda_gu_fused_tile(
+     const uint8_t* blob, const block_q8_1* xq, const int32_t* ent_tok,
+     int e, int r0, NativeExpertLayout L, const uint32_t* s_grid,
+-    float (&res)[4][64], block_q8_1* hq) {
++    float (&res)[4][2*ROWS], block_q8_1* hq) {
+     const int tid = threadIdx.x, t = tid & 15, sub = tid >> 4;
+     int off[NC];
+ #pragma unroll
+     for (int c = 0; c < NC; ++c) off[c] = ent_tok[e+c] * 80;
+ #pragma unroll
+-    for (int pass = 0; pass < 2; ++pass) {
++    for (int pass = 0; pass < ROWS/16; ++pass) {
+         const int rr = sub + pass*16;
+         const uint8_t* gate = blob + (size_t)(r0+rr)*L.gu_row;
+         const uint8_t* up = gate + L.up_off;
+         float sg[NC], su[NC];
+-        row_dot_80_sub16<TG,NC,true,STAGE_GRID>(gate,xq,off,NC,t,sg,s_grid);
+-        row_dot_80_sub16<TG,NC,true,STAGE_GRID>(up,xq,off,NC,t,su,s_grid);
+-        if (t < NC) { res[t][rr] = sg[t]; res[t][32+rr] = su[t]; }
++        if constexpr (PAIR) {
++            row_dot_pair_80_sub16<TG,NC,STAGE_GRID>(gate,up,xq,off,t,sg,su,s_grid);
++        } else {
++            row_dot_80_sub16<TG,NC,true,STAGE_GRID>(gate,xq,off,NC,t,sg,s_grid);
++            row_dot_80_sub16<TG,NC,true,STAGE_GRID>(up,xq,off,NC,t,su,s_grid);
++        }
++        if (t < NC) { res[t][rr] = sg[t]; res[t][ROWS+rr] = su[t]; }
+     }
+     __syncthreads();
+     const int warp = tid >> 5, lane = tid & 31;
+     if (warp < NC) {
+-        const float g = res[warp][lane];
+-        const float xi = __fmul_rn(g/(1.0f+__expf(-g)),res[warp][32+lane]);
+-        q8_1_store(xi,hq, (long long)(e+warp)*L.n_ff+r0+lane);
++        #pragma unroll
++        for (int rr=lane; rr<ROWS; rr+=32) {
++            const float g = res[warp][rr];
++            const float xi = __fmul_rn(g/(1.0f+__expf(-g)),res[warp][ROWS+rr]);
++            q8_1_store(xi,hq, (long long)(e+warp)*L.n_ff+r0+rr);
++        }
+     }
+     __syncthreads();
+ }
+-template<int TG, bool STAGE_GRID=kStageIqGrid<TG>>
++template<int TG, bool STAGE_GRID=kStageIqGrid<TG>, int ROWS=32, bool PAIR=false>
+ __global__ void __launch_bounds__(256) cuda_gu_fused_kernel(
+     const unsigned long long* __restrict__ grp_ptr,
+     const int32_t* __restrict__ grp_start,const int32_t* __restrict__ n_groups,
+@@ -1605,23 +1657,43 @@ __global__ void __launch_bounds__(256) cuda_gu_fused_kernel(
+     const int ng = *n_groups;
+     if (blockIdx.y >= ng) return;
+     STRATA_SHARED_ALIGN16_U32(s_grid_buf,IqGridWords<TG,STAGE_GRID>::value);
+-    __shared__ float res[4][64];
++    static_assert(ROWS == 32 || ROWS == 64);
++    __shared__ float res[4][2*ROWS];
+     const uint32_t* s_grid=stage_iq_grid<TG,STAGE_GRID>(s_grid_buf,threadIdx.x,256);
+-    const int r0=blockIdx.x*32;
++    const int r0=blockIdx.x*ROWS;
+     for(int g=blockIdx.y;g<ng;g+=gridDim.y) {
+         const uint8_t* blob=(const uint8_t*)grp_ptr[g];
+         for(int e=grp_start[g];e<grp_start[g+1];e+=4) {
+             const int nc=min(4,grp_start[g+1]-e);
+             switch(nc) {
+-                case 1: cuda_gu_fused_tile<TG,1,STAGE_GRID>(blob,xq,ent_tok,e,r0,L,s_grid,res,hq);break;
+-                case 2: cuda_gu_fused_tile<TG,2,STAGE_GRID>(blob,xq,ent_tok,e,r0,L,s_grid,res,hq);break;
+-                case 3: cuda_gu_fused_tile<TG,3,STAGE_GRID>(blob,xq,ent_tok,e,r0,L,s_grid,res,hq);break;
+-                default:cuda_gu_fused_tile<TG,4,STAGE_GRID>(blob,xq,ent_tok,e,r0,L,s_grid,res,hq);break;
++                case 1: cuda_gu_fused_tile<TG,1,STAGE_GRID,ROWS,PAIR>(blob,xq,ent_tok,e,r0,L,s_grid,res,hq);break;
++                case 2: cuda_gu_fused_tile<TG,2,STAGE_GRID,ROWS,PAIR>(blob,xq,ent_tok,e,r0,L,s_grid,res,hq);break;
++                case 3: cuda_gu_fused_tile<TG,3,STAGE_GRID,ROWS,PAIR>(blob,xq,ent_tok,e,r0,L,s_grid,res,hq);break;
++                default:cuda_gu_fused_tile<TG,4,STAGE_GRID,ROWS,PAIR>(blob,xq,ent_tok,e,r0,L,s_grid,res,hq);break;
+             }
+         }
+     }
+ }
+ int g_cuda_fused_mode=-1;
++bool env_on(const char* name);
++template<int TG>
++void cuda_gu_fused_launch(bool wide, int gy, cudaStream_t s,
++                         const unsigned long long* grp_ptr, const int32_t* grp_start,
++                         const int32_t* n_groups, const int32_t* ent_tok,
++                         const block_q8_1* X, NativeExpertLayout L, block_q8_1* hq) {
++    static const bool pair = env_on("STRATA_CUDA_EXPERT_PAIR");
++    if (pair && wide) throw std::invalid_argument("expert pair and tile64 are separate screening candidates");
++    if (pair) {
++        const dim3 grid((unsigned)(L.n_ff/32), (unsigned)gy);
++        cuda_gu_fused_kernel<TG,kStageIqGrid<TG>,32,true><<<grid,256,0,s>>>(grp_ptr,grp_start,n_groups,ent_tok,X,L,hq);
++    } else if (wide) {
++        const dim3 grid((unsigned)(L.n_ff/64), (unsigned)gy);
++        cuda_gu_fused_kernel<TG,kStageIqGrid<TG>,64><<<grid,256,0,s>>>(grp_ptr,grp_start,n_groups,ent_tok,X,L,hq);
++    } else {
++        const dim3 grid((unsigned)(L.n_ff/32), (unsigned)gy);
++        cuda_gu_fused_kernel<TG><<<grid,256,0,s>>>(grp_ptr,grp_start,n_groups,ent_tok,X,L,hq);
++    }
++}
+ #endif
+ 
+ // ---------------------------------------------------------------- dequant (dequantize.cuh)
+@@ -3496,15 +3568,23 @@ void native_expert_grouped(const NativeExpertLayout& L, const unsigned long long
+     if (g_exp_phase != 2 && !fused_gu) {
+ #else
+     static const bool cuda_fused_env = env_on("STRATA_CUDA_EXPERT_FUSED");
++    // Extend the exact producer/consumer fusion to IQ3_XXS and IQ3_S.
++    // Keep this separately opt-in until model-level parity and timing pass.
++    static const bool cuda_fused_all_env = env_on("STRATA_CUDA_EXPERT_FUSED_ALL");
++    const bool fused_all = g_cuda_fused_mode >= 0 ? g_cuda_fused_mode == 9 : cuda_fused_all_env;
+     const bool fused_gu = !v1 && !g_old_kernels && L.n_embd == 2560 && L.n_ff % 32 == 0 &&
+-        (L.gu_type == 16 || L.gu_type == 17 || L.gu_type == 22) &&
+-        (g_cuda_fused_mode >= 0 ? g_cuda_fused_mode == 8 : cuda_fused_env);
++        ((L.gu_type == 16 || L.gu_type == 17 || L.gu_type == 22) ||
++         (fused_all && (L.gu_type == 18 || L.gu_type == 21))) &&
++        (g_cuda_fused_mode >= 0 ? (g_cuda_fused_mode == 8 || fused_all) : (cuda_fused_env || fused_all));
+     if (fused_gu && g_exp_phase != 2) {
+-        const dim3 gf((unsigned)(L.n_ff / 32), (unsigned)gy);
++        static const bool wide_env = env_on("STRATA_CUDA_EXPERT_TILE64");
++        const bool wide = wide_env && L.n_ff % 64 == 0;
+         switch(L.gu_type) {
+-            case 16: cuda_gu_fused_kernel<16><<<gf,256,0,s>>>(grp_ptr,grp_start,n_groups,ent_tok,X,L,hq);break;
+-            case 17: cuda_gu_fused_kernel<17><<<gf,256,0,s>>>(grp_ptr,grp_start,n_groups,ent_tok,X,L,hq);break;
+-            default:cuda_gu_fused_kernel<22><<<gf,256,0,s>>>(grp_ptr,grp_start,n_groups,ent_tok,X,L,hq);break;
++            case 16: cuda_gu_fused_launch<16>(wide,gy,s,grp_ptr,grp_start,n_groups,ent_tok,X,L,hq);break;
++            case 17: cuda_gu_fused_launch<17>(wide,gy,s,grp_ptr,grp_start,n_groups,ent_tok,X,L,hq);break;
++            case 18: cuda_gu_fused_launch<18>(wide,gy,s,grp_ptr,grp_start,n_groups,ent_tok,X,L,hq);break;
++            case 21: cuda_gu_fused_launch<21>(wide,gy,s,grp_ptr,grp_start,n_groups,ent_tok,X,L,hq);break;
++            default:cuda_gu_fused_launch<22>(wide,gy,s,grp_ptr,grp_start,n_groups,ent_tok,X,L,hq);break;
+         }
+         check("native_expert_grouped/cuda fused gu");
+     }
+diff --git a/src/kernels/cuda/native_mmvq.cu b/src/kernels/cuda/native_mmvq.cu
+index 9c04806..928afb7 100644
+--- a/src/kernels/cuda/native_mmvq.cu
++++ b/src/kernels/cuda/native_mmvq.cu
+@@ -1002,6 +1002,7 @@ struct SmallTraits {
+ // llama.cpp's generic multi-column table (ncols 2-4: 4 warps; 5-8: 2 warps; always 2 rows per block): faster,
+ // equal to ncols = 1 only to float rounding (the cross-warp reduction groups partial sums differently).
+ bool g_multi_exact = true;   // until the upstream layout is timed on an idle GPU (plan rule: default only what is measured)
++bool g_virtual2 = [] { const char* e=std::getenv("STRATA_MMVQ_VIRTUAL2"); return e && e[0]=='1'; }();
+ // Whole output rows may share a block while retaining all four warps and the original reduction.
+ // This differs from multi_exact=false, which also changes the warp count at T>4.
+ int exact_rows() {
+@@ -1104,6 +1105,55 @@ __global__ void native_mmvq_indexed_kernel(const typename F::Block* __restrict__
+     }
+ }
+ 
++// Two physical warps execute four separately accumulated virtual warps. The
++// weight/activation terms, per-warp iteration order and final four-way sum are
++// the incumbent's. Fewer threads per row group can improve occupancy at T>4
++// without using the upstream two-warp layout's different rounding tree.
++template<typename F, int NCOLS>
++__launch_bounds__(2 * WARP, 1)
++__global__ void native_mmvq_virtual2_kernel(const typename F::Block* __restrict__ w,
++                                           const Q81Block* __restrict__ x,
++                                           float* __restrict__ y, int n_in, int n_out) {
++    constexpr int ROWS=2;
++    const int physical = WARP*int(threadIdx.y)+int(threadIdx.x);
++    const int row0=ROWS*int(blockIdx.x), blocks_per_row=n_in/F::DIV, stride=n_in/Q8K;
++    float sums[2][NCOLS][ROWS] = {};
++#pragma unroll
++    for(int v=0;v<2;++v) {
++        const int tid=physical+v*(2*WARP), kqs=F::kqs(tid);
++        for(int kbx=tid/F::T;kbx<blocks_per_row;kbx+=F::BPI) {
++#pragma unroll
++            for(int r=0;r<ROWS;++r) if(row0+r<n_out) {
++                const typename F::W value=F::load(w+std::size_t(row0+r)*blocks_per_row+kbx,kqs);
++#pragma unroll
++                for(int c=0;c<NCOLS;++c)
++                    sums[v][c][r]+=F::apply(value,x+std::size_t(c)*stride+kbx*F::KBY,kqs);
++            }
++        }
++    }
++    __shared__ float partial[3][NCOLS][ROWS][WARP];
++#pragma unroll
++    for(int c=0;c<NCOLS;++c) {
++#pragma unroll
++        for(int r=0;r<ROWS;++r) {
++            if(threadIdx.y)partial[0][c][r][threadIdx.x]=sums[0][c][r];
++            partial[1+threadIdx.y][c][r][threadIdx.x]=sums[1][c][r];
++        }
++    }
++    __syncthreads();
++    if(threadIdx.y)return;
++#pragma unroll
++    for(int c=0;c<NCOLS;++c) {
++#pragma unroll
++        for(int r=0;r<ROWS;++r) {
++#pragma unroll
++            for(int v=0;v<3;++v)sums[0][c][r]+=partial[v][c][r][threadIdx.x];
++            const float result=warp_sum(sums[0][c][r]);
++            if(threadIdx.x==r && row0+r<n_out)y[std::size_t(c)*n_out+row0+r]=result;
++        }
++    }
++}
++
+ template<typename F>
+ void launch_indexed(const void* weights,const void* x,float* y,const int32_t* indices,int n_in,int n_out,cudaStream_t s){
+  const auto* w=static_cast<const typename F::Block*>(weights);
+@@ -1126,6 +1176,12 @@ void launch_multi_n(const void* weights, const void* x_q8_1, float* y, int n_in,
+     }
+     const dim3 threads(WARP, WARPS);
+     const int rows = exact_rows();
++    if constexpr(NCOLS>4) {
++        if(g_virtual2 && rows==2) {
++            native_mmvq_virtual2_kernel<F,NCOLS><<<unsigned((std::size_t(n_out)+1)/2),dim3(WARP,2),0,s>>>(w,x,y,n_in,n_out);
++            return;
++        }
++    }
+ #define STRATA_EXACT_ROWS(R) native_mmvq_multi_kernel<F, NCOLS, WARPS, R><<<unsigned((std::size_t(n_out) + R - 1) / R), threads, 0, s>>>(w, x, y, n_in, n_out)
+     switch (rows) {
+         case 1: STRATA_EXACT_ROWS(1); return;
+@@ -1421,6 +1477,7 @@ void small_f32(const void* weights, const float* x, void* scratch_q8_1,
+ } // namespace
+ 
+ void native_mmvq_set_multi_exact(bool exact) { g_multi_exact = exact; }
++void native_mmvq_set_virtual2(bool on) { g_virtual2 = on; }
+ bool native_mmvq_multi_exact() { return g_multi_exact; }
+ 
+ std::size_t native_q8_1_bytes(int n_in, int ncols) {
+diff --git a/src/kernels/cuda/native_moe.cu b/src/kernels/cuda/native_moe.cu
+index 3bf0c4b..bde95c2 100644
+--- a/src/kernels/cuda/native_moe.cu
++++ b/src/kernels/cuda/native_moe.cu
+@@ -49,6 +49,38 @@ __global__ void combine(const float* __restrict__ parts, const float* __restrict
+     if (shared) sum += shared[col];
+     output[col] = sum;
+ }
++
++__global__ void combine_mixed(const float* __restrict__ cpu_parts,
++                              const float* __restrict__ hit_parts,
++                              const int32_t* __restrict__ dst,
++                              const int32_t* __restrict__ gpu_entries,
++                              const float* __restrict__ weights,
++                              const float* __restrict__ shared,
++                              float* __restrict__ output, int64_t n_embd, int k) {
++    const int token = blockIdx.y, first = token * k;
++    __shared__ int hit[15];
++    if (threadIdx.x < k) {
++        const int row = first + threadIdx.x;
++        int found = 0;
++        for (int j = 0; j < *gpu_entries; ++j) found |= dst[j] == row;
++        hit[threadIdx.x] = found;
++    }
++    __syncthreads();
++    const int64_t col = int64_t(blockIdx.x) * blockDim.x + threadIdx.x;
++    if (col >= n_embd) return;
++    auto part = [&](int rank) {
++        const int64_t index = int64_t(first + rank) * n_embd + col;
++        // The original path zeroes GPU hit rows before adding the result.
++        // Retain that rounding and signed-zero behavior. Missing GPU rows may
++        // contain arbitrary stale data and must never be read.
++        const volatile float* mapped_cpu = cpu_parts;
++        return hit[rank] ? __fadd_rn(0.0f, hit_parts[index]) : mapped_cpu[index];
++    };
++    float sum = part(0) * weights[first];
++    for (int rank = 1; rank < k; ++rank) sum += part(rank) * weights[first + rank];
++    if (shared) sum += shared[int64_t(token) * n_embd + col];
++    output[int64_t(token) * n_embd + col] = sum;
++}
+ bool valid_span(const void* p, size_t bytes) {
+     const auto address = reinterpret_cast<uintptr_t>(p);
+     return p && address % alignof(float) == 0 && bytes <= UINTPTR_MAX - address;
+@@ -95,4 +127,18 @@ void native_moe_combine_resident_multi(const float* parts, const float* weights,
+     const auto error = cudaGetLastError();
+     if (error != cudaSuccess) throw std::runtime_error(cudaGetErrorString(error));
+ }
++
++void native_moe_combine_mixed_multi(const float* cpu_parts, const float* hit_parts,
++                                   const int32_t* dst, const int32_t* gpu_entries,
++                                   const float* weights, const float* shared, float* output,
++                                   int64_t n_embd, int64_t k, int n_tok, void* stream) {
++    if (!stream || !cpu_parts || !hit_parts || !dst || !gpu_entries || !weights || !output ||
++        n_embd <= 0 || k < 1 || k > 15 || n_tok < 1 || n_tok > 8)
++        throw std::invalid_argument("native mixed MoE combine: invalid inputs or geometry");
++    combine_mixed<<<dim3(unsigned((n_embd + 255) / 256), unsigned(n_tok)), 256, 0,
++                    static_cast<cudaStream_t>(stream)>>>(
++        cpu_parts, hit_parts, dst, gpu_entries, weights, shared, output, n_embd, int(k));
++    const auto error = cudaGetLastError();
++    if (error != cudaSuccess) throw std::runtime_error(cudaGetErrorString(error));
++}
+ }
+diff --git a/src/kernels/iq_multi_parity.cpp b/src/kernels/iq_multi_parity.cpp
+index b497b74..836f1e0 100644
+--- a/src/kernels/iq_multi_parity.cpp
++++ b/src/kernels/iq_multi_parity.cpp
+@@ -328,7 +328,13 @@ void bench(cudaStream_t s, std::mt19937& rng) {
+ }  // namespace
+ 
+ int main(int argc, char** argv) {
+-    const bool do_bench = argc > 1 && std::string(argv[1]) == "--bench";
++    bool do_bench = false;
++    for (int i = 1; i < argc; ++i) {
++        const std::string arg(argv[i]);
++        if (arg == "--bench") do_bench = true;
++        else if (arg == "--fused-all") k::native_expert_set_mode(9, 0);
++        else { std::fprintf(stderr, "Unknown option: %s\n", argv[i]); return 2; }
++    }
+     cudaStream_t s;
+     ck(cudaStreamCreate(&s), "stream");
+     std::mt19937 rng(18);
+diff --git a/src/kernels/cuda/gdn_pipeline.cu b/src/kernels/cuda/gdn_pipeline.cu
+new file mode 100644
+--- /dev/null
++++ b/src/kernels/cuda/gdn_pipeline.cu
+@@ -0,0 +1,126 @@
++// Pipelined GDN recurrence adapted from pinned Strata fb58e0d verify_kernels.cu.
++// Keep the incumbent recurrence and normalization order; fuse the existing
++// native Q8_1 consumer bytes and prefetch next-token q/k with double buffering.
++#include "strata/kernels/verify_kernels.hpp"
++#include <cuda_fp16.h>
++#include <cuda_runtime.h>
++#include <cstdio>
++#include <cstdlib>
++namespace strata::kernels {
++namespace {
++constexpr int S=128, RG=4, RPG=32;
++struct GdnQ81 { half2 ds; int8_t qs[32]; };
++__device__ __forceinline__ void gdn_q8_1_store(GdnQ81* xq,size_t idx,float xi) {
++    float amax=fabsf(xi),sum=xi;
++    #pragma unroll
++    for(int o=16;o>0;o>>=1)amax=fmaxf(amax,__shfl_xor_sync(0xffffffffu,amax,o));
++    #pragma unroll
++    for(int o=16;o>0;o>>=1)sum+=__shfl_xor_sync(0xffffffffu,sum,o);
++    // native_mmvq.cu is compiled with --use_fast_math: retain its divisions.
++    const float d=__fdividef(amax,127.0f);
++    const int8_t q=amax==0.0f?0:roundf(__fdividef(xi,d));
++    xq[idx/32].qs[idx%32]=q;
++    if(idx%32==0)xq[idx/32].ds=__floats2half2_rn(d,sum);
++}
++template <bool ALL_OUT, bool Q>
++__global__ void __launch_bounds__(S * RG) gdn_pipeline_kernel(float* __restrict__ state,
++                                                                     const float* __restrict__ hbuf, int C,
++                                                                     const float* __restrict__ gate,
++                                                                     const float* __restrict__ beta,
++                                                                     const float* __restrict__ z,
++                                                                     const float* __restrict__ gamma, float eps,
++                                                                     float* __restrict__ y, int h_k, int h_v, int T,
++                                                                     const int32_t* __restrict__ n_keep, int t_out_begin,
++                                                                     GdnQ81* __restrict__ xq) {
++    __shared__ float sk[2][S], sq[2][S];
++    __shared__ float red_kv[RG][S];
++    __shared__ float red_o[RG][S];
++    __shared__ float wsum[S / 32];
++    const int head = blockIdx.x;
++    const int col = threadIdx.x;
++    const int rg = threadIdx.y;
++    const int qh = head % h_k;
++    const int qk = S * h_k;             // q at [0, qk), k at [qk, 2qk), v at [2qk, ...)
++    const int value_dim = S * h_v;
++    const int n = ALL_OUT ? T : (n_keep ? *n_keep : T);
++    if (n > 0) {
++        if (rg == 0) sk[0][col] = hbuf[qk + qh * S + col];
++        else if (rg == 1 && (ALL_OUT || 0 >= t_out_begin)) sq[0][col] = hbuf[qh * S + col];
++    }
++    const float gam = (rg == 0) ? gamma[col] : 0.0f;
++    float s[RPG];
++    float* base = state + ((size_t) (rg * RPG) * h_v + head) * S + col;
++    const size_t row_stride = (size_t) h_v * S;
++#pragma unroll
++    for (int r = 0; r < RPG; ++r) s[r] = ALL_OUT ? __ldg(&base[r * row_stride]) : base[r * row_stride];
++    for (int t = 0; t < n; ++t) {
++        const int cur = t & 1, nxt = (t + 1) & 1;
++        const float* ht = hbuf + (size_t) t * C;
++        const bool need_out = ALL_OUT || (t >= t_out_begin);
++        __syncthreads();
++        if (t + 1 < n) {
++            const float* ht_next = ht + C;
++            const bool need_next = ALL_OUT || (t + 1 >= t_out_begin);
++            if (rg == 0) sk[nxt][col] = ht_next[qk + qh * S + col];
++            else if (rg == 1 && need_next) sq[nxt][col] = ht_next[qh * S + col];
++        }
++        const float g = __expf(gate[(size_t) t * h_v + head]);
++        float kv = 0.0f;
++#pragma unroll
++        for (int r = 0; r < RPG; ++r) kv = fmaf(s[r], sk[cur][rg * RPG + r], kv);
++        red_kv[rg][col] = kv;
++        __syncthreads();
++        const float kv_col = red_kv[0][col] + red_kv[1][col] + red_kv[2][col] + red_kv[3][col];
++        const float delta = (ht[2 * qk + head * S + col] - g * kv_col) * beta[(size_t) t * h_v + head];
++        if (!need_out) {
++#pragma unroll
++            for (int r = 0; r < RPG; ++r) s[r] = fmaf(g, s[r], sk[cur][rg * RPG + r] * delta);
++            continue;
++        }
++        float o = 0.0f;
++#pragma unroll
++        for (int r = 0; r < RPG; ++r) {
++            s[r] = fmaf(g, s[r], sk[cur][rg * RPG + r] * delta);
++            o = fmaf(s[r], sq[cur][rg * RPG + r], o);
++        }
++        red_o[rg][col] = o;
++        __syncthreads();
++        float oc = 0.0f, sq_part = 0.0f;
++        if (rg == 0) {
++            oc = (red_o[0][col] + red_o[1][col] + red_o[2][col] + red_o[3][col]) * rsqrtf((float) S);
++            sq_part = oc * oc;
++        }
++        // every thread takes the shuffles, as the single-token kernel does: inside the `rg == 0` branch hipcc on
++        // gfx1151 gave another rounding for 3% of the outputs (gdn_parity section 5 on Aurora)
++        for (int o2 = 16; o2 > 0; o2 >>= 1) sq_part += __shfl_xor_sync(0xffffffffu, sq_part, o2);
++        if (rg == 0 && (col & 31) == 0) wsum[col >> 5] = sq_part;
++        __syncthreads();
++        if (rg == 0) {
++            const float ss = wsum[0] + wsum[1] + wsum[2] + wsum[3];
++            const float scale = rsqrtf(ss / (float) S + eps);
++            const float zz = z[(size_t) t * value_dim + head * S + col];
++            const float yv = __fmul_rn(oc * scale * gam, (1.0f / (1.0f + __expf(-zz))));
++            y[(size_t) t * value_dim + head * S + col] = yv;
++            if constexpr (Q) gdn_q8_1_store(xq, (size_t) (t - t_out_begin) * value_dim + head * S + col, yv);
++        }
++    }
++    if (!ALL_OUT && n_keep != nullptr && n > 0) {
++#pragma unroll
++        for (int r = 0; r < RPG; ++r) base[r * row_stride] = s[r];
++    }
++}
++
++} // namespace
++void gdn_step_norm_pipeline(float* state,const float* h,int C,const float* gate,
++    const float* beta,const float* z,const float* gamma,float eps,float* y,
++    int hk,int hv,int T,int tb,void* q8_out,void* stream) {
++    if(!state||!h||!gate||!beta||!z||!gamma||!y||!q8_out||hk<=0||hv%hk||T<1||T>kVerifyMaxT||tb<0||tb>=T) {
++        std::fprintf(stderr,"gdn pipeline: invalid arguments\n");std::exit(2);
++    }
++    const dim3 grid(hv),block(S,RG);
++    if(tb==0)gdn_pipeline_kernel<true,true><<<grid,block,0,static_cast<cudaStream_t>(stream)>>>(state,h,C,gate,beta,z,gamma,eps,y,hk,hv,T,nullptr,tb,static_cast<GdnQ81*>(q8_out));
++    else gdn_pipeline_kernel<false,true><<<grid,block,0,static_cast<cudaStream_t>(stream)>>>(state,h,C,gate,beta,z,gamma,eps,y,hk,hv,T,nullptr,tb,static_cast<GdnQ81*>(q8_out));
++    const auto error=cudaGetLastError();
++    if(error!=cudaSuccess){std::fprintf(stderr,"gdn pipeline: %s\n",cudaGetErrorString(error));std::exit(2);}
++}
++} // namespace strata::kernels
+diff --git a/src/kernels/gdn_pipeline_parity.cpp b/src/kernels/gdn_pipeline_parity.cpp
+new file mode 100644
+--- /dev/null
++++ b/src/kernels/gdn_pipeline_parity.cpp
+@@ -0,0 +1,104 @@
++// Compare candidate recurrence outputs, untouched state and Q8 bytes against
++// the incumbent independent two-stage pipeline across every verification size.
++#include "strata/kernels/native_mmvq.hpp"
++#include "strata/kernels/verify_kernels.hpp"
++#include <cuda_runtime.h>
++#include <algorithm>
++#include <cmath>
++#include <cstdio>
++#include <cstring>
++#include <random>
++#include <stdexcept>
++#include <string>
++#include <vector>
++
++using namespace strata::kernels;
++namespace {
++void ck(cudaError_t result) {
++    if(result!=cudaSuccess)throw std::runtime_error(cudaGetErrorString(result));
++}
++struct Buffer {
++    void* pointer=nullptr;
++    explicit Buffer(size_t bytes){ck(cudaMalloc(&pointer,bytes));}
++    ~Buffer(){cudaFree(pointer);}
++    float* f(){return static_cast<float*>(pointer);}
++};
++void write(Buffer& buffer,const std::vector<float>& data) {
++    ck(cudaMemcpy(buffer.pointer,data.data(),data.size()*sizeof(float),cudaMemcpyHostToDevice));
++}
++std::vector<unsigned char> read(Buffer& buffer,size_t size) {
++    std::vector<unsigned char> bytes(size);
++    ck(cudaMemcpy(bytes.data(),buffer.pointer,size,cudaMemcpyDeviceToHost));return bytes;
++}
++}
++int main(int argc,char** argv) {
++    try {
++        const bool bench=argc>1&&std::string(argv[1])=="--bench";
++        cudaStream_t stream;ck(cudaStreamCreate(&stream));
++        int failures=0,cases=0;
++        size_t compared=0;
++        std::mt19937 random(20261010);
++        std::normal_distribution<float> normal;
++        for(int hv : {8,48}) {
++            const int hk=hv==48?16:4,N=128*hv,C=256*hk+N;
++            for(int T=1;T<=8;++T)for(int tb : {0,T-1}) {
++                std::vector<float> state(size_t(128)*N),h(size_t(T)*C),z(size_t(T)*N),
++                    gate(size_t(T)*hv),beta(gate.size()),gamma(128);
++                for(auto& value:state)value=0.01f*normal(random);
++                for(auto& value:h)value=0.02f*normal(random);
++                for(auto& value:z)value=normal(random);
++                for(auto& value:gate)value=-0.1f-std::abs(normal(random));
++                for(auto& value:beta)value=0.1f+0.05f*std::abs(normal(random));
++                for(auto& value:gamma)value=1.0f+0.01f*normal(random);
++                Buffer ds(state.size()*4),dh(h.size()*4),dz(z.size()*4),dg(gate.size()*4),
++                    db(beta.size()*4),dm(gamma.size()*4),ref(size_t(T)*N*4),candidate(size_t(T)*N*4),
++                    qr(native_q8_1_bytes(N,T-tb)),qc(native_q8_1_bytes(N,T-tb));
++                write(ds,state);write(dh,h);write(dz,z);write(dg,gate);write(db,beta);write(dm,gamma);
++                ck(cudaMemset(ref.pointer,0xda,size_t(T)*N*4));
++                ck(cudaMemset(candidate.pointer,0xda,size_t(T)*N*4));
++                gdn_step_norm_multi(ds.f(),dh.f(),C,dg.f(),db.f(),dz.f(),dm.f(),1e-6f,
++                    ref.f(),hk,hv,T,nullptr,stream,tb);
++                native_quantize_q8_1(ref.f()+size_t(tb)*N,qr.pointer,N,T-tb,stream);
++                gdn_step_norm_pipeline(ds.f(),dh.f(),C,dg.f(),db.f(),dz.f(),dm.f(),1e-6f,
++                    candidate.f(),hk,hv,T,tb,qc.pointer,stream);
++                ck(cudaStreamSynchronize(stream));
++                auto a=read(ref,size_t(T)*N*4),b=read(candidate,a.size());
++                auto qa=read(qr,native_q8_1_bytes(N,T-tb)),qb=read(qc,qa.size());
++                auto after=read(ds,state.size()*4);
++                const bool equal=a==b&&qa==qb&&std::memcmp(after.data(),state.data(),after.size())==0;
++                compared+=a.size()+qa.size()+after.size();++cases;
++                if(!equal) {
++                    ++failures;
++                    size_t yd=0,qd=0;
++                    for(size_t i=0;i<a.size();++i)yd+=a[i]!=b[i];
++                    for(size_t i=0;i<qa.size();++i)qd+=qa[i]!=qb[i];
++                    std::printf("FAIL hv=%d T=%d tb=%d: output bytes=%zu, quant bytes=%zu, state=%s\n",
++                        hv,T,tb,yd,qd,std::memcmp(after.data(),state.data(),after.size())==0?"same":"changed");
++                }
++                if(bench&&hv==48&&tb==0) {
++                    for(int arm=0;arm<2;++arm) {
++                        cudaEvent_t start,end;ck(cudaEventCreate(&start));ck(cudaEventCreate(&end));
++                        for(int phase=0;phase<2;++phase) {
++                            ck(cudaEventRecord(start,stream));
++                            for(int repeat=0;repeat<200;++repeat) {
++                                if(arm==0) {
++                                    gdn_step_norm_multi(ds.f(),dh.f(),C,dg.f(),db.f(),dz.f(),dm.f(),1e-6f,
++                                        ref.f(),hk,hv,T,nullptr,stream,tb);
++                                    native_quantize_q8_1(ref.f(),qr.pointer,N,T,stream);
++                                } else gdn_step_norm_pipeline(ds.f(),dh.f(),C,dg.f(),db.f(),dz.f(),dm.f(),1e-6f,
++                                    candidate.f(),hk,hv,T,tb,qc.pointer,stream);
++                            }
++                            ck(cudaEventRecord(end,stream));ck(cudaEventSynchronize(end));
++                        }
++                        float milliseconds;ck(cudaEventElapsedTime(&milliseconds,start,end));
++                        std::printf("BENCH T=%d %s %.3f us\n",T,arm?"pipeline":"incumbent",milliseconds*5.0);
++                        ck(cudaEventDestroy(start));ck(cudaEventDestroy(end));
++                    }
++                }
++            }
++        }
++        ck(cudaStreamDestroy(stream));
++        std::printf("gdn_pipeline_parity: %d failures, %d cases, %zu compared bytes\n",failures,cases,compared);
++        return failures?1:0;
++    } catch(const std::exception& error) {std::fprintf(stderr,"%s\n",error.what());return 2;}
++}
+diff --git a/src/kernels/mmvq_virtual2_parity.cpp b/src/kernels/mmvq_virtual2_parity.cpp
+new file mode 100644
+--- /dev/null
++++ b/src/kernels/mmvq_virtual2_parity.cpp
+@@ -0,0 +1,54 @@
++// Four-virtual/two-physical warps against the unchanged four-warp MMVQ.
++#include "strata/kernels/native_mmvq.hpp"
++#include <cuda_runtime.h>
++#include <cmath>
++#include <cstdio>
++#include <cstdlib>
++#include <cstring>
++#include <random>
++#include <vector>
++namespace k=strata::kernels;
++void ck(cudaError_t e) { if(e!=cudaSuccess) {std::fprintf(stderr,"CUDA: %s\n",cudaGetErrorString(e));std::exit(2);} }
++template<class T>T* alloc(size_t n) { T* p=nullptr;ck(cudaMalloc((void**)&p,n*sizeof(T)));return p; }
++int main() {
++    setenv("STRATA_MMVQ_ROWS","2",1);
++    k::native_mmvq_set_multi_exact(true);
++    cudaStream_t stream;ck(cudaStreamCreate(&stream));
++    std::mt19937 rng(20261010);std::normal_distribution<float> normal(0,1);
++    int cases=0,failures=0;size_t compared=0;
++    for(int type:{2,6,8,12,13,14,20,23,42})for(int N:{2560,6144}) {
++        constexpr int M=67;
++        const int block_values=type==42?64:type==12||type==13||type==14||type==23?256:32;
++        const size_t bs=k::native_mmvq_weight_bytes(type,block_values,1);
++        const size_t bytes=k::native_mmvq_weight_bytes(type,N,M);
++        std::vector<unsigned char> w(bytes);for(auto& v:w)v=unsigned(rng())&255;
++        const uint16_t scale=0x1800,minimum=0x1000;
++        for(size_t i=0;i<bytes;i+=bs) {
++            std::memcpy(w.data()+i+(type==14?bs-2:0),&scale,2);
++            if(type==12||type==13)std::memcpy(w.data()+i+2,&minimum,2);
++        }
++        std::vector<float> x(size_t(8)*N);for(auto&v:x)v=normal(rng);
++        auto *dw=alloc<unsigned char>(bytes),*dq=alloc<unsigned char>(k::native_q8_1_bytes(N,8));
++        auto *dx=alloc<float>(x.size()),*da=alloc<float>(8*M),*db=alloc<float>(8*M);
++        ck(cudaMemcpy(dw,w.data(),bytes,cudaMemcpyHostToDevice));
++        ck(cudaMemcpy(dx,x.data(),x.size()*4,cudaMemcpyHostToDevice));
++        k::native_quantize_q8_1(dx,dq,N,8,stream);
++        for(int T=5;T<=8;++T) {
++            k::native_mmvq_set_virtual2(false);k::native_mmvq(type,dw,dq,da,N,M,T,stream);
++            k::native_mmvq_set_virtual2(true);k::native_mmvq(type,dw,dq,db,N,M,T,stream);
++            ck(cudaStreamSynchronize(stream));
++            std::vector<float>a(T*M),b(T*M);
++            ck(cudaMemcpy(a.data(),da,a.size()*4,cudaMemcpyDeviceToHost));
++            ck(cudaMemcpy(b.data(),db,b.size()*4,cudaMemcpyDeviceToHost));
++            bool finite=true;for(float value:b)finite=finite&&std::isfinite(value);
++            if(!finite||std::memcmp(a.data(),b.data(),a.size()*4)!=0) {
++                ++failures;std::printf("FAIL type=%d N=%d T=%d finite=%d\n",type,N,T,finite);
++            }
++            compared+=a.size()*4;++cases;
++        }
++        cudaFree(dw);cudaFree(dq);cudaFree(dx);cudaFree(da);cudaFree(db);
++    }
++    cudaStreamDestroy(stream);
++    std::printf("mmvq_virtual2_parity: %d cases, %zu bytes, %d failures\n",cases,compared,failures);
++    return failures?1:0;
++}
+diff --git a/src/kernels/moe_mixed_parity.cpp b/src/kernels/moe_mixed_parity.cpp
+new file mode 100644
+--- /dev/null
++++ b/src/kernels/moe_mixed_parity.cpp
+@@ -0,0 +1,77 @@
++// Mixed CPU/GPU reduction against the incumbent materialize/add/reduce path.
++// Poison unused rows so an invalid eager read cannot pass by coincidence.
++#include "strata/kernels/native_moe.hpp"
++#include "strata/kernels/s2_expert_grouped.hpp"
++#include <cuda_runtime.h>
++#include <algorithm>
++#include <cstdio>
++#include <cstdlib>
++#include <cstring>
++#include <limits>
++#include <numeric>
++#include <random>
++#include <vector>
++
++namespace k = strata::kernels;
++void ck(cudaError_t e) {
++    if (e != cudaSuccess) {
++        std::fprintf(stderr,"CUDA: %s\n",cudaGetErrorString(e)); std::exit(2);
++    }
++}
++template<class T> T* alloc(size_t count) {
++    T* p = nullptr; ck(cudaMalloc((void**)&p,count*sizeof(T))); return p;
++}
++template<class T> void upload(T* dst,const std::vector<T>& src) {
++    ck(cudaMemcpy(dst,src.data(),src.size()*sizeof(T),cudaMemcpyHostToDevice));
++}
++int main() {
++    cudaStream_t stream; ck(cudaStreamCreate(&stream));
++    std::mt19937 rng(20261010); std::normal_distribution<float> random(0,1);
++    size_t compared=0; int cases=0, failures=0;
++    for (int T=1;T<=8;++T) for(int K:{1,10,15}) for(int N:{33,2560}) {
++        const int rows=T*K; const size_t count=size_t(rows)*N, out_count=size_t(T)*N;
++        float *mapped=nullptr,*device_mapped=nullptr;
++        ck(cudaHostAlloc((void**)&mapped,count*4,cudaHostAllocMapped));
++        ck(cudaHostGetDevicePointer((void**)&device_mapped,mapped,0));
++        float *parts=alloc<float>(count),*hits=alloc<float>(count),*weights=alloc<float>(rows),
++              *shared=alloc<float>(out_count),*old=alloc<float>(out_count),*fused=alloc<float>(out_count);
++        int32_t *dst=alloc<int32_t>(rows),*n_hits=alloc<int32_t>(1);
++        std::vector<float> cpu(count),gpu(count),w(rows),sh(out_count),a(out_count),b(out_count);
++        std::vector<int32_t> order(rows); std::iota(order.begin(),order.end(),0);
++        for(int round=0;round<4;++round) {
++            std::shuffle(order.begin(),order.end(),rng);
++            int nh=round==0?0:round==1?1:round==2?rows/2:rows;
++            ck(cudaMemcpy(dst,order.data(),rows*4,cudaMemcpyHostToDevice));
++            ck(cudaMemcpy(n_hits,&nh,4,cudaMemcpyHostToDevice));
++            std::vector<bool> is_hit(rows,false);
++            for(int i=0;i<nh;++i)is_hit[order[i]]=true;
++            for(int r=0;r<rows;++r)for(int c=0;c<N;++c) {
++                const size_t i=size_t(r)*N+c;
++                cpu[i]=is_hit[r]?0.0f:random(rng);
++                gpu[i]=is_hit[r]?random(rng):std::numeric_limits<float>::quiet_NaN();
++                mapped[i]=is_hit[r]?std::numeric_limits<float>::quiet_NaN():cpu[i];
++                if(c%97==0) { // signed zeros must follow the old hit-add rule
++                    if(is_hit[r])gpu[i]=-0.0f; else mapped[i]=cpu[i]=-0.0f;
++                }
++            }
++            for(auto& value:w)value=random(rng);
++            for(auto& value:sh)value=random(rng);
++            upload(parts,cpu); upload(hits,gpu); upload(weights,w); upload(shared,sh);
++            k::moe_hit_add(parts,hits,dst,n_hits,rows,N,stream);
++            k::native_moe_combine_multi(parts,weights,shared,old,N,K,T,stream);
++            k::native_moe_combine_mixed_multi(device_mapped,hits,dst,n_hits,weights,shared,fused,N,K,T,stream);
++            ck(cudaStreamSynchronize(stream));
++            ck(cudaMemcpy(a.data(),old,out_count*4,cudaMemcpyDeviceToHost));
++            ck(cudaMemcpy(b.data(),fused,out_count*4,cudaMemcpyDeviceToHost));
++            if(std::memcmp(a.data(),b.data(),out_count*4)!=0) {
++                ++failures; std::printf("FAIL T=%d K=%d N=%d hits=%d\n",T,K,N,nh);
++            }
++            compared+=out_count*4; ++cases;
++        }
++        cudaFreeHost(mapped); cudaFree(parts); cudaFree(hits); cudaFree(weights);
++        cudaFree(shared); cudaFree(old); cudaFree(fused); cudaFree(dst); cudaFree(n_hits);
++    }
++    cudaStreamDestroy(stream);
++    std::printf("moe_mixed_parity: %d cases, %zu bytes, %d failures\n",cases,compared,failures);
++    return failures?1:0;
++}
+diff --git a/src/kernels/hc_norm_down_parity.cpp b/src/kernels/hc_norm_down_parity.cpp
+new file mode 100644
+--- /dev/null
++++ b/src/kernels/hc_norm_down_parity.cpp
+@@ -0,0 +1,145 @@
++// Exact fused normalization/down projection against the selected incumbent HC read.
++// Adapted from the pinned upstream fused_gr_bench.cpp (MIT).
++// Compare R, xn, lo, rs, inject and mixed, including graph replay.
++// Usage: hc_norm_down_parity [iterations] [minimum T] [maximum T]
++#include "strata/kernels/fused_gr.hpp"
++
++#include <cuda_runtime.h>
++
++#include <cmath>
++#include <cstdint>
++#include <cstdio>
++#include <cstdlib>
++#include <cstring>
++#include <random>
++#include <vector>
++
++namespace K = strata::kernels;
++
++static uint16_t bf16(float x) {
++    uint32_t u;
++    std::memcpy(&u, &x, 4);
++    return (uint16_t) ((u + 0x7fff + ((u >> 16) & 1)) >> 16);
++}
++
++int main(int argc, char** argv) {
++    setvbuf(stdout, nullptr, _IONBF, 0);
++    const int iters = argc > 1 ? std::atoi(argv[1]) : 500;
++    const int t_lo = argc > 2 ? std::atoi(argv[2]) : 1, t_hi = argc > 3 ? std::atoi(argv[3]) : 8;
++    if (iters < 1 || t_lo < 1 || t_hi > 8 || t_lo > t_hi) return 2;
++    K::fused_gr_set_norm_down(false);
++    K::fused_gr_check();
++    const int N = 2560, HC = 4, D = N * HC, LR = 320, TM = K::kFusedGrMaxT;
++    std::mt19937 rng(7);
++    std::normal_distribution<float> nd(0.f, 1.f);
++    auto fill = [&](std::vector<float>& v, float sc) { for (auto& x : v) x = sc * nd(rng); };
++    std::vector<float> R((size_t) TM * D), bo((size_t) TM * N), inj((size_t) TM * HC), wn(D);
++    fill(R, 1.0f); fill(bo, 0.5f); fill(inj, 1.0f); fill(wn, 0.3f);
++    for (auto& x : wn) x += 1.0f;
++    std::vector<uint16_t> wd((size_t) LR * D), wu((size_t) D * LR), wi((size_t) HC * D);
++    for (auto& x : wd) x = bf16(0.02f * nd(rng));
++    for (auto& x : wu) x = bf16(0.05f * nd(rng));
++    for (auto& x : wi) x = bf16(0.02f * nd(rng));
++    float *dR, *dR0, *dbo, *dinj, *dwn, *dxn, *dlo, *drs, *dio, *dmix;
++    uint16_t *dwd, *dwu, *dwi;
++    cudaMalloc((void**) &dR, R.size() * 4);
++    cudaMalloc((void**) &dR0, R.size() * 4);
++    cudaMemcpy(dR0, R.data(), R.size() * 4, cudaMemcpyHostToDevice);
++    cudaMalloc((void**) &dbo, bo.size() * 4);
++    cudaMalloc((void**) &dinj, inj.size() * 4);
++    cudaMalloc((void**) &dwn, wn.size() * 4);
++    cudaMalloc((void**) &dxn, (size_t) TM * D * 4);
++    cudaMalloc((void**) &dlo, (size_t) TM * LR * 4);
++    cudaMalloc((void**) &drs, (size_t) TM * HC * 4);
++    cudaMalloc((void**) &dio, (size_t) TM * HC * 4);
++    cudaMalloc((void**) &dmix, (size_t) TM * N * 4);
++    cudaMalloc((void**) &dwd, wd.size() * 2);
++    cudaMalloc((void**) &dwu, wu.size() * 2);
++    cudaMalloc((void**) &dwi, wi.size() * 2);
++    cudaMemcpy(dbo, bo.data(), bo.size() * 4, cudaMemcpyHostToDevice);
++    cudaMemcpy(dinj, inj.data(), inj.size() * 4, cudaMemcpyHostToDevice);
++    cudaMemcpy(dwn, wn.data(), wn.size() * 4, cudaMemcpyHostToDevice);
++    cudaMemcpy(dwd, wd.data(), wd.size() * 2, cudaMemcpyHostToDevice);
++    cudaMemcpy(dwu, wu.data(), wu.size() * 2, cudaMemcpyHostToDevice);
++    cudaMemcpy(dwi, wi.data(), wi.size() * 2, cudaMemcpyHostToDevice);
++    cudaStream_t s;
++    cudaStreamCreate(&s);
++    cudaEvent_t e0, e1;
++    cudaEventCreate(&e0);
++    cudaEventCreate(&e1);
++    int failures = 0;
++    for (int T = t_lo; T <= t_hi; ++T)
++        for (int apply = 0; apply < 2; ++apply)
++            for (int inject = 0; inject < 2; ++inject) {
++                K::FusedGrArgs a[TM];
++                for (int t = 0; t < T; ++t) {
++                    a[t].R = dR + (size_t) t * D; a[t].R_out = dR + (size_t) t * D; a[t].apply = apply;
++                    a[t].bo_prev = dbo + (size_t) t * N; a[t].inj_prev = dinj + (size_t) t * HC;
++                    a[t].w_norm = dwn; a[t].w_down = dwd; a[t].w_up = dwu; a[t].w_inject = inject ? dwi : nullptr;
++                    a[t].lo = dlo + (size_t) t * LR; a[t].rs = drs + (size_t) t * HC;
++                    a[t].inject_out = dio + (size_t) t * HC; a[t].mixed = dmix + (size_t) t * N;
++                }
++                std::vector<float> out[2];
++                for (int f = 0; f < 2; ++f) {
++                    cudaMemcpy(dR, R.data(), R.size() * 4, cudaMemcpyHostToDevice);
++                    cudaMemset(dxn, 0xff, (size_t) TM * D * 4);
++                    cudaMemset(dlo, 0xff, (size_t) TM * LR * 4);
++                    cudaMemset(drs, 0xff, (size_t) TM * HC * 4);
++                    cudaMemset(dio, 0xff, (size_t) TM * HC * 4);
++                    cudaMemset(dmix, 0xff, (size_t) TM * N * 4);
++                    K::fused_gr_set_norm_down(f != 0);
++                    K::fused_gr_read_multi(a, T, dxn, s);
++                    cudaStreamSynchronize(s);
++                    auto& o = out[f];
++                    o.resize((size_t) TM * (D + D + LR + HC + HC + N));
++                    float* p = o.data();
++                    cudaMemcpy(p, dR, (size_t) TM * D * 4, cudaMemcpyDeviceToHost); p += (size_t) TM * D;
++                    cudaMemcpy(p, dxn, (size_t) TM * D * 4, cudaMemcpyDeviceToHost); p += (size_t) TM * D;
++                    cudaMemcpy(p, dlo, (size_t) TM * LR * 4, cudaMemcpyDeviceToHost); p += (size_t) TM * LR;
++                    cudaMemcpy(p, drs, (size_t) TM * HC * 4, cudaMemcpyDeviceToHost); p += (size_t) TM * HC;
++                    cudaMemcpy(p, dio, (size_t) TM * HC * 4, cudaMemcpyDeviceToHost); p += (size_t) TM * HC;
++                    cudaMemcpy(p, dmix, (size_t) TM * N * 4, cudaMemcpyDeviceToHost);
++                }
++                const bool same = std::memcmp(out[0].data(), out[1].data(), out[0].size() * 4) == 0;
++                double us[2] = {1e30, 1e30};
++                for (int f = 0; f < 2; ++f) {
++                    K::fused_gr_set_norm_down(f != 0);
++                    cudaGraph_t graph=nullptr;
++                    cudaGraphExec_t exec=nullptr;
++                    if(cudaStreamBeginCapture(s,cudaStreamCaptureModeThreadLocal)!=cudaSuccess)return 2;
++                    cudaMemcpyAsync(dR,dR0,R.size()*4,cudaMemcpyDeviceToDevice,s);
++                    K::fused_gr_read_multi(a,T,dxn,s);
++                    if(cudaStreamEndCapture(s,&graph)!=cudaSuccess ||
++                       cudaGraphInstantiate(&exec,graph,nullptr,nullptr,0)!=cudaSuccess)return 2;
++                    for(int round=0;round<3;++round) {
++                        for(int i=0;i<20;++i)cudaGraphLaunch(exec,s);
++                        cudaEventRecord(e0,s);
++                        for(int i=0;i<iters;++i)cudaGraphLaunch(exec,s);
++                        cudaEventRecord(e1,s);
++                        if(cudaEventSynchronize(e1)!=cudaSuccess)return 2;
++                        float ms=0;
++                        cudaEventElapsedTime(&ms,e0,e1);
++                        us[f]=std::fmin(us[f],1e3*ms/iters);
++                    }
++                    // Every replay starts from the identical residual input.
++                    std::vector<float> replay(out[f].size());
++                    float* p=replay.data();
++                    cudaMemcpy(p,dR,(size_t)TM*D*4,cudaMemcpyDeviceToHost);p+=(size_t)TM*D;
++                    cudaMemcpy(p,dxn,(size_t)TM*D*4,cudaMemcpyDeviceToHost);p+=(size_t)TM*D;
++                    cudaMemcpy(p,dlo,(size_t)TM*LR*4,cudaMemcpyDeviceToHost);p+=(size_t)TM*LR;
++                    cudaMemcpy(p,drs,(size_t)TM*HC*4,cudaMemcpyDeviceToHost);p+=(size_t)TM*HC;
++                    cudaMemcpy(p,dio,(size_t)TM*HC*4,cudaMemcpyDeviceToHost);p+=(size_t)TM*HC;
++                    cudaMemcpy(p,dmix,(size_t)TM*N*4,cudaMemcpyDeviceToHost);
++                    if(std::memcmp(replay.data(),out[f].data(),replay.size()*4)!=0) {
++                        std::printf("T %d apply %d inject %d graph replay differs\n",T,apply,inject);
++                        ++failures;
++                    }
++                    cudaGraphExecDestroy(exec);cudaGraphDestroy(graph);
++                }
++                std::printf("T %d apply %d inject %d | control %6.1f us  fused %6.1f us | %s\n", T, apply, inject, us[0], us[1],
++                            same ? "bitwise equal" : "DIFFERS");
++                if (!same) ++failures;
++            }
++    std::printf("hc_norm_down_parity: %d differing\n", failures);
++    return failures ? 1 : 0;
++}
