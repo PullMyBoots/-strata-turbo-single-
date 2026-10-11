@@ -1,0 +1,49 @@
+{
+  "context_background_tokens": 0,
+  "family": "english",
+  "sample": 0,
+  "cold_prefill_sample": true,
+  "request": {
+    "model": "qwen3.8-flash-iq3-s",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Write a detailed numbered guide to organizing and reviewing a software project. Include concrete examples. Continue for at least 100 items."
+      }
+    ],
+    "max_tokens": 512,
+    "temperature": 0,
+    "reasoning_effort": "none",
+    "cache_prompt": false,
+    "seed": 20261010
+  },
+  "result": {
+    "text": "This is a comprehensive, numbered guide to organizing, reviewing, and maintaining a software project. It covers the entire lifecycle from initial setup to long-term maintenance, including concrete examples for each step.\n\n### Phase 1: Project Initialization & Structure\n\n1.  **Define the Project Scope Clearly**: Write a one-page document outlining what the software will do and, crucially, what it will *not* do.\n    *   *Example*: \"This app tracks daily water intake. It does not integrate with smart bottles or provide medical advice.\"\n2.  **Choose a Version Control System**: Initialize a Git repository immediately.\n    *   *Example*: Run `git init` in the root directory before writing any code.\n3.  **Create a `.gitignore` File**: Prevent unnecessary files from being committed.\n    *   *Example*: Add `node_modules/`, `.env`, `dist/`, and `*.log` to the ignore list.\n4.  **Select a License**: Choose an open-source or proprietary license to define usage rights.\n    *   *Example*: Use MIT License for permissive open-source sharing.\n5.  **Set Up a README.md**: Create a basic readme with the project name and a one-sentence description.\n    *   *Example*: \"# WaterTracker - A simple iOS app to log daily hydration.\"\n6.  **Establish a Directory Structure**: Plan the folder hierarchy before coding.\n    *   *Example*: `/src` for source code, `/tests` for unit tests, `/docs` for documentation, `/assets` for images.\n7.  **Choose a Package Manager**: Select the appropriate tool for dependency management.\n    *   *Example*: Use `npm` for JavaScript, `pip` for Python, or `cargo` for Rust.\n8.  **Initialize Dependency Files**: Create the manifest file for dependencies.\n    *   *Example*: Run `npm init` to create `package.json`.\n9.  **Set Up a Linter**: Configure code style enforcement tools.\n    *   *Example*: Install ESLint for JavaScript with the Airbnb style guide.\n10. **Configure a Formatter**: Ensure consistent code formatting across the team.\n    *   *Example*: Set up Prettier to auto-format code on save.\n11. **Define Coding Standards**: Document specific rules for naming conventions and structure.\n    *   *Example*: \"Use camelCase for",
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 39,
+      "prompt_ms": 211.9,
+      "prompt_per_token_ms": 5.433,
+      "prompt_per_second": 184.0,
+      "predicted_n": 512,
+      "predicted_ms": 3856.3,
+      "predicted_per_token_ms": 7.532,
+      "predicted_per_second": 132.8,
+      "draft_n": 531,
+      "draft_n_accepted": 335
+    },
+    "usage": {
+      "prompt_tokens": 39,
+      "completion_tokens": 512,
+      "total_tokens": 551,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "finish_reason": "length",
+    "wall_s": 4.08329969807528,
+    "first_content_s": 0.22906113392673433
+  },
+  "text_sha256": "9dda7ee19a5d8bee607ee3e0d1a796fa90f7aab65946b6cbc3c4fb9b8144e9eb",
+  "equals_first_arm": false
+}

@@ -1,0 +1,49 @@
+{
+  "context_background_tokens": 0,
+  "family": "english",
+  "sample": 1,
+  "cold_prefill_sample": true,
+  "request": {
+    "model": "qwen3.8-flash-iq3-s",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Write a detailed numbered guide to organizing and reviewing a software project. Include concrete examples. Continue for at least 100 items."
+      }
+    ],
+    "max_tokens": 512,
+    "temperature": 0,
+    "reasoning_effort": "none",
+    "cache_prompt": false,
+    "seed": 20261010
+  },
+  "result": {
+    "text": "This is a comprehensive, numbered guide to organizing, executing, and reviewing a software project. It covers the entire lifecycle from inception to post-mortem, designed to be actionable for teams of any size.\n\n### Phase 1: Project Initiation & Definition\n\n1.  **Define the Problem Statement**: Clearly articulate the specific business or user problem the software solves. *Example: \"Users currently spend 15 minutes manually reconciling invoices; we need an automated matching engine.\"*\n2.  **Identify Stakeholders**: List everyone who has an interest in the project, including end-users, executives, support teams, and external partners.\n3.  **Assign a Project Sponsor**: Designate a senior leader who has the authority to make high-level decisions and secure resources.\n4.  **Appoint a Project Manager (PM)**: Select the individual responsible for timeline, budget, and scope management.\n5.  **Select a Technical Lead**: Identify the senior engineer responsible for architectural decisions and code quality.\n6.  **Draft a Project Charter**: Create a one-page document summarizing the project’s purpose, objectives, and high-level constraints.\n7.  **Establish Success Metrics (KPIs)**: Define measurable outcomes. *Example: \"Reduce invoice processing time by 50% within 6 months.\"*\n8.  **Conduct a Feasibility Study**: Assess technical, financial, and operational viability before committing resources.\n9.  **Identify Key Risks Early**: Brainstorm potential pitfalls such as third-party API instability or regulatory changes.\n10. **Set a Preliminary Budget**: Estimate costs for development, infrastructure, licensing, and contingency funds.\n11. **Define Scope Boundaries**: Explicitly state what is *in* scope and, crucially, what is *out* of scope to prevent scope creep.\n12. **Choose the Development Methodology**: Decide between Agile (Scrum/Kanban), Waterfall, or Hybrid based on project predictability.\n13. **Create a High-Level Roadmap**: Outline major milestones and release dates for the next 6–12 months.\n14. **Secure Initial Funding**: Obtain formal approval for the budget from the finance department or steering committee.\n15. **Form the Core Team**: Hire or assign developers, QA engineers, designers, and product owners.\n\n### Phase 2: Requirements & Planning\n\n16. **Conduct User Interviews**: Speak directly",
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 39,
+      "prompt_ms": 121.5,
+      "prompt_per_token_ms": 3.115,
+      "prompt_per_second": 321.0,
+      "predicted_n": 512,
+      "predicted_ms": 3494.5,
+      "predicted_per_token_ms": 6.825,
+      "predicted_per_second": 146.5,
+      "draft_n": 517,
+      "draft_n_accepted": 334
+    },
+    "usage": {
+      "prompt_tokens": 39,
+      "completion_tokens": 512,
+      "total_tokens": 551,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "finish_reason": "length",
+    "wall_s": 3.6299948568921536,
+    "first_content_s": 0.14053487894125283
+  },
+  "text_sha256": "44f5cd0234105431879d4f8ae43704fbef778fc89dd01e9e5659b665e1bce514",
+  "equals_first_arm": false
+}

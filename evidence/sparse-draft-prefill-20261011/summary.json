@@ -1,0 +1,155 @@
+[
+  {
+    "raw_directory": "runtime/fused-prefill-abba-iq2_xs-clean-20261011",
+    "metrics": {
+      "official": {
+        "short_family_decode_tps": {
+          "english": 199.2,
+          "code": 215.3,
+          "chinese": 159.85000000000002
+        },
+        "short_geomean_decode_tps": 189.96867845649544,
+        "prefill_32k_ms": 7092.15,
+        "prefill_native_ms": 61030.9,
+        "native_decode_tps": 134.0,
+        "native_client_wall_s": 65.03388729598373,
+        "binary_sha256": [
+          "54bf7a29420294216f78fb72e1c46f7496fb54ec809a5c5c464b9d4607a9acb9"
+        ],
+        "independent_service_starts": 2
+      },
+      "candidate": {
+        "short_family_decode_tps": {
+          "english": 217.7,
+          "code": 240.15,
+          "chinese": 173.55
+        },
+        "short_geomean_decode_tps": 208.57161918619045,
+        "prefill_32k_ms": 6586.6,
+        "prefill_native_ms": 56048.65,
+        "native_decode_tps": 167.39999999999998,
+        "native_client_wall_s": 59.68999357055873,
+        "binary_sha256": [
+          "c89835335d1a26ba00c404bc2e7fed95c3f8d32b21f28e0e978260da73db173c"
+        ],
+        "independent_service_starts": 2
+      }
+    },
+    "gains_percent": {
+      "short_decode": 9.792635754928014,
+      "prefill_32k": 7.67543193757021,
+      "prefill_native": 8.889152548723288,
+      "native_decode": 24.925373134328343,
+      "native_client_time_reduction": 8.217091039174317
+    },
+    "limitations": [
+      "Two independent starts per arm; no confidence interval claim.",
+      "Capability smokes and operator numerical checks are not a comprehensive intelligence evaluation.",
+      "L40S hardware only; no measured cross-hardware speed claim.",
+      "Candidate includes existing decode presets, new sparse draft batching and upstream optional expert fusion.",
+      "IQ2_XS retains its existing automatic 16k prefill cap; other profiles use auto 8k."
+    ]
+  },
+  {
+    "raw_directory": "runtime/fused-prefill-abba-swift-20261011",
+    "metrics": {
+      "official": {
+        "short_family_decode_tps": {
+          "english": 141.55,
+          "code": 175.55,
+          "chinese": 142.0
+        },
+        "short_geomean_decode_tps": 152.24148702719017,
+        "prefill_32k_ms": 7012.1,
+        "prefill_native_ms": 60363.0,
+        "native_decode_tps": 129.2,
+        "native_client_wall_s": 64.51347076310776,
+        "binary_sha256": [
+          "54bf7a29420294216f78fb72e1c46f7496fb54ec809a5c5c464b9d4607a9acb9"
+        ],
+        "independent_service_starts": 2
+      },
+      "candidate": {
+        "short_family_decode_tps": {
+          "english": 158.60000000000002,
+          "code": 208.65,
+          "chinese": 148.85
+        },
+        "short_geomean_decode_tps": 170.14667648453218,
+        "prefill_32k_ms": 6538.950000000001,
+        "prefill_native_ms": 58502.95,
+        "native_decode_tps": 134.45,
+        "native_client_wall_s": 62.89175591361709,
+        "binary_sha256": [
+          "c89835335d1a26ba00c404bc2e7fed95c3f8d32b21f28e0e978260da73db173c"
+        ],
+        "independent_service_starts": 2
+      }
+    },
+    "gains_percent": {
+      "short_decode": 11.761044776279771,
+      "prefill_32k": 7.2358712025631045,
+      "prefill_native": 3.1794123202334212,
+      "native_decode": 4.063467492260053,
+      "native_client_time_reduction": 2.5137615916613454
+    },
+    "limitations": [
+      "Two independent starts per arm; no confidence interval claim.",
+      "Capability smokes and operator numerical checks are not a comprehensive intelligence evaluation.",
+      "L40S hardware only; no measured cross-hardware speed claim.",
+      "Candidate includes existing decode presets, new sparse draft batching and upstream optional expert fusion.",
+      "IQ2_XS retains its existing automatic 16k prefill cap; other profiles use auto 8k."
+    ]
+  },
+  {
+    "raw_directory": "runtime/fused-prefill-abba-iq3_s-20261011",
+    "metrics": {
+      "official": {
+        "short_family_decode_tps": {
+          "english": 131.2,
+          "code": 154.25,
+          "chinese": 118.6
+        },
+        "short_geomean_decode_tps": 133.88992519707236,
+        "prefill_32k_ms": 7185.75,
+        "prefill_native_ms": 61849.1,
+        "native_decode_tps": 114.85,
+        "native_client_wall_s": 66.50664021749981,
+        "binary_sha256": [
+          "54bf7a29420294216f78fb72e1c46f7496fb54ec809a5c5c464b9d4607a9acb9"
+        ],
+        "independent_service_starts": 2
+      },
+      "candidate": {
+        "short_family_decode_tps": {
+          "english": 148.0,
+          "code": 176.85,
+          "chinese": 123.85
+        },
+        "short_geomean_decode_tps": 147.99746054201256,
+        "prefill_32k_ms": 6659.85,
+        "prefill_native_ms": 59608.85,
+        "native_decode_tps": 126.5,
+        "native_client_wall_s": 64.24540031002834,
+        "binary_sha256": [
+          "c89835335d1a26ba00c404bc2e7fed95c3f8d32b21f28e0e978260da73db173c"
+        ],
+        "independent_service_starts": 2
+      }
+    },
+    "gains_percent": {
+      "short_decode": 10.536666835966436,
+      "prefill_32k": 7.89657424716772,
+      "prefill_native": 3.758250662443574,
+      "native_decode": 10.143665650848943,
+      "native_client_time_reduction": 3.400021261149899
+    },
+    "limitations": [
+      "Two independent starts per arm; no confidence interval claim.",
+      "Capability smokes and operator numerical checks are not a comprehensive intelligence evaluation.",
+      "L40S hardware only; no measured cross-hardware speed claim.",
+      "Candidate includes existing decode presets, new sparse draft batching and upstream optional expert fusion.",
+      "IQ2_XS retains its existing automatic 16k prefill cap; other profiles use auto 8k."
+    ]
+  }
+]

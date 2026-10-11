@@ -1,0 +1,69 @@
+--- a/experimental/packed-batch/generate.cpp
++++ b/experimental/packed-batch/generate.cpp
+@@ -3881,6 +3881,8 @@
+         }
+     }
+     const bool packed_batch_mtp = batch_mtp && packed_env && packed_env[0] && packed_env[0] != '0';
++    const char* selective_env = std::getenv("STRATA_BATCH_SELECTIVE_MTP");
++    const bool selective_batch_mtp = packed_batch_mtp && selective_env && selective_env[0] == '1';
+     if (packed_batch_mtp) std::fprintf(stderr, "strata generate: packed batch MTP row scheduling enabled\n");
+     std::vector<std::vector<std::unique_ptr<strata::core::SessionState>>> bslot_ss;
+     if (o.batch != 0) {
+@@ -4001,7 +4003,7 @@
+                                  vram_free_note().c_str());
+                     return 1;
+                 }
+-                d->set_max_drafts(packed_batch_mtp ? std::clamp(8 / o.batch - 1, 1, o.spec - 1) : 1);
++                d->set_max_drafts(selective_batch_mtp ? 1 : packed_batch_mtp ? std::clamp(8 / o.batch - 1, 1, o.spec - 1) : 1);
+                 d->set_ple_session(bslot_ss[0][(size_t) b].get());
+                 slot_mtp.push_back(std::move(d));
+             }
+@@ -8507,6 +8509,26 @@
+                 }
+                 if (batch_mtp && sl.active) {
+                     const size_t stride = (size_t) g.hc * (size_t) g.n_embd;
++                    if (selective_batch_mtp) {
++                        int live = 0, rank = 0;
++                        for (size_t i = 0; i < bs.size(); ++i) if (bs[i].active) {
++                            ++live; if ((int)i < b) ++rank;
++                        }
++                        // Every live session gets a target row. Only spare rows can verify proposals.
++                        const int proposal_slots = std::min(live, strata::kernels::kVerifyMaxT - live);
++                        if (rank >= proposal_slots) {
++                            // Maintain complete draft KV, omitting attention/expert/head proposal work.
++                            // A later load decrease can resume proposals without replay or truncation.
++                            if (!slot_mtp[(size_t)b]->prefill(ver.final_R_all() + (size_t)first[t] * stride,
++                                    outb + first[t], keep[b], pos[first[t]], err)) {
++                                std::printf("ERR selective batch KV maintenance: %s\n", err.c_str());
++                                return false;
++                            }
++                            sl.draft_ready = false;
++                            sl.draft_n = 0;
++                            continue;
++                        }
++                    }
+                     if (cudaMemcpy(slot_mtp_rows[(size_t) b].get(),
+                                    ver.final_R_all() + (size_t) first[t] * stride,
+                                    (size_t)length[t] * stride * sizeof(float), cudaMemcpyDeviceToDevice) != cudaSuccess) {
+@@ -8515,10 +8537,10 @@
+                     }
+                     int live_slots = 0;
+                     for (const BSlot& v : bs) live_slots += v.active;
+-                    slot_mtp[(size_t)b]->set_max_drafts(packed_batch_mtp ? std::clamp(8 / std::max(live_slots,1) - 1, 1, o.spec - 1) : 1);
++                    slot_mtp[(size_t)b]->set_max_drafts(selective_batch_mtp ? 1 : packed_batch_mtp ? std::clamp(8 / std::max(live_slots,1) - 1, 1, o.spec - 1) : 1);
+                     if (!slot_mtp[(size_t) b]->draft(length[t], outb + first[t], pos[first[t]], keep[b] - 1,
+                                                     sl.draft.data(), err, sl.draft_prob.data(),
+-                                                    packed_batch_mtp ? (float)o.spec_min_p : 0.0f, &sl.draft_n)) {
++                                                    (packed_batch_mtp && !selective_batch_mtp) ? (float)o.spec_min_p : 0.0f, &sl.draft_n)) {
+                         std::printf("ERR batch MTP slot %d: %s\n", b, err.c_str());
+                         return false;
+                     }
+@@ -11046,7 +11068,7 @@
+                     if (batch_mtp) {
+                         if (!slot_mtp[(size_t) admit_slot]->draft_first(1, ver.final_R_all(), sl.x,
+                                                                         sl.p - 1, sl.draft.data(), err,
+-                                                                        sl.draft_prob.data(), packed_batch_mtp ? (float)o.spec_min_p : 0.0f,
++                                                                        sl.draft_prob.data(), (packed_batch_mtp && !selective_batch_mtp) ? (float)o.spec_min_p : 0.0f,
+                                                                         &sl.draft_n)) {
+                             std::fprintf(stderr, "strata batch: MTP admission for slot %d failed: %s\n",
+                                          admit_slot, err.c_str());

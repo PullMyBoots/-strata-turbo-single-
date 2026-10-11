@@ -33,7 +33,8 @@ def main():
     p.add_argument('--gpu', default='0')
     p.add_argument('--weights', choices=tuple(d.MODELS), default='iq2_xs')
     p.add_argument('--counts', nargs='+', type=int, choices=range(2,7), default=[2,6])
-    p.add_argument('--arms', nargs='+', choices=('default','shared','incumbent','legacy','no-mtp','control','packed','gdn','gdn-plain','packed-gdn','adaptive','adaptive-gdn','profile'),
+    p.add_argument('--capacity', type=int, choices=range(2,7), help='Keep this server capacity while varying active request counts')
+    p.add_argument('--arms', nargs='+', choices=('default','shared','incumbent','legacy','no-mtp','control','packed','gdn','gdn-plain','packed-gdn','adaptive','adaptive-gdn','selective','self-commit','self-commit-control','self-commit-mtp','direct-state','direct-state-control','profile'),
                    default=['incumbent','packed','incumbent'])
     p.add_argument('--candidate-exe', type=Path)
     p.add_argument('--tokens', type=int, default=256)
@@ -43,8 +44,10 @@ def main():
     p.add_argument('--media', action='store_true')
     p.add_argument('--native-context', action='store_true')
     a = p.parse_args()
+    if a.capacity is not None and a.capacity < max(a.counts):
+        p.error('--capacity must accommodate every requested count')
     if a.candidate_exe is None and any(arm in ('control','packed','gdn','gdn-plain',
-                                              'packed-gdn','adaptive','adaptive-gdn') for arm in a.arms):
+                                              'packed-gdn','adaptive','adaptive-gdn','selective','self-commit','self-commit-control','self-commit-mtp','direct-state','direct-state-control') for arm in a.arms):
         p.error('--candidate-exe is required for isolated candidate arms')
     lock = acquire()
     out = a.output.absolute()
@@ -57,7 +60,7 @@ def main():
     for count in a.counts:
         for index, arm in enumerate(a.arms):
             cfg = d.build_config(d.ROOT/'assets', hw, a.weights,
-                                 d.resource_plan(hw,a.weights,count),
+                                 d.resource_plan(hw,a.weights,a.capacity or count),
                                  arm='official' if arm in ('default','shared') else 'turbo')
             d.check_config(cfg)
             cfg = copy.deepcopy(cfg)
@@ -70,13 +73,24 @@ def main():
                 cfg['args'].append('--batch-mtp')
             if arm == 'no-mtp':
                 cfg['args'] = d.set_arg(cfg['args'],'--batch-mtp')
-            if arm in ('control','packed','gdn','gdn-plain','packed-gdn','adaptive','adaptive-gdn'):
+            if arm in ('control','packed','gdn','gdn-plain','packed-gdn','adaptive','adaptive-gdn','selective','self-commit','self-commit-control','self-commit-mtp','direct-state','direct-state-control'):
                 cfg['exe'] = str(a.candidate_exe.absolute())
-                cfg['env']['STRATA_BATCH_PACKED_MTP'] = '1' if arm in ('packed','packed-gdn') else '0'
+                cfg['env']['STRATA_BATCH_PACKED_MTP'] = '1' if arm in ('packed','packed-gdn','selective') else '0'
+                cfg['env']['STRATA_BATCH_SELECTIVE_MTP'] = '1' if arm == 'selective' else '0'
                 cfg['env']['STRATA_BATCH_GDN_FUSED'] = '1' if arm in ('gdn','gdn-plain','packed-gdn','adaptive-gdn') else '0'
                 cfg['env']['STRATA_BATCH_MTP_ADAPT'] = '1' if arm in ('adaptive','adaptive-gdn') else '0'
                 if arm == 'gdn-plain':
                     cfg['args'] = d.set_arg(cfg['args'],'--batch-mtp')
+            if arm in ('self-commit','self-commit-control','self-commit-mtp','direct-state','direct-state-control'):
+                cfg['exe'] = str(a.candidate_exe.absolute())
+                cfg['env']['STRATA_BATCH_SELF_COMMIT'] = '0' if arm == 'self-commit-control' else '1'
+                if arm != 'self-commit-mtp':
+                    cfg['args'] = d.set_arg(cfg['args'],'--batch-mtp')
+            if arm in ('direct-state','direct-state-control'):
+                cfg['exe'] = str(a.candidate_exe.absolute())
+                cfg['env']['STRATA_BATCH_SELF_COMMIT'] = '1'
+                cfg['env']['STRATA_DIRECT_SLOT_STATE'] = '1' if arm == 'direct-state' else '0'
+                cfg['args'] = d.set_arg(cfg['args'],'--batch-mtp')
             if arm == 'profile':
                 cfg['env']['STRATA_VERIFY_PROFILE']='1'
 
@@ -147,7 +161,7 @@ def main():
                 aggregate=sum(count*a.tokens for _ in rows)/sum(r['wall_s'] for r in rows)
                 return dict(rows=rows,checks=checks,aggregate_e2e_tps=aggregate,
                             all_equal=all(r['equals_first_arm'] for row in rows for r in row['requests']),
-                            screening_only=True,holdout=a.holdout,
+                            screening_only=True,holdout=a.holdout,configured_capacity=a.capacity or count,
                             protocol='Fresh service per count/arm; identical 64-token warm-up; three-family rotated simultaneous batches; aggregate includes prefill/admission; temperature zero; thinking/cache off.')
 
             report=measure(cfg,out/f'c{count}-{index}-{arm}',run)

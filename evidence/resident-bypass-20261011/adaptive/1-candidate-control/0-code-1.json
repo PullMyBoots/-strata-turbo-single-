@@ -1,0 +1,49 @@
+{
+  "context_background_tokens": 0,
+  "family": "code",
+  "sample": 1,
+  "cold_prefill_sample": true,
+  "request": {
+    "model": "qwen3.8-flash-iq3-s",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Write a complete Python asyncio task scheduler with concurrency limits, retries with exponential backoff, cancellation, structured logging, and a runnable demonstration. Explain the design after the code. Produce at least 200 lines."
+      }
+    ],
+    "max_tokens": 512,
+    "temperature": 0,
+    "reasoning_effort": "none",
+    "cache_prompt": false,
+    "seed": 20261010
+  },
+  "result": {
+    "text": "```python\n\"\"\"\nAsyncio Task Scheduler with Concurrency Limits, Retries, Cancellation, and Structured Logging.\n\nThis module provides a robust task scheduler that:\n- Limits concurrent execution of tasks\n- Retries failed tasks with exponential backoff\n- Supports task cancellation\n- Provides structured logging\n- Handles graceful shutdown\n\"\"\"\n\nimport asyncio\nimport logging\nimport random\nimport time\nfrom dataclasses import dataclass, field\nfrom enum import Enum\nfrom typing import Any, Callable, Coroutine, Dict, List, Optional, Set\n\n# Configure structured logging\nlogging.basicConfig(\n    level=logging.INFO,\n    format=\"%(asctime)s [%(levelname)s] %(name)s: %(message)s\",\n    datefmt=\"%Y-%m-%d %H:%M:%S\",\n)\nlogger = logging.getLogger(\"TaskScheduler\")\n\n\nclass TaskStatus(Enum):\n    \"\"\"Enumeration of possible task states.\"\"\"\n    PENDING = \"pending\"\n    RUNNING = \"running\"\n    COMPLETED = \"completed\"\n    FAILED = \"failed\"\n    CANCELLED = \"cancelled\"\n\n\n@dataclass\nclass TaskResult:\n    \"\"\"Holds the result or error of a completed task.\"\"\"\n    task_id: str\n    status: TaskStatus\n    result: Any = None\n    error: Optional[Exception] = None\n    attempts: int = 0\n    start_time: float = 0.0\n    end_time: float = 0.0\n\n    @property\n    def duration(self) -> float:\n        \"\"\"Calculate the duration of the task execution.\"\"\"\n        if self.end_time and self.start_time:\n            return self.end_time - self.start_time\n        return 0.0\n\n\n@dataclass\nclass Task:\n    \"\"\"Represents a schedulable task with retry and cancellation support.\"\"\"\n    task_id: str\n    coroutine_func: Callable[..., Coroutine]\n    args: tuple = ()\n    kwargs: dict = field(default_factory=dict)\n    max_retries: int = 3\n    base_delay: float = 1.0\n    max_delay: float = 30.0\n    backoff_factor: float = 2.0\n    jitter: bool = True\n    status: TaskStatus = TaskStatus.PENDING\n    result: Optional[TaskResult] = None\n    _cancel_event: asyncio.Event = field(default_factory=asyncio.Event)\n",
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 55,
+      "prompt_ms": 162.8,
+      "prompt_per_token_ms": 2.96,
+      "prompt_per_second": 337.8,
+      "predicted_n": 512,
+      "predicted_ms": 2619.2,
+      "predicted_per_token_ms": 5.116,
+      "predicted_per_second": 195.5,
+      "draft_n": 499,
+      "draft_n_accepted": 396
+    },
+    "usage": {
+      "prompt_tokens": 55,
+      "completion_tokens": 512,
+      "total_tokens": 567,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "finish_reason": "length",
+    "wall_s": 2.7964677289128304,
+    "first_content_s": 0.18368631089106202
+  },
+  "text_sha256": "207f2e8f1b09c165e5d336b51ad9d8bf518b2c98b436d167d9509d4ab3533aa5",
+  "equals_first_arm": false
+}

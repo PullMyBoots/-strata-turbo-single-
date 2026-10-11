@@ -1,0 +1,49 @@
+{
+  "context_background_tokens": 0,
+  "family": "english",
+  "sample": 0,
+  "cold_prefill_sample": true,
+  "request": {
+    "model": "qwen3.8-flash-iq3-s",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Write a detailed numbered guide to organizing and reviewing a software project. Include concrete examples. Continue for at least 100 items."
+      }
+    ],
+    "max_tokens": 512,
+    "temperature": 0,
+    "reasoning_effort": "none",
+    "cache_prompt": false,
+    "seed": 20261010
+  },
+  "result": {
+    "text": "This is a comprehensive, numbered guide to organizing, reviewing, and maintaining a software project. It covers the entire lifecycle from initial setup to long-term maintenance, including concrete examples for each step.\n\n### Phase 1: Project Initialization & Structure\n\n1.  **Define the Project Scope Clearly**: Write a one-page document outlining what the software will do and, crucially, what it will *not* do.\n    *   *Example*: \"This app tracks daily water intake. It does not track calories or exercise.\"\n2.  **Choose a Version Control System**: Initialize a Git repository immediately.\n    *   *Example*: Run `git init` in the root directory.\n3.  **Create a `.gitignore` File**: Prevent unnecessary files from being committed.\n    *   *Example*: Add `node_modules/`, `.env`, `*.log`, and `dist/` to the file.\n4.  **Establish a Branching Strategy**: Decide how branches will be named and merged.\n    *   *Example*: Use `main` for production, `develop` for integration, and `feature/user-login` for new work.\n5.  **Set Up a README.md**: Create a clear entry point for developers.\n    *   *Example*: Include installation steps, a brief description, and a link to the API documentation.\n6.  **Define Coding Standards**: Choose a linter and formatter to enforce style.\n    *   *Example*: Use ESLint for JavaScript and Prettier for formatting, configured in `.eslintrc.json`.\n7.  **Select a Dependency Manager**: Choose the tool for managing libraries.\n    *   *Example*: Use `npm` or `yarn` for Node.js, `pip` or `poetry` for Python.\n8.  **Create a Directory Structure**: Organize files logically from day one.\n    *   *Example*: `src/` for source code, `tests/` for unit tests, `docs/` for documentation, `scripts/` for build tools.\n9.  **Set Up Environment Variables**: Never hardcode secrets.\n    *   *Example*: Create a `.env.example` file with placeholders like `DB_PASSWORD=your_password_here`.\n10. **Initialize a License File**: Define how others can use your code.\n    *   *Example*: Add an MIT License file if the project is open-source and permissive.",
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 39,
+      "prompt_ms": 161.1,
+      "prompt_per_token_ms": 4.131,
+      "prompt_per_second": 242.1,
+      "predicted_n": 512,
+      "predicted_ms": 3431.0,
+      "predicted_per_token_ms": 6.701,
+      "predicted_per_second": 149.2,
+      "draft_n": 507,
+      "draft_n_accepted": 349
+    },
+    "usage": {
+      "prompt_tokens": 39,
+      "completion_tokens": 512,
+      "total_tokens": 551,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "finish_reason": "length",
+    "wall_s": 3.6101104100234807,
+    "first_content_s": 0.1810167650692165
+  },
+  "text_sha256": "26676d8b1feb84878550e94d3dbad0d8d6d0269dcdd80aee2f2e7228aa53c9db",
+  "equals_first_arm": false
+}

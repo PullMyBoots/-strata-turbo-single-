@@ -1,0 +1,49 @@
+{
+  "context_background_tokens": 0,
+  "family": "english",
+  "sample": 1,
+  "cold_prefill_sample": true,
+  "request": {
+    "model": "qwen3.8-flash-iq3-s",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Write a detailed numbered guide to organizing and reviewing a software project. Include concrete examples. Continue for at least 100 items."
+      }
+    ],
+    "max_tokens": 512,
+    "temperature": 0,
+    "reasoning_effort": "none",
+    "cache_prompt": false,
+    "seed": 20261010
+  },
+  "result": {
+    "text": "This is a comprehensive, numbered guide to organizing, managing, and reviewing a software project. It covers the entire lifecycle from inception to maintenance, with concrete examples for each step.\n\n### Phase 1: Project Initiation & Definition\n\n1.  **Define the Problem Statement**: Clearly articulate the business problem the software solves. *Example: \"Users currently spend 15 minutes manually entering data from PDFs into Excel; we need an OCR tool to reduce this to 2 minutes.\"*\n2.  **Identify Stakeholders**: List everyone who has an interest in the project. *Example: Product Manager, Engineering Lead, Customer Support Head, Legal Compliance Officer.*\n3.  **Establish Success Metrics (KPIs)**: Define measurable outcomes. *Example: \"Reduce data entry time by 80%,\" \"Achieve 99.9% uptime,\" or \"Increase user retention by 5%.\"*\n4.  **Conduct a Feasibility Study**: Assess technical, financial, and operational viability. *Example: Determine if existing OCR libraries (like Tesseract) are accurate enough or if custom ML models are required.*\n5.  **Create a Project Charter**: A high-level document authorizing the project. *Example: A one-page document signed by the VP of Engineering outlining scope, budget, and timeline.*\n6.  **Define Scope Boundaries**: Explicitly state what is *not* included. *Example: \"This version will not support handwritten notes, only typed PDFs.\"*\n7.  **Identify Risks Early**: Brainstorm potential pitfalls. *Example: \"Risk: Third-party API rate limits may cause processing delays during peak hours.\"*\n8.  **Set Budget Constraints**: Allocate resources for development, infrastructure, and licensing. *Example: \"$50,000 for cloud infrastructure, $10,000 for third-party API licenses.\"*\n9.  **Choose the Development Methodology**: Decide between Agile, Waterfall, Kanban, etc. *Example: \"We will use Scrum with 2-week sprints because requirements are likely to change.\"*\n10. **Assemble the Core Team**: Assign roles. *Example: 1 Product Owner, 2 Backend Developers, 1 Frontend Developer, 1 QA Engineer, 1 DevOps Engineer.*\n\n### Phase 2: Requirements Gathering & Analysis\n\n11. **Conduct User Interviews**: Talk to end-users to",
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 39,
+      "prompt_ms": 121.6,
+      "prompt_per_token_ms": 3.118,
+      "prompt_per_second": 320.7,
+      "predicted_n": 512,
+      "predicted_ms": 3390.4,
+      "predicted_per_token_ms": 6.622,
+      "predicted_per_second": 151.0,
+      "draft_n": 497,
+      "draft_n_accepted": 336
+    },
+    "usage": {
+      "prompt_tokens": 39,
+      "completion_tokens": 512,
+      "total_tokens": 551,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "finish_reason": "length",
+    "wall_s": 3.5273200990632176,
+    "first_content_s": 0.14001316903159022
+  },
+  "text_sha256": "57bb7cea8aa2e508c2a34209bc8236ed4cfed10784b2f5e5d3c47ede6f935708",
+  "equals_first_arm": false
+}

@@ -1,0 +1,49 @@
+{
+  "context_background_tokens": 0,
+  "family": "english",
+  "sample": 0,
+  "cold_prefill_sample": true,
+  "request": {
+    "model": "qwen3.8-flash-iq3-s",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Write a detailed numbered guide to organizing and reviewing a software project. Include concrete examples. Continue for at least 100 items."
+      }
+    ],
+    "max_tokens": 512,
+    "temperature": 0,
+    "reasoning_effort": "none",
+    "cache_prompt": false,
+    "seed": 20261010
+  },
+  "result": {
+    "text": "This is a comprehensive, numbered guide to organizing, reviewing, and maintaining a software project. It covers the entire lifecycle from initial setup to long-term maintenance, including concrete examples for each step.\n\n### Phase 1: Project Initialization & Structure\n\n1.  **Define the Project Scope Clearly**: Write a one-page document outlining what the software will do and, crucially, what it will *not* do.\n    *   *Example*: \"This app tracks daily water intake. It does not integrate with smart bottles or provide medical advice.\"\n2.  **Choose a Version Control System**: Initialize a Git repository immediately.\n    *   *Example*: Run `git init` in the root directory before writing any code.\n3.  **Create a `.gitignore` File**: Prevent unnecessary files from being committed.\n    *   *Example*: Add `node_modules/`, `.env`, `*.log`, and `dist/` to the ignore list.\n4.  **Select a License**: Choose an open-source or proprietary license to define usage rights.\n    *   *Example*: Use MIT License for permissive open-source projects or Apache 2.0 for patent protection.\n5.  **Write a README.md**: Create a high-level overview of the project.\n    *   *Example*: Include the project name, a brief description, installation instructions, and a \"Getting Started\" section.\n6.  **Establish a Directory Structure**: Organize files logically from day one.\n    *   *Example*: Use `src/` for source code, `tests/` for test files, `docs/` for documentation, and `scripts/` for automation tools.\n7.  **Set Up a Package Manager**: Initialize dependency management.\n    *   *Example*: Run `npm init` for JavaScript, `pip freeze > requirements.txt` for Python, or `go mod init` for Go.\n8.  **Define Coding Standards**: Choose a linter and formatter.\n    *   *Example*: Use ESLint with Prettier for JavaScript, or Black for Python.\n9.  **Configure Editor Settings**: Ensure consistent formatting across the team.\n    *   *Example*: Add a `.editorconfig` file specifying `indent_style = space` and `indent_size = 2`.\n10. **Create a Branching Strategy**: Decide how branches will be named and managed.\n    *   *Example*: Use `main`",
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 39,
+      "prompt_ms": 167.5,
+      "prompt_per_token_ms": 4.295,
+      "prompt_per_second": 232.8,
+      "predicted_n": 512,
+      "predicted_ms": 3637.8,
+      "predicted_per_token_ms": 7.105,
+      "predicted_per_second": 140.7,
+      "draft_n": 468,
+      "draft_n_accepted": 322
+    },
+    "usage": {
+      "prompt_tokens": 39,
+      "completion_tokens": 512,
+      "total_tokens": 551,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "finish_reason": "length",
+    "wall_s": 3.8181228118482977,
+    "first_content_s": 0.18420083285309374
+  },
+  "text_sha256": "3c6221de02017344fc0487338417b2defc4e1799490d4a4a373751988ca611ce",
+  "equals_first_arm": false
+}

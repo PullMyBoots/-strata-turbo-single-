@@ -1,0 +1,49 @@
+{
+  "context_background_tokens": 0,
+  "family": "code",
+  "sample": 0,
+  "cold_prefill_sample": true,
+  "request": {
+    "model": "qwen3.8-flash-iq3-s",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Write a complete Python asyncio task scheduler with concurrency limits, retries with exponential backoff, cancellation, structured logging, and a runnable demonstration. Explain the design after the code. Produce at least 200 lines."
+      }
+    ],
+    "max_tokens": 512,
+    "temperature": 0,
+    "reasoning_effort": "none",
+    "cache_prompt": false,
+    "seed": 20261010
+  },
+  "result": {
+    "text": "```python\n\"\"\"\nAsyncio Task Scheduler with Concurrency Limits, Retries, Cancellation, and Structured Logging.\n\nFeatures:\n- Concurrency limiting via semaphore\n- Retry logic with exponential backoff and jitter\n- Task cancellation support\n- Structured JSON logging\n- Priority-based task execution\n- Graceful shutdown\n\"\"\"\n\nimport asyncio\nimport json\nimport logging\nimport random\nimport time\nimport uuid\nfrom dataclasses import dataclass, field\nfrom enum import Enum\nfrom typing import Any, Callable, Coroutine, Dict, List, Optional, Set\n\n\n# ---------------------------------------------------------------------------\n# Structured Logging\n# ---------------------------------------------------------------------------\n\nclass StructuredFormatter(logging.Formatter):\n    \"\"\"JSON formatter for structured logging.\"\"\"\n\n    def format(self, record: logging.LogRecord) -> str:\n        log_data = {\n            \"timestamp\": self.formatTime(record, self.datefmt),\n            \"level\": record.levelname,\n            \"logger\": record.name,\n            \"message\": record.getMessage(),\n        }\n        if record.exc_info:\n            log_data[\"exception\"] = self.formatException(record.exc_info)\n        # Add extra fields if present\n        for key in (\"task_id\", \"task_name\", \"attempt\", \"max_retries\", \"delay\", \"status\"):\n            if hasattr(record, key):\n                log_data[key] = getattr(record, key)\n        return json.dumps(log_data, default=str)\n\n\ndef setup_logger(name: str = \"scheduler\") -> logging.Logger:\n    \"\"\"Configure and return a structured logger.\"\"\"\n    logger = logging.getLogger(name)\n    logger.setLevel(logging.DEBUG)\n    if not logger.handlers:\n        handler = logging.StreamHandler()\n        handler.setFormatter(StructuredFormatter())\n        logger.addHandler(handler)\n    return logger\n\n\n# ---------------------------------------------------------------------------\n# Task Definition\n# ---------------------------------------------------------------------------\n\nclass TaskStatus(Enum):\n    PENDING = \"pending\"\n    RUNNING = \"running\"\n    COMPLETED = \"completed\"\n    FAILED = \"failed\"\n    CANCELLED = \"cancelled\"\n\n\n@dataclass\nclass Task:\n    \"\"\"Represents a schedulable async task.\"\"\"\n    task_id: str = field(default_factory=lambda: str(uuid.uuid4()))\n    name: str = \"unnamed\"\n    coroutine_func: Callable[..., Coroutine] = None\n    args: tuple = ()\n    kwargs: dict = field(default_factory=dict)\n    priority: int =",
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 55,
+      "prompt_ms": 255.0,
+      "prompt_per_token_ms": 4.636,
+      "prompt_per_second": 215.7,
+      "predicted_n": 512,
+      "predicted_ms": 3667.3,
+      "predicted_per_token_ms": 7.163,
+      "predicted_per_second": 139.6,
+      "draft_n": 435,
+      "draft_n_accepted": 368
+    },
+    "usage": {
+      "prompt_tokens": 55,
+      "completion_tokens": 512,
+      "total_tokens": 567,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "finish_reason": "length",
+    "wall_s": 3.937891462817788,
+    "first_content_s": 0.27250703098252416
+  },
+  "text_sha256": "ab29a0f681da210444ca2b2dae127f952fb1da783dd46fcbfe964c02ca3f818c",
+  "equals_first_arm": true
+}

@@ -1,0 +1,167 @@
+{
+  "adaptive": {
+    "incumbent_bracket_mean": 156.73333333333335,
+    "control_mean": 159.43333333333334,
+    "candidate_mean": 159.98333333333332,
+    "incremental_mechanism_gain_pct": 0.3449717750365844,
+    "on_off_output_equality": {
+      "english-0": false,
+      "english-1": false,
+      "code-0": false,
+      "code-1": false,
+      "chinese-0": false,
+      "chinese-1": false
+    },
+    "owned_services_stopped": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "expected_completion_tokens": 512,
+    "rows": [
+      {
+        "index": 0,
+        "arm": "incumbent",
+        "medians": {
+          "english": 143.85000000000002,
+          "code": 191.35000000000002,
+          "chinese": 128.85
+        },
+        "mean": 154.68333333333334,
+        "native_context_medians": {},
+        "native_context_mean": null,
+        "checks": {},
+        "equal": true
+      },
+      {
+        "index": 1,
+        "arm": "candidate-control",
+        "medians": {
+          "english": 155.0,
+          "code": 187.65,
+          "chinese": 135.65
+        },
+        "mean": 159.43333333333334,
+        "native_context_medians": {},
+        "native_context_mean": null,
+        "checks": {},
+        "equal": false
+      },
+      {
+        "index": 2,
+        "arm": "resident-bypass",
+        "medians": {
+          "english": 150.1,
+          "code": 192.0,
+          "chinese": 137.85
+        },
+        "mean": 159.98333333333332,
+        "native_context_medians": {},
+        "native_context_mean": null,
+        "checks": {},
+        "equal": false
+      },
+      {
+        "index": 3,
+        "arm": "incumbent",
+        "medians": {
+          "english": 143.6,
+          "code": 188.9,
+          "chinese": 143.85000000000002
+        },
+        "mean": 158.78333333333333,
+        "native_context_medians": {},
+        "native_context_mean": null,
+        "checks": {},
+        "equal": false
+      }
+    ]
+  },
+  "fixed-window": {
+    "incumbent_bracket_mean": 128.61666666666667,
+    "control_mean": 126.76666666666668,
+    "candidate_mean": 126.96666666666667,
+    "incremental_mechanism_gain_pct": 0.15777018143570132,
+    "on_off_output_equality": {
+      "english-0": true,
+      "code-0": true,
+      "chinese-0": true
+    },
+    "owned_services_stopped": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "expected_completion_tokens": 512,
+    "rows": [
+      {
+        "index": 0,
+        "arm": "incumbent",
+        "medians": {
+          "english": 139.6,
+          "code": 138.3,
+          "chinese": 107.9
+        },
+        "mean": 128.6,
+        "native_context_medians": {},
+        "native_context_mean": null,
+        "checks": {},
+        "equal": true
+      },
+      {
+        "index": 1,
+        "arm": "candidate-control",
+        "medians": {
+          "english": 132.8,
+          "code": 139.3,
+          "chinese": 108.2
+        },
+        "mean": 126.76666666666668,
+        "native_context_medians": {},
+        "native_context_mean": null,
+        "checks": {},
+        "equal": false
+      },
+      {
+        "index": 2,
+        "arm": "resident-bypass",
+        "medians": {
+          "english": 133.0,
+          "code": 139.6,
+          "chinese": 108.3
+        },
+        "mean": 126.96666666666667,
+        "native_context_medians": {},
+        "native_context_mean": null,
+        "checks": {},
+        "equal": false
+      },
+      {
+        "index": 3,
+        "arm": "incumbent",
+        "medians": {
+          "english": 139.2,
+          "code": 139.0,
+          "chinese": 107.7
+        },
+        "mean": 128.63333333333333,
+        "native_context_medians": {},
+        "native_context_mean": null,
+        "checks": {},
+        "equal": true
+      }
+    ]
+  },
+  "decision": "reject promotion: incremental mechanism gain below 5%; retain isolated prototype",
+  "weights": "iq3_s",
+  "hardware": "one L40S; no cross-hardware measurements",
+  "native_context_limit": 262144,
+  "kv": "int8",
+  "target_weights_changed": false,
+  "main_numerical_kernels_changed": false,
+  "context_limit_changed": false,
+  "full_native_context_campaign_run": false,
+  "installed_engine_sha256": "a7a467411ecdd0e39c489b1c8897fe4d12fde9fcc9750bc766536c68c448cbf9"
+}

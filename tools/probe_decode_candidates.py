@@ -59,10 +59,12 @@ def main():
                 raise ValueError('Pipeline screening requires --candidate-exe')
             cfg['exe'] = str(args.candidate_exe.absolute())
             cfg['env']['STRATA_GDN_PIPELINE'] = '1'
-        elif arm in ('fused-all', 'miss-actq', 'mixed-combine', 'expert-fusion', 'fusion-virtual', 'expert-transport', 'virtual2', 'fused-and-lazy', 'candidate-control', 'expert-wide', 'expert-pair', 'norm-down', 'norm-down-pair'):
+        elif arm in ('fused-all', 'miss-actq', 'mixed-combine', 'expert-fusion', 'fusion-virtual', 'expert-transport', 'virtual2', 'fused-and-lazy', 'candidate-control', 'expert-wide', 'expert-pair', 'norm-down', 'norm-down-pair', 'resident-bypass'):
             if not args.candidate_exe:
                 raise ValueError('Candidate screening requires --candidate-exe')
             cfg['exe'] = str(args.candidate_exe.absolute())
+            if arm in ('resident-bypass', 'candidate-control'):
+                cfg['env']['STRATA_RESIDENT_HOST_BYPASS'] = '1' if arm == 'resident-bypass' else '0'
             if arm in ('fused-all', 'fused-and-lazy', 'expert-fusion', 'fusion-virtual', 'expert-transport'):
                 cfg['env']['STRATA_CUDA_EXPERT_FUSED_ALL'] = '1'
             if arm in ('miss-actq', 'fused-and-lazy', 'expert-fusion', 'fusion-virtual', 'expert-transport'):

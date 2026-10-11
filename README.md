@@ -88,6 +88,28 @@ Prefill is measured from the **first cold English request at each input size**, 
 
 <!-- END PREFILL TABLE -->
 
+#### Prefill follow-up (experimental source build)
+
+A default-off source implementation now batches the full-history sparse
+drafter's KV/index construction. Combined with upstream fused expert prefill,
+it passed a separate official/candidate/candidate/official comparison on all
+three weights, including native-window retrieval and image/video/tools checks.
+
+| Weight | 31,566-token prefill throughput gain | 256,013-token prefill throughput gain | Native request time reduction |
+|---|---:|---:|---:|
+| IQ2_XS | +7.68% | +8.89% | 8.22% |
+| Swift IQ3_XXS | +7.24% | +3.18% | 2.51% |
+| IQ3_S | +7.90% | +3.76% | 3.40% |
+
+These are two independent service starts per arm on the same L40S, with shared
+resource tuning, native context, INT8 KV, thinking and prompt caching disabled.
+This follow-up uses different prompts from the release curves above and does
+not replace them. It is not yet the installed default. Sparse draft batching is
+our change; expert fusion is upstream reuse. Cross-hardware speed and broad
+intelligence equivalence remain unverified. [Source/build instructions and full
+report](experimental/sparse-draft-prefill/REPORT.md) include the retained
+compiler-overlapped pilot and failed concurrency candidate.
+
 ### Concurrent requests: 1, 2, 4, and 6
 
 ![Concurrent aggregate throughput of upstream and Turbo](docs/figures/concurrent-throughput.svg)
@@ -108,6 +130,32 @@ Prefill is measured from the **first cold English request at each input size**, 
 The slot-count columns report **aggregate end-to-end output tokens/s**: total output divided by total batch wall time, including prefill and admission. The last column reports individual request decode tokens/s at six slots, excluding prefill. Each setting runs three simultaneous batches of mixed English/code/Chinese tasks, **256 output tokens per request**, with thinking and prefix caching disabled. Increasing the slot count does not guarantee increasing throughput.
 
 The concurrent Turbo preset uses upstream native shared batching with **batch MTP** enabled; it shares one model copy. The single-request preset uses the custom Turbo engine. These plots compare the two candidate execution presets before the installer's selection gate. Setup can select the shared-tuning upstream preset when it is faster locally. Six near-full-window simultaneous sessions have not been validated.
+
+#### Batch state-transfer follow-up (experimental)
+
+Removing redundant recurrent-state replay and host roundtrips during slot
+admission/restoration improved six-way aggregate end-to-end throughput:
+
+| Weight | Upstream, shared resources | Candidate | Change |
+|---|---:|---:|---:|
+| IQ2_XS | 184.25 | 213.10 | **+15.66%** |
+| IQ3_S | 125.72 | 139.76 | **+11.17%** |
+| Swift IQ3_XXS | Incomplete | Not qualified | Upstream video check failed |
+
+Rates are **aggregate end-to-end output tokens/s**, not single-request decode.
+For IQ2_XS, median first-content latency fell from 1.01 to 0.74 seconds and
+median completion time from 8.09 to 6.97 seconds in the same workload.
+
+Each completed model uses held-out official/candidate/candidate/official fresh
+starts, identical resources, 256 output tokens per request and the native context
+cap. Both arms disable batch MTP. All complete starts passed isolation,
+image/video/tools, 32k retrieval and 256013-token native retrieval checks.
+Native retrieval is a capability check, not six-way full-context throughput.
+The release batch-MTP charts above use a different mode. This default-off source
+prototype has not replaced the installed engine. Only L40S has been measured.
+[Mechanism, reproduction and limits](experimental/direct-slot-state/REPORT.md) ·
+[Raw evidence and summary](evidence/direct-slot-state-20261011/summary.json) ·
+[Singleton-commit ablation](experimental/batch-self-commit/REPORT.md).
 
 ### Default resources versus shared tuning
 

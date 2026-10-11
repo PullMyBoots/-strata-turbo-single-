@@ -1,0 +1,38 @@
+--- a/generate.cpp
++++ b/generate.cpp
+@@ -113,6 +113,11 @@
+ #include <string>
+ #include <set>
+ #include <vector>
++
++namespace strata::core {
++bool conversation_state_transfer(const SessionState&, SessionState&, const ModelGeometry&,
++                                 const std::vector<int32_t>&, std::string&);
++}
+ 
+ namespace {
+ // Windows' WDDM driver model: native Windows, or WSL2 (its GPU goes through /dev/dxg to the Windows driver).  There,
+@@ -8300,10 +8305,7 @@
+                 strata::core::SessionState& to = *bslot_ss[k][(size_t) b];
+                 const strata::core::OnDevice on_k(k == 0 ? 0 : stages[k - 1]->dev);
+                 if (cudaDeviceSynchronize() != cudaSuccess) { e = "batch admission: device sync failed"; return false; }
+-                strata::core::ConversationCheckpoint ck;
+-                ck.ids = ids;
+-                if (!strata::core::conversation_checkpoint_save(ck, from, g, e) ||
+-                    !strata::core::conversation_checkpoint_restore(ck, to, g, e))
++                if (!strata::core::conversation_state_transfer(from, to, g, ids, e))
+                     return false;
+                 for (int64_t j = 0; j < from.qsa_alloc; ++j) {
+                     strata::core::ConversationKv img;
+@@ -8343,10 +8345,7 @@
+                     if (!strata::core::conversation_checkpoint_restore(k == 0 ? *at : at->stage_parts[k - 1], to, g, e))
+                         return false;
+                 } else {
+-                    strata::core::ConversationCheckpoint ck;
+-                    ck.ids = bs[(size_t) b].ids;
+-                    if (!strata::core::conversation_checkpoint_save(ck, from, g, e) ||
+-                        !strata::core::conversation_checkpoint_restore(ck, to, g, e))
++                    if (!strata::core::conversation_state_transfer(from, to, g, bs[(size_t) b].ids, e))
+                         return false;
+                 }
+                 for (int64_t j = 0; j < from.qsa_alloc; ++j) {

@@ -1,0 +1,49 @@
+{
+  "context_background_tokens": 0,
+  "family": "english",
+  "sample": 1,
+  "cold_prefill_sample": true,
+  "request": {
+    "model": "qwen3.8-flash-iq3-s",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Write a detailed numbered guide to organizing and reviewing a software project. Include concrete examples. Continue for at least 100 items."
+      }
+    ],
+    "max_tokens": 512,
+    "temperature": 0,
+    "reasoning_effort": "none",
+    "cache_prompt": false,
+    "seed": 20261010
+  },
+  "result": {
+    "text": "This is a comprehensive, numbered guide to organizing, managing, and reviewing a software project. It covers the entire lifecycle from inception to maintenance, with concrete examples for each step.\n\n### Phase 1: Project Initiation & Definition\n\n1.  **Define the Problem Statement**: Clearly articulate the business problem the software solves. *Example: \"Users currently spend 15 minutes manually reconciling invoices; this tool will reduce that to 2 minutes.\"*\n2.  **Identify Stakeholders**: List everyone who has an interest in the project. *Example: Product Manager, Lead Developer, QA Lead, Customer Support Manager, and the VP of Sales.*\n3.  **Establish Success Metrics (KPIs)**: Define how you will measure success. *Example: \"Reduce invoice processing time by 80% within 3 months of launch.\"*\n4.  **Conduct a Feasibility Study**: Assess technical, financial, and operational viability. *Example: Determine if the existing legacy database can handle the new API load without migration.*\n5.  **Create a Project Charter**: Draft a high-level document outlining scope, objectives, and constraints. *Example: A one-page PDF signed by the sponsor stating the budget cap is $50,000.*\n6.  **Define Scope Boundaries**: Explicitly state what is *not* included. *Example: \"Mobile app support is out of scope for Version 1.0; only web-based access is included.\"*\n7.  **Identify Risks Early**: Brainstorm potential pitfalls. *Example: \"Key developer may leave during the project; mitigation is to pair-program critical modules.\"*\n8.  **Set Initial Budget**: Estimate costs for labor, infrastructure, and licenses. *Example: Allocate $10,000 for AWS cloud resources and $40,000 for developer salaries.*\n9.  **Choose a Project Management Methodology**: Decide between Agile, Waterfall, or Hybrid. *Example: Use Scrum for a startup product with changing requirements.*\n10. **Select the Tech Stack**: Choose languages, frameworks, and tools. *Example: React for frontend, Node.js for backend, PostgreSQL for database.*\n\n### Phase 2: Requirements Gathering & Analysis\n\n11. **Conduct User Interviews**: Talk to end-users to understand their needs. *Example: Interview 5 accountants to understand their pain points with current invoicing software.*\n1",
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 39,
+      "prompt_ms": 121.3,
+      "prompt_per_token_ms": 3.11,
+      "prompt_per_second": 321.5,
+      "predicted_n": 512,
+      "predicted_ms": 3485.6,
+      "predicted_per_token_ms": 6.808,
+      "predicted_per_second": 146.9,
+      "draft_n": 522,
+      "draft_n_accepted": 337
+    },
+    "usage": {
+      "prompt_tokens": 39,
+      "completion_tokens": 512,
+      "total_tokens": 551,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "finish_reason": "length",
+    "wall_s": 3.6203534780070186,
+    "first_content_s": 0.1423444750253111
+  },
+  "text_sha256": "2b8f9e3c9c770d3e1540c28524b4ed8192bdcf7c4b485ed51007e7f041cea924",
+  "equals_first_arm": true
+}

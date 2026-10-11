@@ -1,0 +1,92 @@
+[
+  {
+    "raw_directory": "runtime/batch-self-commit-holdout-iq2_xs-20261011",
+    "model": "qwen3.8-flash-iq2-xs",
+    "metrics": {
+      "official": {
+        "aggregate_e2e_tps": 184.20054156135035,
+        "starts_tps": [
+          185.34314793932415,
+          183.05793518337654
+        ],
+        "binary_sha256": [
+          "54bf7a29420294216f78fb72e1c46f7496fb54ec809a5c5c464b9d4607a9acb9"
+        ],
+        "per_family_decode_tps": {
+          "english": 35.225,
+          "code": 37.150000000000006,
+          "chinese": 34.25
+        }
+      },
+      "candidate": {
+        "aggregate_e2e_tps": 197.13300743722593,
+        "starts_tps": [
+          197.33007260751384,
+          196.935942266938
+        ],
+        "binary_sha256": [
+          "451563acc6f09e43d9dc641f8c00ad4f7a0df2cb74256a300126716b0a897b9b"
+        ],
+        "per_family_decode_tps": {
+          "english": 39.825,
+          "code": 38.025,
+          "chinese": 38.349999999999994
+        }
+      }
+    },
+    "gain_percent": 7.020862026927466,
+    "limitations": [
+      "Two independent service starts per arm; no confidence interval claim.",
+      "Only target-only six-slot mode is accelerated; batch-MTP uses its original path.",
+      "Native context is a capability check, not six-way native-input throughput.",
+      "L40S only; no measured universal hardware claim.",
+      "Capability checks are not comprehensive intelligence evaluation.",
+      "Complete response text varies between unchanged six-slot controls."
+    ]
+  },
+  {
+    "raw_directory": "runtime/batch-self-commit-holdout-iq3_s-20261011",
+    "model": "qwen3.8-flash-iq3-s",
+    "metrics": {
+      "official": {
+        "aggregate_e2e_tps": 127.08308255305857,
+        "starts_tps": [
+          129.94691049908394,
+          124.21925460703319
+        ],
+        "binary_sha256": [
+          "54bf7a29420294216f78fb72e1c46f7496fb54ec809a5c5c464b9d4607a9acb9"
+        ],
+        "per_family_decode_tps": {
+          "english": 23.549999999999997,
+          "code": 25.8,
+          "chinese": 23.875
+        }
+      },
+      "candidate": {
+        "aggregate_e2e_tps": 131.29159325808916,
+        "starts_tps": [
+          130.72101124489794,
+          131.86217527128036
+        ],
+        "binary_sha256": [
+          "451563acc6f09e43d9dc641f8c00ad4f7a0df2cb74256a300126716b0a897b9b"
+        ],
+        "per_family_decode_tps": {
+          "english": 25.375,
+          "code": 25.475,
+          "chinese": 24.924999999999997
+        }
+      }
+    },
+    "gain_percent": 3.3116215160058804,
+    "limitations": [
+      "Two independent service starts per arm; no confidence interval claim.",
+      "Only target-only six-slot mode is accelerated; batch-MTP uses its original path.",
+      "Native context is a capability check, not six-way native-input throughput.",
+      "L40S only; no measured universal hardware claim.",
+      "Capability checks are not comprehensive intelligence evaluation.",
+      "Complete response text varies between unchanged six-slot controls."
+    ]
+  }
+]

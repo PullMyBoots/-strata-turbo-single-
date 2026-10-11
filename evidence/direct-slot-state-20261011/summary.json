@@ -1,0 +1,104 @@
+[
+  {
+    "raw_directory": "runtime/direct-slot-state-holdout-iq2_xs-20261011",
+    "model": "qwen3.8-flash-iq2-xs",
+    "metrics": {
+      "official": {
+        "aggregate_e2e_tps": 184.25068939997385,
+        "starts_tps": [
+          183.55374353885242,
+          184.94763526109531
+        ],
+        "binary_sha256": [
+          "54bf7a29420294216f78fb72e1c46f7496fb54ec809a5c5c464b9d4607a9acb9"
+        ],
+        "request_count": 36,
+        "median_first_content_s": 1.005704763578251,
+        "median_request_wall_s": 8.090851070126519,
+        "per_family_decode_tps": {
+          "english": 35.55,
+          "code": 37.275,
+          "chinese": 34.375
+        }
+      },
+      "candidate": {
+        "aggregate_e2e_tps": 213.10348320141566,
+        "starts_tps": [
+          214.16073968477906,
+          212.04622671805222
+        ],
+        "binary_sha256": [
+          "dc0065aadc397a2af333e3db7fb33f7c7ab77a0b862992dcf2d5c8e496ef552d"
+        ],
+        "request_count": 36,
+        "median_first_content_s": 0.742496207007207,
+        "median_request_wall_s": 6.973166754003614,
+        "per_family_decode_tps": {
+          "english": 39.625,
+          "code": 41.25,
+          "chinese": 39.05
+        }
+      }
+    },
+    "gain_percent": 15.65953098759254,
+    "limitations": [
+      "Two independent service starts per arm; no confidence interval claim.",
+      "Only target-only six-slot throughput is qualified here; this cohort does not qualify batch-MTP throughput.",
+      "Native context is a capability check, not six-way native-input throughput.",
+      "L40S only; no measured universal hardware claim.",
+      "Capability checks are not comprehensive intelligence evaluation.",
+      "Complete response text varies between unchanged six-slot controls."
+    ]
+  },
+  {
+    "raw_directory": "runtime/direct-slot-state-holdout-iq3_s-repeat-20261011",
+    "model": "qwen3.8-flash-iq3-s",
+    "metrics": {
+      "official": {
+        "aggregate_e2e_tps": 125.71924647138572,
+        "starts_tps": [
+          126.20590470088567,
+          125.23258824188576
+        ],
+        "binary_sha256": [
+          "54bf7a29420294216f78fb72e1c46f7496fb54ec809a5c5c464b9d4607a9acb9"
+        ],
+        "request_count": 36,
+        "median_first_content_s": 1.2656722959363833,
+        "median_request_wall_s": 11.933506320463493,
+        "per_family_decode_tps": {
+          "english": 23.65,
+          "code": 24.725,
+          "chinese": 23.825000000000003
+        }
+      },
+      "candidate": {
+        "aggregate_e2e_tps": 139.7605044333426,
+        "starts_tps": [
+          138.06260158362267,
+          141.45840728306254
+        ],
+        "binary_sha256": [
+          "dc0065aadc397a2af333e3db7fb33f7c7ab77a0b862992dcf2d5c8e496ef552d"
+        ],
+        "request_count": 36,
+        "median_first_content_s": 1.0449480368988588,
+        "median_request_wall_s": 10.603107169037685,
+        "per_family_decode_tps": {
+          "english": 25.825,
+          "code": 26.975,
+          "chinese": 26.125
+        }
+      }
+    },
+    "gain_percent": 11.1687417448471,
+    "limitations": [
+      "Two independent service starts per arm; no confidence interval claim.",
+      "Only target-only six-slot throughput is qualified here; this cohort does not qualify batch-MTP throughput.",
+      "Native context is a capability check, not six-way native-input throughput.",
+      "L40S only; no measured universal hardware claim.",
+      "Capability checks are not comprehensive intelligence evaluation.",
+      "Complete response text varies between unchanged six-slot controls."
+    ]
+  }
+]

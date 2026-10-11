@@ -899,7 +899,10 @@ bool Prefill::draft_kv(core::MtpDrafter& mtp, const float* R_rows, const int32_t
     // drafter's own pass for a ring (the A/B).
     static const bool ring_ok = [] { const char* v = std::getenv("STRATA_MTP_BATCH_RING"); return v == nullptr || v[0] != '0'; }();
     core::QsaState& st = mtp.kv_state_rw();
-    if (off || n <= 0 || m.g == nullptr || m.region == nullptr || (st.kv_mode != 0 && !(st.kv_mode == 2 && ring_ok)) ||
+    static const bool sparse_batch = [] { const char* v = std::getenv("STRATA_MTP_SPARSE_BATCH"); return v && v[0] == '1'; }();
+    const bool sparse = st.auxiliary_indexer;
+    if ((sparse && !sparse_batch) || off || n <= 0 || m.g == nullptr || m.region == nullptr ||
+        (st.kv_mode != 0 && !(st.kv_mode == 2 && ring_ok) && !(sparse && st.kv_mode == 1)) ||
         st.kv_hybrid || mtp.device() != m.device)
         return false;
     const auto t0 = Clock::now();
@@ -917,6 +920,9 @@ bool Prefill::draft_kv(core::MtpDrafter& mtp, const float* R_rows, const int32_t
     const void* w_v = mtp.tensor_q8("self_attn.v_proj.weight");
     const float* w_kn = mtp.tensor_f32("self_attn.k_norm.weight");
     if (!w_ne || !w_fe || !w_nh || !w_fh || !w_hn || !w_dn || !w_up || !w_k || !w_v || !w_kn) return false;
+    const void* w_idx = sparse ? mtp.tensor_q8("self_attn.indexer.index_qk_proj.weight") : nullptr;
+    const float* w_idx_norm = sparse ? mtp.tensor_f32("self_attn.indexer.k_layernorm.weight") : nullptr;
+    if (sparse && (!w_idx || !w_idx_norm || !mmq::built())) return false;
     const core::NativeEmbed* nemb = core::native_embed();
     const core::WeightRef* wemb = nemb ? nullptr : m.wt->find("token_embd.weight");
     if (!nemb && (wemb == nullptr || wemb->codebook_iq4nl || wemb->ne0 != g.n_embd || wemb->group_elems <= 0 ||
@@ -932,7 +938,8 @@ bool Prefill::draft_kv(core::MtpDrafter& mtp, const float* R_rows, const int32_t
     static const bool f16_only = [] { const char* v = std::getenv("STRATA_MTP_BATCH_F16"); return v && v[0] == '1'; }();
     const bool q8 = !f16_only && mmq::built() && mmq::fits(kQ8_0, Nn) && mmq::fits(kQ8_0, KV);   // #420
     const uint64_t per_row = 4 * (2 * Nn + 4 * HCN + LR + HC + Nn + 2 * KV + 1) + 2 * (Nn + 2 * HCN + LR + Nn) + 64 +
-                             (q8 ? (uint64_t) mmq::q8_bytes(g.hc, Nn) + 4 * g.hc : 0);
+                             (q8 ? (uint64_t) mmq::q8_bytes(g.hc, Nn) + 4 * g.hc : 0) +
+                             (sparse ? 4 * (uint64_t) g.idx_key_dim : 0);
     int64_t B = std::min<int64_t>(n - r0, (int64_t) (m.region_bytes / per_row) & ~(int64_t) 63);
     if (st.kv_mode == 2)   // a ring: one batch's cells must not share a slot (a batch can straddle one page more)
         B = std::min<int64_t>(B, ((st.n_slots - 1) * strata::kernels::qsa_real_shapes().page_size) & ~(int64_t) 63);
@@ -959,6 +966,7 @@ bool Prefill::draft_kv(core::MtpDrafter& mtp, const float* R_rows, const int32_t
     void* xq = q8 ? carve(mmq::q8_bytes(B * g.hc, Nn)) : nullptr;
     int32_t* ident = q8 ? (int32_t*) carve((size_t) B * g.hc * 4) : nullptr;
     int32_t* bnd = q8 ? (int32_t*) carve(16) : nullptr;
+    float* idx_raw = sparse ? (float*) carve((size_t) B * g.idx_key_dim * 4) : nullptr;
     if ((uint64_t) (q - m.region) > m.region_bytes) return false;
     static const bool timing = std::getenv("STRATA_DRAFT_TIMING") != nullptr;   // debug: where this pass's time goes
     if (timing) cudaStreamSynchronize(m.cs);
@@ -1027,6 +1035,17 @@ bool Prefill::draft_kv(core::MtpDrafter& mtp, const float* R_rows, const int32_t
         // K and V into the drafter's cache, as the prompt path's QSA layers append theirs
         proj(mixed, mixed_h, w_k, Kc, nb, KV, Nn, 0);
         proj(mixed, mixed_h, w_v, Vc, nb, KV, Nn, 0);
+        if (sparse) {
+            // Prefill needs indexer keys only; query rows are never consumed here.
+            const auto* keys = (const uint8_t*) w_idx +
+                mmq::matrix_bytes(kQ8_0, g.idx_q_heads * g.idx_key_dim, Nn);
+            proj(mixed, mixed_h, keys, idx_raw, nb, g.idx_key_dim, Nn, 0);
+            const strata::kernels::QsaIndexerBuffers ib{st.idx_tail, st.idx_dead, st.idx_pooled, st.idx_block_pos};
+            try {
+                strata::kernels::native_qsa_indexer_append_batch(idx_raw, nb, c0, 0, w_idx_norm, EPS, ib, s,
+                    st.max_cells, strata::kernels::rope_scaling(), m.cs);
+            } catch (const std::exception& e) { err = std::string("draft prefill indexer: ") + e.what(); return false; }
+        }
         rms_rows(Kc, w_kn, nb * g.n_head_kv, g.head_dim, g.head_dim, EPS, m.cs);
         rope(Kc, nb, g.n_head_kv, g.head_dim, KV, c0, strata::kernels::rope_scaling(), m.cs);
         if (st.kv_rot) {   // rotated as the drafter's own decode stores them (mtp.cpp)
@@ -1042,6 +1061,11 @@ bool Prefill::draft_kv(core::MtpDrafter& mtp, const float* R_rows, const int32_t
     }
     if (cudaStreamSynchronize(m.cs) != cudaSuccess) {
         err = std::string("prefill: the draft layer's K/V: ") + cudaGetErrorString(cudaGetLastError());
+        return false;
+    }
+    // Publish the rollback state only after every batch has completed.
+    if (sparse && (!mtp.finish_batched_index(m.cs, err) || cudaStreamSynchronize(m.cs) != cudaSuccess)) {
+        if (err.empty()) err = "draft prefill index checkpoint synchronization failed";
         return false;
     }
     mtp.ms_prefill += ms_since(t0);

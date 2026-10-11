@@ -1,0 +1,87 @@
+--- a/src/core/verify.cpp
++++ b/src/core/verify.cpp
+@@ -180,6 +180,20 @@
+     }();
+     return on;
+ #endif
++}
++
++// Every distinct slot contributes one mandatory token. Do not use this for
++// repeated slots (speculative prefixes) or partial-model pipeline stages.
++bool batch_singletons(const int* rows, int n) {
++    static const bool enabled = [] {
++        const char* v = std::getenv("STRATA_BATCH_SELF_COMMIT");
++        return v && v[0] == '1';
++    }();
++    if (!enabled || !one_token_self_commit() || n < 1) return false;
++    for (int i = 0; i < n; ++i)
++        for (int j = 0; j < i; ++j)
++            if (rows[i] == rows[j]) return false;
++    return true;
+ }
+ 
+ bool mapped(size_t bytes, void** h, void** d) {
+@@ -711,6 +725,7 @@
+     auto Rt = [&](int t) { return R_ + (size_t) t * HC * N; };
+     const int G = (split_ && T >= 2 && !batch_rec_) ? 2 : 1;   // a batch window is one group
+     const bool self_commit = T == 1 && !batch_rec_ && !g_qfuse() && one_token_self_commit();   // see Verifier::commit
++    const bool batch_advance = batch_rec_ && lb_ == 0 && le_ == g.n_layers && batch_singletons(brow_, T);
+     static const bool dec_batch = [] { const char* v = std::getenv("STRATA_DEC_BATCH"); return v == nullptr || std::atoi(v) != 0; }();
+     auto stamp = [&](int64_t l, int i, int grp) {
+         if (prof_on_ && grp == 0) gpu_stamp(prof_, (int) (l * kProfPer + i), cs);
+@@ -915,7 +930,7 @@
+                     err = std::string("verify PLE: ") + e.what();
+                     return false;
+                 }
+-                copy_from_mapped(hist_snap_ + (size_t) t * HS, hist, HS, cs);
++                if (!batch_advance) copy_from_mapped(hist_snap_ + (size_t) t * HS, hist, HS, cs);
+             }
+             pending = false;
+         }
+@@ -998,7 +1013,7 @@
+                         const float* cx = sx.gdn_state + (size_t) (gi - sx.gdn_ord0) * gdn_floats +
+                                           (uint64_t) g.ssm_state_size * g.ssm_v_heads * g.ssm_state_size;
+                         gdn_conv_l2_multi(cx, qkv + (size_t) first * C, (const float*) wc->data,
+-                                          hb + (size_t) first * C, (int) C, (int) (2 * HK), EPS, t - first, cs, 0);
++                                          hb + (size_t) first * C, (int) C, (int) (2 * HK), EPS, t - first, cs, 0, batch_advance);
+                     }
+                 } else
+                 // a one-token window keeps its token: it advances the conv history and the state itself (commit)
+@@ -1026,7 +1041,7 @@
+                         gdn_step_norm_multi(stx, hb + (size_t) first * C, (int) C, gate + (size_t) first * HV,
+                                             beta + (size_t) first * HV, z_ + (size_t) first * ZV,
+                                             (const float*) wnm->data, EPS, y_ + (size_t) first * ZV,
+-                                            (int) HK, (int) HV, t - first, nullptr, cs, 0);
++                                            (int) HK, (int) HV, t - first, batch_advance ? one_ : nullptr, cs, 0);
+                     }
+                 } else
+                 gdn_step_norm_multi(state, hb, (int) C, gate, beta, z_, (const float*) wnm->data, EPS, y_, (int) HK,
+@@ -1112,7 +1127,7 @@
+                 stamp(l, 8, grp);
+                 if (batch_rec_) {   // snapshot each slot's indexer tail before its first proposed row
+                     for (int t = tb; t < te; ++t)
+-                        if (t == tb || brow_[t] != brow_[t - 1])
++                        if (!batch_advance && (t == tb || brow_[t] != brow_[t - 1]))
+                             copy_from_mapped(tail_snap_b_ + ((size_t) brow_[t] * nQall + qi) * TS,
+                                              slot_ss(t).qsa_states[qi].idx_tail, TS, cs);
+                 } else
+@@ -2747,10 +2762,15 @@
+             c[2 + j] = j < n ? (int32_t) last_pos_b_[first + j] : -1;
+     }
+     std::atomic_thread_fence(std::memory_order_seq_cst);
+-    const cudaError_t le = cudaGraphLaunch(commit_bm_[bkey(last_rows_, S, row_base_)], cs_);
+-    if (le != cudaSuccess) { err = std::string("verify: batch commit launch: ") + cudaGetErrorString(le); return false; }
+-    const cudaError_t se = cudaStreamSynchronize(cs_);
+-    if (se != cudaSuccess) { err = std::string("verify: batch commit: ") + cudaGetErrorString(se); return false; }
++    // run_slot_rows has already synchronized the forward graph before sampling.
++    // For mandatory singleton rows that graph also committed conv/GDN/QSA/PLE.
++    const bool advanced = lb_ == 0 && le_ == g_->n_layers && batch_singletons(last_rows_, S);
++    if (!advanced) {
++        const cudaError_t le = cudaGraphLaunch(commit_bm_[bkey(last_rows_, S, row_base_)], cs_);
++        if (le != cudaSuccess) { err = std::string("verify: batch commit launch: ") + cudaGetErrorString(le); return false; }
++        const cudaError_t se = cudaStreamSynchronize(cs_);
++        if (se != cudaSuccess) { err = std::string("verify: batch commit: ") + cudaGetErrorString(se); return false; }
++    }
+     if (ple_stage())
+         for (int t = 0; t < S;) {
+             const int first = t;

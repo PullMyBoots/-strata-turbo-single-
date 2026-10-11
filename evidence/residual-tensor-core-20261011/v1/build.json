@@ -1,0 +1,18 @@
+{
+  "command": [
+    "/usr/local/cuda/bin/nvcc",
+    "-std=c++17",
+    "-O3",
+    "-arch=sm_89",
+    "-Iinclude",
+    "experimental/residual-tensor-core/probe.cu",
+    "build-distribution/turbo/CMakeFiles/strata_kernels.dir/src/kernels/cuda/native_bf16.cu.o",
+    "-lcublas",
+    "-o",
+    "experimental/residual-tensor-core/build/probe"
+  ],
+  "exit_code": 0,
+  "elapsed_s": 4.0942206382751465,
+  "source_sha256": "b1b37ac44dd2f6b2ef24a1f3b5c8ae56648ae5d7c82f716e8f640b60d080441a",
+  "binary_sha256": "467f83ed53ca3df65168410c6a442252dfd7eddba966bff22b407e4022bd33b0"
+}
