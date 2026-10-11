@@ -1,189 +1,97 @@
 # Strata-Turbo-Single
 
-An unofficial single-NVIDIA-GPU distribution of [Strata](https://github.com/Niko1221/Strata), tuned for local Qwen3.8-Flash-Next inference. OpenAI and Anthropic APIs, native images/video, and up to **six concurrent requests** are included.
+Single-GPU inference for IQ2_XS, Swift IQ3_XXS, and IQ3_S, with text, image, video, and up to six concurrent requests. Audio input is not supported.
 
-The selected target GGUF and its experts are retained. KV precision stays **INT8** and the native context limit stays **262,144 tokens**. This release supports text, images, and video; audio input is unavailable.
+## Performance
 
-Measured on this L40S/EPYC host: **+19.2% to +105.5% two-request throughput versus upstream resource defaults**, **+19.9% to +21.3% near-native-window decode versus upstream with shared tuning** (three-task means), and **10.4% less maximum-effort Claude Code task time**. The tables below separate the comparison policies and retain every measured model.
+**Measured October 11, 2026.** Local hardware: one NVIDIA L40S (48 GB), AMD EPYC 9754, approximately 1 TB RAM, 32 CPU workers. Strata and Strata-Turbo-Single use identical weights and matched resource settings, with a native 262,144-token context and INT8 KV cache. Strata is v0.1.41. These results use optimized experimental builds, not the installer-default engine; [builds and full results](evidence/all-speed-results-20261011/RESULTS.md).
 
-## 1. Claude Code pelican showcase
-
-The same **GSQ-RCO IQ2_XS** model completed this exact task through **Claude Code 2.1.290**, using either the pinned upstream engine or Strata-Turbo-Single:
+### Pelican animation · Claude Code
 
 > Create a self-contained HTML file with a 2D SVG animation of a pelican riding a bicycle.
 
-Both engines used one NVIDIA L40S on GPU 0, native context, `--effort max` (mapped to the backend's highest `xhigh` reasoning level), and **65,536 output tokens per model call**. Thinking and final output share that budget; no separate thinking limit was imposed. Each trial started with an empty workspace and a fresh service/session.
+Claude Code 2.1.290, `max` effort, identical task and tool permissions, two fresh sessions per model. Times include thinking and tool use; DeepSeek also includes API network time. Local model loading is excluded.
 
-| Upstream (shared tuning) — first trial | Strata-Turbo-Single — first trial |
-|:---:|:---:|
-| <img src="docs/showcase/pelican-corrected/official-1/pelican.gif" width="400" alt="Upstream model-generated pelican animation"> | <img src="docs/showcase/pelican-corrected/turbo-1/pelican.gif" width="400" alt="Turbo model-generated pelican animation"> |
-| **240.2 s** · [Original HTML](docs/showcase/pelican-corrected/official-1/pelican.html) | **211.5 s** · [Original HTML](docs/showcase/pelican-corrected/turbo-1/pelican.html) |
+| | DeepSeek V4.1 Flash + Claude Code | IQ2_XS + Strata-Turbo-Single + Claude Code |
+|---|---|---|
+| First-trial animation | ![DeepSeek pelican animation](docs/showcase/deepseek-pelican-20261011/deepseek-1/pelican.gif) | ![IQ2_XS pelican animation](docs/showcase/pelican-latest-20261011/turbo-1/pelican.gif) |
+| Original HTML | [Trial 1](docs/showcase/deepseek-pelican-20261011/deepseek-1/pelican.html) · [Trial 2](docs/showcase/deepseek-pelican-20261011/deepseek-2/pelican.html) | [Trial 1](docs/showcase/pelican-latest-20261011/turbo-1/pelican.html) · [Trial 2](docs/showcase/pelican-latest-20261011/turbo-2/pelican.html) |
 
-| Engine | Trial 1 | Trial 2 | Median completion time | Model calls, trials 1 / 2 | Reported output tokens, trials 1 / 2 |
-|---|---:|---:|---:|---:|---:|
-| Upstream (shared tuning) | 240.2 s | 241.3 s | **240.7 s** | 11 / 7 | 44,421 / 45,386 |
-| Strata-Turbo-Single | 211.5 s | 220.0 s | **215.8 s** | 5 / 10 | 45,548 / 45,080 |
+| Model and engine | Trial 1 (s) | Trial 2 (s) | Median (s) |
+|---|---:|---:|---:|
+| DeepSeek V4.1 Flash API | 333.3 | 181.6 | **257.5** |
+| IQ2_XS · Strata-Turbo-Single | 180.2 | 120.2 | **150.2** |
 
-In this four-trial **ABBA** test, Turbo's median task time was **10.4% lower**. Timing includes CLI startup, thinking, generation, tool calls, and retries through successful completion. Model loading and the identical 64-token warm-up are excluded. The initial requests and their actual rendered prompt hashes match across all four trials. [Prompt parity evidence](evidence/pelican-corrected/pelican-summary.json).
+IQ2_XS completed the task in **41.7% less median time** in these trials. All four outputs are self-contained, playable SVG animations. Different models generated different amounts of output; this is task completion time, not a pure engine-speed or quality score. [View all four animations](docs/showcase/pelican-comparison-20261011.html) · [DeepSeek results](evidence/deepseek-pelican-20261011/REPORT.md) · [IQ2_XS results](evidence/pelican-latest-20261011/pelican-summary.json).
 
-These are two trials per engine. Output lengths and tool paths differ, so the completion-time ratio is not a pure decoder speedup or a model-quality score. All four original HTML files are preserved without editing. Chromium checks confirm animated SVG content and no requested external dependencies; GIFs show the first six seconds at 20 fps.
+### Decode · tokens/s
 
-View every result in the [four-trial gallery](docs/showcase/pelican-corrected/index.html), or open the second-trial originals: [upstream](docs/showcase/pelican-corrected/official-2/pelican.html), [Turbo](docs/showcase/pelican-corrected/turbo-2/pelican.html). Download HTML files and open them locally; GitHub displays their source. [Timing and API evidence](evidence/pelican-corrected/pelican-summary.json) · [Render checks](docs/showcase/pelican-corrected/render-checks.json).
+Higher is faster. Single request, thinking off, median of two 512-token outputs per cell. Columns show background context tokens; task instructions add a small overhead. Prefix caching is enabled.
 
-<details>
-<summary>Historical campaign and subsequent input correction</summary>
+**English prose**
 
-The earlier campaign measured 128.2 s upstream and 148.9 s Turbo. Its rendered initial prompts differed by one token (1,226 versus 1,227), despite matching HTTP request bodies. It does not isolate the engine difference. [Historical animations and all timings](docs/showcase/pelican/index.html) remain available. The corrected showcase above uses the incumbent numerical engine plus the adapter repair; it is not a new kernel result. Absolute times across these campaigns are not paired measurements.
-
-</details>
-
-## 2. Throughput across tasks, context, and concurrency
-
-The following measurements use the **v0.2.2 release presets**, one **L40S on GPU 0**, and the same selected weights within each engine pair. The comparator is pinned Strata commit [`fb58e0d`](https://github.com/Niko1221/Strata/tree/fb58e0dbc8399662c0e47c76578c6e878b14f6cf), with its original numerical kernels and the common native media reader. It is a reproducible pinned baseline, not a claim about every subsequent upstream release.
-
-The host uses **AMD EPYC 9754 CPUs and approximately 1 TB RAM**; the preset selects **32 CPU workers** on GPU 0's NUMA node. This engine also uses host memory and CPU resources, so the absolute rates are specific to the whole machine, not the GPU alone.
-
-**Comparator labels matter:** the decode, prefill and original concurrency charts below use **upstream with shared resource tuning**: both arms receive our 32-worker setting, KV residency budget and VRAM reserve. They measure the remaining engine/preset advantage after sharing that tuning. They are not measurements against untouched upstream resource defaults. A separate resource comparison reports default workers, 32,768 resident KV tokens and a 700 MiB reserve explicitly; it does not attribute resource-policy gains to a new numerical algorithm.
-
-### Decode: task type × input length
-
-Summary values below are arithmetic means of the three task medians, in **decode tokens/s**; the plots retain every task and input-length point.
-
-<!-- BEGIN DECODE SUMMARY TABLE -->
-
-| Weight | Short shared-upstream / Turbo | Short change | ~254k shared-upstream / Turbo | Long change |
-|---|---:|---:|---:|---:|
-| IQ2_XS | 197.7 / 218.4 | +10.5% | 160.8 / 192.9 | +19.9% |
-| Swift IQ3_XXS | 157.5 / 176.3 | +12.0% | 140.5 / 168.8 | +20.2% |
-| IQ3_S | 142.2 / 158.9 | +11.8% | 131.7 / 159.8 | +21.3% |
-
-<!-- END DECODE SUMMARY TABLE -->
-
-Each chart contains English prose, Python code, and Chinese prose. The x-axis is the **actual input length**, not the configured context limit; both engines retain the **262,144-token** cap. Each point is the median of two **512-token** outputs, with their observed minimum–maximum range shaded. Thinking is disabled and temperature is zero. Every plotted response is checked to contain all 512 requested tokens; the cores do not implement the request's `ignore_eos` hint. These charts measure the **output stage only**, excluding prefill.
-
-![IQ2_XS decode speed by task and input length](docs/figures/decode-iq2_xs.svg)
-
-![Swift IQ3_XXS decode speed by task and input length](docs/figures/decode-swift.svg)
-
-![IQ3_S decode speed by task and input length](docs/figures/decode-iq3_s.svg)
-
-KV prefix caching is enabled. Each input size starts cold; subsequent task/repeat requests can reuse prefixes. Generated answers are not cached. The two outputs share a service lifetime; their range is not a confidence interval. Gains vary by task and context, and some points regress. The highest-reasoning agent test above is deliberately separate from these fixed-length throughput tests.
-
-### Prefill: three weights × two engines
-
-Prefill is measured from the **first cold English request at each input size**, with **zero cached tokens**. The plot shows the approximately 254k-token input; the table includes smaller inputs. This is one observation per configuration and length.
-
-![Cold prefill throughput for all six configurations](docs/figures/prefill-six-configurations.svg)
-
-<!-- BEGIN PREFILL TABLE -->
-
-| Weight | Engine | ~8k tokens/s | ~64k tokens/s | ~254k tokens/s | ~254k prefill time |
+| Weight | Engine | Short | 8,192 | 65,536 | 253,952 |
 |---|---|---:|---:|---:|---:|
-| IQ2_XS | Upstream (shared tuning) | 3,617 | 4,406 | 4,096 | 62.0 s |
-| IQ2_XS | Strata-Turbo-Single | 3,616 | 4,257 | 3,988 | 63.7 s |
-| Swift IQ3_XXS | Upstream (shared tuning) | 3,660 | 4,458 | 4,131 | 61.5 s |
-| Swift IQ3_XXS | Strata-Turbo-Single | 3,347 | 4,061 | 3,726 | 68.2 s |
-| IQ3_S | Upstream (shared tuning) | 3,403 | 4,329 | 4,032 | 63.0 s |
-| IQ3_S | Strata-Turbo-Single | 3,130 | 3,940 | 3,642 | 69.7 s |
+| IQ2_XS | Strata | 189.7 | 179.4 | 168.1 | 151.3 |
+| IQ2_XS | Strata-Turbo-Single | 210.1 | 202.6 | 199.8 | 178.1 |
+| Swift IQ3_XXS | Strata | 145.1 | 145.2 | 148.3 | 129.9 |
+| Swift IQ3_XXS | Strata-Turbo-Single | 155.9 | 161.4 | 167.1 | 151.3 |
+| IQ3_S | Strata | 135.9 | 133.4 | 134.7 | 126.2 |
+| IQ3_S | Strata-Turbo-Single | 147.9 | 151.4 | 142.3 | 154.8 |
 
-<!-- END PREFILL TABLE -->
+**Python code**
 
-#### Prefill follow-up (experimental source build)
+| Weight | Engine | Short | 8,192 | 65,536 | 253,952 |
+|---|---|---:|---:|---:|---:|
+| IQ2_XS | Strata | 231.6 | 215.9 | 223.0 | 194.0 |
+| IQ2_XS | Strata-Turbo-Single | 276.2 | 265.5 | 252.1 | 247.8 |
+| Swift IQ3_XXS | Strata | 188.6 | 191.8 | 173.4 | 169.4 |
+| Swift IQ3_XXS | Strata-Turbo-Single | 228.1 | 223.1 | 226.1 | 220.2 |
+| IQ3_S | Strata | 171.0 | 168.0 | 165.8 | 159.0 |
+| IQ3_S | Strata-Turbo-Single | 175.3 | 177.1 | 180.4 | 187.8 |
 
-A default-off source implementation now batches the full-history sparse
-drafter's KV/index construction. Combined with upstream fused expert prefill,
-it passed a separate official/candidate/candidate/official comparison on all
-three weights, including native-window retrieval and image/video/tools checks.
+**Chinese prose**
 
-| Weight | 31,566-token prefill throughput gain | 256,013-token prefill throughput gain | Native request time reduction |
-|---|---:|---:|---:|
-| IQ2_XS | +7.68% | +8.89% | 8.22% |
-| Swift IQ3_XXS | +7.24% | +3.18% | 2.51% |
-| IQ3_S | +7.90% | +3.76% | 3.40% |
+| Weight | Engine | Short | 8,192 | 65,536 | 253,952 |
+|---|---|---:|---:|---:|---:|
+| IQ2_XS | Strata | 172.1 | 160.8 | 166.6 | 141.8 |
+| IQ2_XS | Strata-Turbo-Single | 172.1 | 188.4 | 179.2 | 167.2 |
+| Swift IQ3_XXS | Strata | 139.9 | 140.9 | 137.0 | 123.7 |
+| Swift IQ3_XXS | Strata-Turbo-Single | 144.7 | 153.6 | 146.8 | 149.2 |
+| IQ3_S | Strata | 120.9 | 120.2 | 121.1 | 113.7 |
+| IQ3_S | Strata-Turbo-Single | 129.3 | 128.9 | 132.4 | 126.2 |
 
-These are two independent service starts per arm on the same L40S, with shared
-resource tuning, native context, INT8 KV, thinking and prompt caching disabled.
-This follow-up uses different prompts from the release curves above and does
-not replace them. It is not yet the installed default. Sparse draft batching is
-our change; expert fusion is upstream reuse. Cross-hardware speed and broad
-intelligence equivalence remain unverified. [Source/build instructions and full
-report](experimental/sparse-draft-prefill/REPORT.md) include the retained
-compiler-overlapped pilot and failed concurrency candidate.
+### Prefill · tokens/s
 
-### Concurrent requests: 1, 2, 4, and 6
+Higher is faster. Cold prompts, no prefix-cache hits; mean of two fresh single-request starts.
 
-![Concurrent aggregate throughput of upstream and Turbo](docs/figures/concurrent-throughput.svg)
+| Weight | Engine | 31,566 input tokens | 256,013 input tokens |
+|---|---|---:|---:|
+| IQ2_XS | Strata | 4627 | 4231 |
+| IQ2_XS | Strata-Turbo-Single | 4962 | 4583 |
+| Swift IQ3_XXS | Strata | 4625 | 4256 |
+| Swift IQ3_XXS | Strata-Turbo-Single | 4956 | 4373 |
+| IQ3_S | Strata | 4535 | 4155 |
+| IQ3_S | Strata-Turbo-Single | 4860 | 4270 |
 
-<!-- BEGIN CONCURRENCY TABLE -->
+### Concurrent requests · total tokens/s
 
-| Weight | Engine | 1 request | 2 requests | 4 requests | 6 requests | 6-slot median request decode |
-|---|---|---:|---:|---:|---:|---:|
-| IQ2_XS | Upstream (shared tuning) | 165.5 | 134.0 | 163.3 | 183.3 | 36.0 |
-| IQ2_XS | Strata-Turbo-Single | 183.6 | 161.5 | 175.6 | 172.9 | 35.0 |
-| Swift IQ3_XXS | Upstream (shared tuning) | 133.6 | 104.1 | 137.5 | 153.0 | 29.5 |
-| Swift IQ3_XXS | Strata-Turbo-Single | 146.2 | 122.0 | 143.3 | 144.4 | 29.1 |
-| IQ3_S | Upstream (shared tuning) | 118.9 | 89.5 | 115.1 | 125.7 | 24.1 |
-| IQ3_S | Strata-Turbo-Single | 127.3 | 105.5 | 121.5 | 121.8 | 23.6 |
+Higher is faster. Total output across all requests divided by elapsed time, including prefill and scheduling. Each request generates 256 tokens; thinking and prefix caching are off. Mean of two independent service starts, three task waves per start. These are not concurrent full-context requests.
 
-<!-- END CONCURRENCY TABLE -->
+| Weight | Engine | 1 request | 2 requests | 4 requests | 6 requests |
+|---|---|---:|---:|---:|---:|
+| IQ2_XS | Strata | 165.1 | 134.7 | 164.0 | 183.7 |
+| IQ2_XS | Strata-Turbo-Single | 183.0 | 149.1 | 186.9 | 211.8 |
+| Swift IQ3_XXS | Strata | 129.6 | 104.1 | 135.2 | 151.1 |
+| Swift IQ3_XXS | Strata-Turbo-Single | 142.8 | 113.1 | 150.2 | 172.4 |
+| IQ3_S | Strata | 119.5 | 90.1 | 114.4 | 125.3 |
+| IQ3_S | Strata-Turbo-Single | 127.8 | 96.0 | 124.2 | 136.8 |
 
-The slot-count columns report **aggregate end-to-end output tokens/s**: total output divided by total batch wall time, including prefill and admission. The last column reports individual request decode tokens/s at six slots, excluding prefill. Each setting runs three simultaneous batches of mixed English/code/Chinese tasks, **256 output tokens per request**, with thinking and prefix caching disabled. Increasing the slot count does not guarantee increasing throughput.
+[Download tables and raw measurements](evidence/all-speed-results-20261011/RESULTS.md) · [Decode protocol](evidence/readme-latest-curves-20261011/summary.json) · [Prefill and concurrency protocol](evidence/readme-full-matrix-20261011/REPORT.md)
 
-The concurrent Turbo preset uses upstream native shared batching with **batch MTP** enabled; it shares one model copy. The single-request preset uses the custom Turbo engine. These plots compare the two candidate execution presets before the installer's selection gate. Setup can select the shared-tuning upstream preset when it is faster locally. Six near-full-window simultaneous sessions have not been validated.
+---
 
-#### Batch state-transfer follow-up (experimental)
-
-Removing redundant recurrent-state replay and host roundtrips during slot
-admission/restoration improved six-way aggregate end-to-end throughput:
-
-| Weight | Upstream, shared resources | Candidate | Change |
-|---|---:|---:|---:|
-| IQ2_XS | 184.25 | 213.10 | **+15.66%** |
-| IQ3_S | 125.72 | 139.76 | **+11.17%** |
-| Swift IQ3_XXS | Incomplete | Not qualified | Upstream video check failed |
-
-Rates are **aggregate end-to-end output tokens/s**, not single-request decode.
-For IQ2_XS, median first-content latency fell from 1.01 to 0.74 seconds and
-median completion time from 8.09 to 6.97 seconds in the same workload.
-
-Each completed model uses held-out official/candidate/candidate/official fresh
-starts, identical resources, 256 output tokens per request and the native context
-cap. Both arms disable batch MTP. All complete starts passed isolation,
-image/video/tools, 32k retrieval and 256013-token native retrieval checks.
-Native retrieval is a capability check, not six-way full-context throughput.
-The release batch-MTP charts above use a different mode. This default-off source
-prototype has not replaced the installed engine. Only L40S has been measured.
-[Mechanism, reproduction and limits](experimental/direct-slot-state/REPORT.md) ·
-[Raw evidence and summary](evidence/direct-slot-state-20261011/summary.json) ·
-[Singleton-commit ablation](experimental/batch-self-commit/REPORT.md).
-
-### Default resources versus shared tuning
-
-The original curves above already share our resource tuning with upstream. This separate **two-request** comparison splits the resource-policy benefit from the remaining batch-MTP benefit. All three arms use the **same pinned numerical executable**, target weight and native context within each model pair, with two independent service starts per arm in balanced order. Rates include prefill and admission.
-
-![Default upstream resources, shared tuning and the Turbo preset](docs/figures/resource-comparison.svg)
-
-<!-- BEGIN RESOURCE COMPARISON TABLE -->
-
-| Weight | Default resources | Shared tuning | Turbo preset | vs defaults | vs shared tuning |
-|---|---:|---:|---:|---:|---:|
-| IQ2_XS | 133.5 | 135.5 | 159.2 | **+19.2%** | +17.4% |
-| Swift IQ3_XXS | 64.2 | 105.0 | 124.1 | **+93.4%** | +18.3% |
-| IQ3_S | 51.2 | 90.8 | 105.2 | **+105.5%** | +15.9% |
-
-<!-- END RESOURCE COMPARISON TABLE -->
-
-Default resources use automatic expert-worker selection, a 32,768 resident-KV budget and a 700 MiB reserve. Shared tuning uses 32 workers, a 16,384 budget and a 1,400 MiB reserve; Turbo additionally enables upstream's existing batch MTP. GPU/NUMA placement and the native API/media adapter are controlled across arms, so this is a resource ablation rather than an untouched installation test. The large default-to-Turbo differences include resource tuning. [Exact policies and reproduction](docs/resource-comparison.md) · [All measurements](evidence/resource-comparison/summary.json).
-
-The final scheduling/kernel follow-up found packed proposals slower, grouped GDN under 1% faster, and adaptive paired verification slower at six slots. These candidates are archived and the **v0.2.2 numerical engine remains unchanged**. [Complete follow-up evidence](evidence/concurrency-followup/summary.json) · [Source patches and decisions](experimental/packed-batch/README.md).
-
-All measurements, prompts, configuration, binary hashes, and limitations are in the [benchmark methodology](docs/benchmark-methodology.md), [summary](evidence/showcase/benchmark-summary.json), and [raw runs](evidence/showcase/raw). Figures are reproducible with [the plotting script](docs/figures/scripts/plot_showcase.py). These L40S observations do not establish performance on other hardware.
-
-### What changed in the engine
-
-The release combines tuned quantized kernels, execution/cache settings, verified speculative decoding, and model-specific presets. IQ2_XS uses temporary expert-cache loans for prefill chunks up to 16k tokens, then restores the residency table before decode. Swift restores and holds its original cache profile for native media requests, while retaining text adaptation. Target weights, context, and KV precision are unchanged. See [prefill changes](docs/prefill-upgrade.md), [Swift media repair](docs/swift-video-fix.md), and [three-weight tuning](docs/three-weight-tuning.md). No new decoding algorithm or universal SOTA claim is made.
-
-## 3. Install and run
+## Install and run
 
 On **Linux x86_64** with an AVX2 CPU and one NVIDIA GPU:
 
@@ -193,7 +101,7 @@ cd strata-turbo-single
 ./setup.sh
 ```
 
-Choose a weight when prompted. Setup detects an available GPU, prepares a private Python environment, builds the engines when binaries are absent, downloads the selected weights and auxiliary assets, and runs a local comparison before starting the API. Downloads resume when setup is repeated. A source build requires a CUDA Toolkit; setup uses the pinned upstream Linux build-tool helper where supported.
+Choose a weight when prompted. Setup detects an available GPU, prepares a private Python environment, builds the engines when binaries are absent, downloads the selected weights and auxiliary assets, and runs a local comparison before starting the API. Downloads resume when setup is repeated. A source build requires a CUDA Toolkit; setup uses the pinned Strata Linux build-tool helper where supported.
 
 | Setup weight | Main GGUF size (decimal GB) | Intended tradeoff |
 |---|---:|---|
@@ -250,7 +158,7 @@ Replace `local` with the configured API key when authentication is enabled, and 
 
 Resource planning accounts for free VRAM, RAM, CPU affinity, NUMA, and container limits. Smaller GPUs can run the vision encoder on the CPU; low-RAM mode maps experts from disk. The selected GGUF's experts remain available. Context is fixed at the native limit. Insufficient resources cause an explicit error. NVIDIA compute capability **7.5+** is targeted, but performance here is validated only on L40S; native Windows and AMD are not qualified. NVIDIA-enabled WSL2 is an alternative with its own runtime policy.
 
-Turbo is selected after a local ABBA comparison confirms at least **3% aggregate improvement**, no tested output-family regression over **3%**, prefill regression no greater than **10%**, and capability checks. Otherwise setup uses the upstream numerical engine with the native media adapter. Changing hardware, assets, flags, or binaries invalidates that comparison. Qualification covers its specific workloads; the broader charts above can still show regressions.
+Turbo is selected after a local ABBA comparison confirms at least **3% aggregate improvement**, no tested output-family regression over **3%**, prefill regression no greater than **10%**, and capability checks. Otherwise setup uses the Strata numerical engine with the native media adapter. Changing hardware, assets, flags, or binaries invalidates that comparison. Qualification covers its specific workloads; performance varies by workload.
 
 See [distribution details](docs/distribution.md), [building and assets](docs/build-and-assets.md), and [release verification](docs/distribution-verification.md). To rebuild and create local source/runtime archives:
 
