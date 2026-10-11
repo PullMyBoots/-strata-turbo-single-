@@ -34,7 +34,7 @@ def main():
     server = ThreadingHTTPServer(('127.0.0.1', 0), handler)
     threading.Thread(target=server.serve_forever, daemon=True).start()
     runs = json.loads((source / 'results.json').read_text())['runs']
-    counts = {'official': 0, 'turbo': 0}
+    counts = {row['arm']: 0 for row in runs}
     checks = []
     subprocess.run(cli + ['open', f'http://127.0.0.1:{server.server_port}/'], cwd=root, check=True,
                    stdout=(frames_dir / 'open.txt').open('w'))

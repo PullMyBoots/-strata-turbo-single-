@@ -1,0 +1,218 @@
+{
+  "task": "Create a self-contained HTML file with a 2D SVG animation of a pelican riding a bicycle.",
+  "model": "deepseek-flash",
+  "model_family": "DeepSeek-V4.1-Flash",
+  "effort": "max",
+  "output_limit_per_request": 65536,
+  "claude_version": "2.1.290 (Claude Code)",
+  "temperature_requested": 0,
+  "temperature_effective": "Ignored in DeepSeek thinking mode per provider documentation",
+  "seed": "Not controlled by this provider API",
+  "network_included": true,
+  "runs": [
+    {
+      "index": 0,
+      "arm": "deepseek",
+      "wall_s": 333.3029220860917,
+      "exit_code": 0,
+      "html_svg_exists": true,
+      "claude_result": {
+        "duration_api_ms": 331885,
+        "stop_reason": "end_turn",
+        "session_id": "92e770e5-28e6-4a89-94f9-1a86806df878",
+        "total_cost_usd": 1.9460359999999999,
+        "usage": {
+          "input_tokens": 9914,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 1459200,
+          "output_tokens": 80727,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "",
+          "iterations": [],
+          "speed": "standard",
+          "fallback_credit": null
+        },
+        "modelUsage": {
+          "deepseek-flash[1m]": {
+            "inputTokens": 9914,
+            "outputTokens": 80727,
+            "cacheReadInputTokens": 1459200,
+            "cacheCreationInputTokens": 0,
+            "webSearchRequests": 0,
+            "costUSD": 1.9460359999999999,
+            "contextWindow": 1000000,
+            "maxOutputTokens": 32000,
+            "thinkingTokens": 0,
+            "canonicalModel": "deepseek-flash[1m]",
+            "provider": "firstParty",
+            "costBasis": "unknown"
+          }
+        },
+        "permission_denials": [],
+        "terminal_reason": "completed",
+        "fast_mode_state": "off",
+        "fast_mode_disabled_reason": "sdk_opt_in_required",
+        "subagent_stats": {
+          "spawned": 0,
+          "requested": {
+            "background": 0,
+            "foreground": 0,
+            "unset": 0
+          },
+          "started_in_background": 0,
+          "max_depth": 0,
+          "spawned_by_subagents": 0,
+          "completed": 0,
+          "failed": 0,
+          "killed": {
+            "parent": 0,
+            "user": 0,
+            "system": 0
+          },
+          "refused": {
+            "depth_limit": 0,
+            "concurrency_limit": 0,
+            "budget": 0
+          },
+          "by_type": {}
+        },
+        "is_error": false,
+        "num_turns": 21,
+        "subtype": "success",
+        "api_error_status": null,
+        "result": "Saved `pelican.html` (27 KB, single file, zero external resources) in the current directory.\n\n## What's in it\n\n**The rider** \u2014 a white pelican with a long orange pouch beak, an eye with a glint, feathery crest, tail fan, and a red scarf trailing in the wind. It sits on the saddle gripping the drop handlebars with a wing.\n\n**The bicycle** \u2014 red-tubed frame, chrome fork/seat post/stem, spoked wheels, chainring with teeth, a chain, and offset cranks with flat pedals.\n\n**How the motion works**\n- **Pedalling is real kinematics, not a looped sprite**: each frame the pedal position is placed on the crank circle, then a two-bone IK solver finds the knee (always bending forward), so the thigh and shin stretch and compress correctly through the stroke. The near and far legs run exactly \u03c0 out of phase.\n- Feet stay locked to the pedals as they orbit; pedals counter-rotate so they stay level; the chain crawls along its dashes at the same rate as the chainring's surface speed.\n- The rider bobs and tilts twice per revolution, the head nods, the pouch squashes and springs, the tail and wing flick, driven by the same pedal phase.\n- **Parallax world scroll**: clouds and birds, two hill ridges, roadside trees, grass tufts, and lane markings each travel at their own speed. Every layer is built as a mathematically seamless 900-px tile, so it wraps with no visible seam.\n- CSS handles the ambient bits (sun rays rotating, dust puffs, speed streaks, scarf and crest flutter), and there's a `prefers-reduced-motion` path that freezes to a single still pose.\n\n## Verification performed\n- SVG parses as strict XML (150 elements, 55 ids); all `url(#\u2026)` paints, CSS id selectors, and every id the script looks up resolve.\n- Extracted the inline JavaScript and syntax-checked it, then **executed the real script against a stub DOM for 301 frames**: leg segments stayed rigid to within 0.5 px of their bone lengths, feet stayed exactly on the pedals, pedals stayed on the 30-px crank circle and never dipped below the road, and all parallax offsets stayed inside the wrap window. Result: no problems.\n- Confirmed the generated background art covers two full 900-px periods and that the hill curves are exactly periodic at their tile edges.\n\nJust open the file in a browser to see it ride.",
+        "ttft_ms": 218027,
+        "type": "result",
+        "duration_ms": 332932,
+        "uuid": "b77cfe7f-8c56-4915-9f41-a1974ea957de",
+        "ttft_stream_ms": 1560,
+        "time_to_request_ms": 51,
+        "first_content_frame_ms": 1561,
+        "queued_turn_count": 0,
+        "result_index": 0
+      },
+      "api_requests": 21,
+      "html_sha256": "0b05d3c529fccf69cdda29a3939d55c78507bec8eba1b1282882475e5c0116b8",
+      "model_calls": 21,
+      "output_tokens": 80727
+    },
+    {
+      "index": 1,
+      "arm": "deepseek",
+      "wall_s": 181.63999770302325,
+      "exit_code": 0,
+      "html_svg_exists": true,
+      "claude_result": {
+        "duration_api_ms": 181093,
+        "stop_reason": "end_turn",
+        "session_id": "53e2657c-72fb-40b9-a227-44f944846c7b",
+        "total_cost_usd": 0.938304,
+        "usage": {
+          "input_tokens": 1790,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 136320,
+          "output_tokens": 45194,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "",
+          "iterations": [],
+          "speed": "standard",
+          "fallback_credit": null
+        },
+        "modelUsage": {
+          "deepseek-flash[1m]": {
+            "inputTokens": 1790,
+            "outputTokens": 45194,
+            "cacheReadInputTokens": 136320,
+            "cacheCreationInputTokens": 0,
+            "webSearchRequests": 0,
+            "costUSD": 0.938304,
+            "contextWindow": 1000000,
+            "maxOutputTokens": 32000,
+            "thinkingTokens": 0,
+            "canonicalModel": "deepseek-flash[1m]",
+            "provider": "firstParty",
+            "costBasis": "unknown"
+          }
+        },
+        "permission_denials": [],
+        "terminal_reason": "completed",
+        "fast_mode_state": "off",
+        "fast_mode_disabled_reason": "sdk_opt_in_required",
+        "subagent_stats": {
+          "spawned": 0,
+          "requested": {
+            "background": 0,
+            "foreground": 0,
+            "unset": 0
+          },
+          "started_in_background": 0,
+          "max_depth": 0,
+          "spawned_by_subagents": 0,
+          "completed": 0,
+          "failed": 0,
+          "killed": {
+            "parent": 0,
+            "user": 0,
+            "system": 0
+          },
+          "refused": {
+            "depth_limit": 0,
+            "concurrency_limit": 0,
+            "budget": 0
+          },
+          "by_type": {}
+        },
+        "is_error": false,
+        "num_turns": 4,
+        "subtype": "success",
+        "api_error_status": null,
+        "result": "Saved `pelican.html` in the current directory (20 KB, no external assets).\n\n**What's in it:**\n\n*The rig (pure SVG, no libraries)*\n- **Bicycle** \u2014 red frame with chainstay/seat/top/down tubes, fork, saddle, curved handlebar, chainring + cog with a dashed chain, and two spoked wheels (r=61) whose spoke groups are rotated each frame with an orange valve dot so the spin reads clearly.\n- **Pelican** \u2014 cream body with belly shading, bobbing neck/head group, long orange mandibles with a sagging pouch, crest feather, eye highlight, a blue fish tail poking out of the beak tip, tail that wags, a far wing that flaps, and one long wing reaching forward to rest on the handlebar grip.\n\n*Animation (requestAnimationFrame with delta-time, so it's frame-rate independent)*\n- Cranks rotate at ~52 rpm; a **two-bone inverse-kinematics solver** puts a bent-forward knee between each hip and its pedal, so the legs pedal convincingly. Near/far legs are 180\u00b0 out of phase, with the far leg and pedal drawn behind the frame.\n- Parallax world scroll: road dashes (150 px tile), treeline (960 px tile), rolling hills, drifting clouds, and flapping distant birds \u2014 all wrapping seamlessly.\n- Dirt puffs kicked up behind the rear wheel from a recycled particle pool, plus faint wind streaks for speed.\n\n*Self-contained & robust:* everything is inline, the SVG scales to the viewport, and `dt` is clamped so the animation doesn't jump after a background tab. Verified the SVG parses as well-formed XML, every JS-referenced ID exists, and the script passes a syntax check. Open it in any modern browser.",
+        "ttft_ms": 152181,
+        "type": "result",
+        "duration_ms": 181303,
+        "uuid": "06e11de4-8140-4a48-9bd1-3dcabe153823",
+        "ttft_stream_ms": 341,
+        "time_to_request_ms": 47,
+        "first_content_frame_ms": 342,
+        "queued_turn_count": 0,
+        "result_index": 0
+      },
+      "api_requests": 4,
+      "html_sha256": "01c72467c34e987daf785287639b624ce18109109a9d542cdf451c9666050847",
+      "model_calls": 4,
+      "output_tokens": 45194
+    }
+  ],
+  "median_s": 257.4714598945575,
+  "first_requests_match_except_metadata": true,
+  "response_models": [
+    "deepseek-flash"
+  ],
+  "complete": true,
+  "documentation": [
+    "https://api-docs.deepseek.com/guides/coding_agents/",
+    "https://api-docs.deepseek.com/guides/thinking_mode/"
+  ]
+}
