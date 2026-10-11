@@ -8,13 +8,17 @@ import qualify_distribution as q
 from benchmark_showcase import TASKS,measure
 from showcase_lock import acquire
 
-p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);p.add_argument('--exe',type=Path);p.add_argument('--fixed',action='store_true');p.add_argument('--no-adapt',action='store_true');p.add_argument('--regression',action='store_true');a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);p.add_argument('--exe',type=Path);p.add_argument('--fixed',action='store_true');p.add_argument('--no-adapt',action='store_true');p.add_argument('--regression',action='store_true');p.add_argument('--reserve-mib',type=int);p.add_argument('--trace',action='store_true');p.add_argument('--vision-min-tokens',type=int);a=p.parse_args()
 with acquire():
  hw=d.detect('0');cfg=d.build_config(d.ROOT/'assets',hw,'swift',d.resource_plan(hw,'swift',6),arm='official')
  cfg['args']=d.set_arg(cfg['args'],'--prompt-cache','0')
  if a.exe:
   cfg['exe']=str(a.exe.absolute());cfg['env'].update(STRATA_BATCH_SELF_COMMIT='1',STRATA_DIRECT_SLOT_STATE='1')
  if a.fixed:cfg['env']['STRATA_MEDIA_FIXED_PROFILE']='1'
+ if a.reserve_mib:cfg['args']=d.set_arg(cfg['args'],'--vram-reserve-mib',str(a.reserve_mib))
+ if a.trace:cfg['env']['STRATA_MEDIA_TRACE_DIR']=str(a.output.absolute()/'media-trace')
+ if a.vision_min_tokens is not None:
+  cfg['vision']['min_tokens']=a.vision_min_tokens
  if a.no_adapt:cfg['args']=d.set_arg(cfg['args'],'--adapt-every','0')
  def run(url,config,folder):
   checks=[]

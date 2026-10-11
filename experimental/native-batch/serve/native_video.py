@@ -89,6 +89,11 @@ def native_prepare(svc, messages, tools, kwargs, max_new=None, force=None, req=N
                 Path(str(old_file)+".json").unlink(missing_ok=True)
         output, meta = cached
         ids = list(meta["ids"])
+        trace = (getattr(svc.engine, "spawn", (None,)*5)[4] or {}).get("STRATA_MEDIA_TRACE_DIR")
+        if trace:
+            target = Path(trace); target.mkdir(parents=True, exist_ok=True)
+            (target / (key + ".json")).write_text(json.dumps(dict(prompt=prompt, decoded=svc.tok.decode(ids), meta=meta), ensure_ascii=False, indent=2))
+
         if force and kwargs.get("enable_thinking", True) is False:
             ids += svc.tok.encode(force, parse_special=True)
         room = svc.engine.max_context - server.CTX_SLACK - len(ids)

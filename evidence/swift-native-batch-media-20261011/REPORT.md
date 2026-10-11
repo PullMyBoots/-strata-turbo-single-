@@ -1,4 +1,6 @@
-# Swift native-batch video repair
+# Swift native-batch profile-only candidate
+
+**Superseded:** this candidate passed the bounded checks below but failed the later six-way matrix video check at a 2,048 MiB reserve. It is not a complete repair. Subsequent one-token verification and prompt-tail variants also failed. The selected intervention instead raises the minimum visual token budget, and passes with the unchanged Strata numerical engine.
 
 | Sequence | Strata | Fixed placement control | Request-scoped repair |
 |---|---|---|---|
@@ -9,7 +11,7 @@
 
 The repaired engine additionally passed three simultaneous RGB-video requests plus three independent text-identifier requests, a 256,013-token retrieval request, a video after that request, and another six-way mixed batch. All media use the real native video input path; the request does not disclose the expected color.
 
-## Cause and repair
+## Rejected hypothesis and prototype
 
 Adaptive expert placement makes Swift's video response sensitive to prior text execution. Disabling placement changes eliminates the failure in this sequence. Restoring the startup placement only for media also eliminates it, while keeping text adaptation enabled. CPU and GPU expert paths can round differently; this is a plausible explanation for placement sensitivity, not a proved per-logit diagnosis. No corrupted cache bytes were established by this experiment.
 

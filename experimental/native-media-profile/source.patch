@@ -23,10 +23,20 @@
                      a_last = a_win;
                      ++a_rounds;
                      a_t0 = Clock::now();
-@@ -9809,6 +9816,38 @@
+@@ -9422,7 +9429,7 @@
+             static const bool no_short = std::getenv("STRATA_CKPT_REREAD") != nullptr;
+             int64_t req_short_read = o.short_read;   // STRATA_PIPELINE_SWITCH may set it per request (short_read=)
+             auto windows_ok = [&](int64_t a, int64_t b) -> bool {
+-                if (no_short || b - a > req_short_read) return false;
++                if ((geni && media_fixed_profile) || no_short || b - a > req_short_read) return false;
+                 if (sp.embd_rows != nullptr)
+                     for (int64_t i = a; i < b; ++i)
+                         if (sp.embd_rows[i] != nullptr) return false;
+@@ -9808,6 +9815,38 @@
+             if (!adapt_tick(true)) {   // --adapt-async: the round in flight lands before the prompt lends any slot
                  std::printf("ERR an adaptive refill failed\n");
                  return 1;
-             }
++            }
 +            media_profile_hold = media_fixed_profile && (geni ||
 +                std::any_of(bs.begin(), bs.end(), [](const BSlot& slot) { return slot.active && slot.img; }));
 +            auto media_target = media_residency;
@@ -58,10 +68,9 @@
 +                std::fill(drive.d.usage.begin(),drive.d.usage.end(),0.0f);
 +                std::fprintf(stderr,"strata serve: restored %lld media-profile slots in %.1f ms\n",
 +                    (long long)restored,std::chrono::duration<double,std::milli>(Clock::now()-restore_start).count());
-+            }
+             }
              // per-request sampling for the verify window's head (greedy when temperature is absent)
              strata::kernels::SamplerParams req_sp;
-             req_sp.greedy = req_temperature <= 0.0f;
 @@ -10242,7 +10281,7 @@
                      }
                      if (pl_adapt_thr.joinable()) return true;   // still adapting
@@ -71,6 +80,30 @@
                          !exch_wait) {
                          pl_adapt_done = false;
                          pl_adapt_thr = std::thread([&] { pl_adapt_ok = adapt(); pl_adapt_done = true; });
+@@ -10639,12 +10678,12 @@
+                     T = 1;
+                     while (T < S_mtp && dprob[(size_t) T - 1] >= (float) req_spec_min_p) ++T;
+                 }
+-                if (first_window) T = 1;
++                if (first_window || (geni && media_fixed_profile)) T = 1;
+                 // a repeat of earlier context (prompt lookup) where the MTP's own first guess agrees: the policy takes it
+                 // when its expected tokens per ms, from the measured acceptance and window costs, beat the MTP window's
+                 bool from_sfx = false;
+                 int sfx_match = 0;
+-                if (o.suffix_draft > 0 && !first_window) {
++                if (o.suffix_draft > 0 && !first_window && !(geni && media_fixed_profile)) {
+                     const int k = sfx.propose(S - 1, sbuf.data());
+                     sfx_match = sfx.last_match();
+                     if (k > 0 && (!use_mtp || sbuf[0] == drafts[0])) {
+@@ -10654,7 +10693,7 @@
+                 }
+                 // --lookup-chain: what followed an earlier occurrence of the context + the MTP's drafts, after them
+                 int chain_n = 0, cm = 0;
+-                if (o.lookup_chain > 0 && !first_window && !from_sfx && T < S) {
++                if (o.lookup_chain > 0 && !first_window && !from_sfx && T < S && !(geni && media_fixed_profile)) {
+                     int csrc = -1;
+                     const int nt = chain_tail(sfx, drafts.data(), T - 1, ctail);
+                     chain_n = strata::spec::propose_from_sources(lookup_src, ctail.data(), nt, T - 1,
 @@ -10741,7 +10780,7 @@
                  std::thread adapt_thr;   // the adaptive tier beside the commit and the draft (as in generate)
                  bool adapt_ok = true;

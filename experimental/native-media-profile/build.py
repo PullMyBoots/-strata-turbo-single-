@@ -52,6 +52,18 @@ restore='''            media_profile_hold = media_fixed_profile && (geni ||
 assert s.count(marker)==1;s=s.replace(marker,restore+marker)
 a='if (!drive.d.usage.empty() && !ajob && ((rounds + 1) % o.adapt_every) == 0)';assert s.count(a)==1;s=s.replace(a,a.replace('if (','if (!media_profile_hold && ',1))
 a='if (!drive.d.usage.empty() && o.adapt_every > 0 && (rounds % o.adapt_every) == 0 && pending.empty() &&';assert s.count(a)==1;s=s.replace(a,a.replace('if (','if (!media_profile_hold && ',1))
+# Media uses non-scalar positions; keep the established one-token verifier
+# policy from the custom single-session engine. Text speculation is unchanged.
+a='if (first_window) T = 1;';assert s.count(a)==2
+s=s.replace(a,'if (first_window || (geni && media_fixed_profile)) T = 1;',1)
+a='if (o.suffix_draft > 0 && !first_window) {';assert s.count(a)==2
+s=s.replace(a,'if (o.suffix_draft > 0 && !first_window && !(geni && media_fixed_profile)) {',1)
+a='if (o.lookup_chain > 0 && !first_window && !from_sfx && T < S) {';assert s.count(a)==1
+s=s.replace(a,'if (o.lookup_chain > 0 && !first_window && !from_sfx && T < S && !(geni && media_fixed_profile)) {')
+# Keep media prompt tails on the same prefill path as their visual prefix.
+a='                if (no_short || b - a > req_short_read) return false;'
+assert s.count(a)==1
+s=s.replace(a,'                if ((geni && media_fixed_profile) || no_short || b - a > req_short_read) return false;')
 src=OUT/'generate.cpp';src.write_text(s)
 (HERE/'source.patch').write_text(''.join(difflib.unified_diff(old.splitlines(True),s.splitlines(True),fromfile='a/generate.cpp',tofile='b/generate.cpp')))
 record=json.loads((BASE/'build.json').read_text());compile_cmd=next(c for c in record['commands'] if '-c' in c and str(BASE/'generate.cpp') in c)

@@ -691,6 +691,8 @@ class Vision:
             args.append("--gpu")
         if cfg.get("threads"):
             args += ["--threads", str(cfg["threads"])]
+        if cfg.get("min_tokens"):
+            args += ["--min-tokens", str(cfg["min_tokens"])]
         if cfg.get("max_tokens"):
             args += ["--max-tokens", str(cfg["max_tokens"])]
         if cfg.get("flash_attn"):

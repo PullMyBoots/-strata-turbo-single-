@@ -329,6 +329,9 @@ def build_config(assets, hw, weights, plan, arm='turbo', port=8090, host='127.0.
     cfg['vision']['exe'] = str(ROOT / portable['binaries']['vision']['path'])
     cfg['lib_dirs'] = lib_dirs()
     cfg['vision'].update(gpu=plan['vision_gpu'], threads=plan['workers'])
+    if weights == 'swift':
+        # Tiny native video frames need enough spatial samples for reliable recognition.
+        cfg['vision']['min_tokens'] = 128
     projector = Path(cfg['vision']['mmproj'])
     if not projector.exists():
         model_dir = Path(assets) / 'models' / single_gpu.WEIGHTS[weights][0]
@@ -391,7 +394,7 @@ def performance_options(cfg):
             'draft_vocab': cfg.get('draft_vocab'), 'server_module': cfg.get('server_module'),
             'parallel': cfg.get('parallel', 1), 'parallel_workers': cfg.get('parallel_workers', 1),
             'vision': {k: cfg['vision'].get(k) for k in
-                       ('gpu', 'threads', 'max_tokens', 'flash_attn', 'native_video')}}
+                       ('gpu', 'threads', 'min_tokens', 'max_tokens', 'flash_attn', 'native_video')}}
 
 
 def api_source_hashes(root=None):

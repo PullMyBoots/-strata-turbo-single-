@@ -154,6 +154,7 @@ class ConfigPolicy(unittest.TestCase):
                         self.assertEqual(cfg['args'][cfg['args'].index('--max-context') + 1], '262144')
                         self.assertEqual(cfg['args'][cfg['args'].index('--kv') + 1], 'int8')
                         self.assertEqual(cfg['vision']['native_video']['fps'], 8)
+                        self.assertEqual(cfg['vision'].get('min_tokens', 0), 128 if weights == 'swift' else 0)
                         self.assertEqual(cfg['deployment']['max_concurrent_requests'], count)
                         if count > 1:
                             self.assertEqual(cfg['parallel_workers'], 1)
