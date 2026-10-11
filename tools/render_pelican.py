@@ -25,7 +25,7 @@ def main():
     source = a.input.absolute()
     destination = a.output.absolute()
     destination.mkdir(parents=True, exist_ok=True)
-    frames_dir = root / 'output/playwright/pelican-readme'
+    frames_dir = root / 'output/playwright' / a.session
     frames_dir.mkdir(parents=True, exist_ok=True)
     wrapper = Path.home() / '.codex/skills/playwright/scripts/playwright_cli.sh'
     cli = ['bash', str(wrapper)] if wrapper.exists() else ['npx', '--yes', '--package', '@playwright/cli', 'playwright-cli']

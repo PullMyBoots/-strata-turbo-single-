@@ -1,0 +1,52 @@
+--- a/generate.cpp
++++ b/generate.cpp
+@@ -8375,6 +8375,11 @@
+         // one batch window over the active slots only (row t is the t-th active slot): an idle slot is not touched,
+         // so it keeps the conversation it holds
+         auto batch_step = [&]() -> bool {
++            // Keep draft state current, but spend verifier rows on all live
++            // targets when paired proposals would exclude some sessions.
++            static const bool adaptive = [] { const char* e=std::getenv("STRATA_BATCH_MTP_ADAPT"); return e && e[0]=='1'; }();
++            const size_t live = std::count_if(bs.begin(),bs.end(),[](const BSlot& s){return s.active;});
++            const bool paired = batch_mtp && !(adaptive && live > 4);
+             int S = 0;
+             int rows[strata::kernels::kVerifyMaxT] = {};
+             int32_t tok[strata::kernels::kVerifyMaxT] = {}, outb[strata::kernels::kVerifyMaxT] = {};
+@@ -8383,7 +8388,7 @@
+             static size_t next_slot = 0;
+             // Each MTP slot uses two rows; rotate slots when more than four are active.
+             int A = 0;
+-            for (size_t offset = 0; offset < bs.size() && S + (batch_mtp ? 2 : 1) <= strata::kernels::kVerifyMaxT; ++offset) {
++            for (size_t offset = 0; offset < bs.size() && S + (paired ? 2 : 1) <= strata::kernels::kVerifyMaxT; ++offset) {
+                 const int b = (int) ((next_slot + offset) % bs.size());
+                 if (bs[(size_t) b].active) {
+                     first[A] = S;
+@@ -8392,7 +8397,7 @@
+                     tok[S] = bs[(size_t) b].x;
+                     pos[S] = bs[(size_t) b].p;
+                     ++S;
+-                    if (batch_mtp) {
++                    if (paired) {
+                         rows[S] = b;
+                         if (!bs[(size_t) b].draft_ready) {
+                             err = "batch MTP: a live slot has no draft";
+@@ -8429,7 +8434,7 @@
+                 const int b = active[a], i = first[a];
+                 const BSlot& sl = bs[(size_t) b];
+                 const bool eos = std::find(o.eos_ids.begin(), o.eos_ids.end(), (int64_t) outb[i]) != o.eos_ids.end();
+-                keep[b] = batch_mtp && outb[i] == tok[i + 1] && !eos && !sl.stop &&
++                keep[b] = paired && outb[i] == tok[i + 1] && !eos && !sl.stop &&
+                           sl.produced + 2 <= sl.max_new && sl.p + 3 <= o.max_context ? 2 : 1;
+             }
+             if (!(batch_mtp ? ver.commit_slot_prefixes(keep.data(), err) : ver.commit_slots(err))) {
+@@ -8467,8 +8472,8 @@
+                     const size_t stride = (size_t) g.hc * (size_t) g.n_embd;
+                     if (cudaMemcpy(slot_mtp_rows[(size_t) b].get(),
+                                    ver.final_R_all() + (size_t) first[t] * stride,
+-                                   2 * stride * sizeof(float), cudaMemcpyDeviceToDevice) != cudaSuccess ||
+-                        !slot_mtp[(size_t) b]->draft(2, outb + first[t], pos[first[t]], keep[b] - 1,
++                                   (paired ? 2 : 1) * stride * sizeof(float), cudaMemcpyDeviceToDevice) != cudaSuccess ||
++                        !slot_mtp[(size_t) b]->draft(paired ? 2 : 1, outb + first[t], pos[first[t]], keep[b] - 1,
+                                                     sl.draft.data(), err)) {
+                         std::printf("ERR batch MTP slot %d: %s\n", b, err.c_str());
+                         return false;

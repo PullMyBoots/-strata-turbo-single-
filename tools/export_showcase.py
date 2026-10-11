@@ -2,10 +2,12 @@
 import argparse
 from datetime import datetime, timezone
 import hashlib
+import importlib.util
 import json
 from pathlib import Path
 import shutil
 import statistics
+import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 WEIGHTS = ('iq2_xs', 'swift', 'iq3_s')
@@ -18,10 +20,17 @@ def save(path, value):
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--benchmark', type=Path, required=True)
+    p.add_argument('--benchmark', type=Path)
     p.add_argument('--pelican', type=Path, required=True)
+    p.add_argument('--pelican-only', action='store_true')
+    p.add_argument('--pelican-output', type=Path, default=ROOT / 'evidence/showcase')
     p.add_argument('--allow-incomplete', action='store_true')
     a = p.parse_args()
+    if a.pelican_only:
+        export_pelican(a.pelican, a.pelican_output, a.allow_incomplete)
+        return
+    if a.benchmark is None:
+        p.error('--benchmark is required unless --pelican-only is selected')
     out = ROOT / 'evidence/showcase'
     build = json.loads((ROOT / 'distribution/build.json').read_text())
     summary = {'version': (ROOT / 'VERSION').read_text().strip(),
@@ -100,14 +109,22 @@ def main():
         assert summary['complete'], summary['missing']
     save(out / 'benchmark-summary.json', summary)
 
-    report = json.loads((a.pelican / 'results.json').read_text()) if (a.pelican / 'results.json').exists() else {'runs': []}
+    export_pelican(a.pelican, a.pelican_output, a.allow_incomplete)
+    print('Benchmark complete:', summary['complete'])
+
+
+def export_pelican(source_root, out, allow_incomplete=False):
+    """Export a separate campaign without overwriting throughput evidence."""
+    report = json.loads((source_root / 'results.json').read_text()) if (source_root / 'results.json').exists() else {'runs': []}
+
     if len(report['runs']) != 4:
-        if not a.allow_incomplete:
+        if not allow_incomplete:
             raise RuntimeError('Pelican ABBA is incomplete')
         return
     first_requests = []
+    rendered_prompts = []
     for row in report['runs']:
-        source = a.pelican / f"{row['index']}-{row['arm']}"
+        source = source_root / f"{row['index']}-{row['arm']}"
         payloads = [json.loads(f.read_text()) for f in sorted(source.glob('api-[0-9]*.json'), key=lambda f: int(f.stem.split('-')[1]))]
         calls = [p for p in payloads if p['path'].split('?')[0] == '/v1/messages']
         assert all(p['request']['output_config']['effort'] == 'max' and
@@ -116,6 +133,25 @@ def main():
         first = dict(calls[0]['request'])
         first.pop('metadata', None)
         first_requests.append(first)
+        cfg = json.loads((source / 'config.json').read_text())
+        adapter = ROOT / ('experimental/native-batch/serve/frontend.py'
+                          if cfg['server_module'] == 'experimental-native-api' else 'serve/frontend.py')
+        module_name = f"showcase_frontend_{row['index']}"
+        spec = importlib.util.spec_from_file_location(module_name, adapter)
+        frontend = importlib.util.module_from_spec(spec)
+        sys.modules[module_name] = frontend
+        spec.loader.exec_module(frontend)
+        template = Path(cfg['tokenizer']) / 'chat_template.jinja'
+        if not template.exists():
+            template = adapter.parent / 'chat_template.jinja'
+        messages, tools, options = frontend.anthropic_to_messages(first)
+        prompt = frontend.ChatTemplate(template).render(messages, tools=tools, **options).encode()
+        rendered_prompts.append({'arm': f"{row['index']}-{row['arm']}",
+                                 'bytes': len(prompt), 'sha256': hashlib.sha256(prompt).hexdigest(),
+                                 'wire_request_sha256': hashlib.sha256(json.dumps(first, sort_keys=True).encode()).hexdigest(),
+                                 'adapter_sha256': hashlib.sha256(adapter.read_bytes()).hexdigest(),
+                                 'template_sha256': hashlib.sha256(template.read_bytes()).hexdigest(),
+                                 'render_options': options})
         assert first['output_config']['effort'] == 'max' and first['max_tokens'] == 65536
         row['model_calls'] = len(calls)
         row['total_output_tokens'] = row['claude_result'].get('usage', {}).get('output_tokens')
@@ -130,17 +166,21 @@ def main():
             shutil.copy2(file, dest / file.name)
     report['first_requests_match_except_metadata'] = all(r == first_requests[0] for r in first_requests)
     assert report['first_requests_match_except_metadata']
+    report['initial_prompt_parity'] = {'rows': rendered_prompts,
+                                      'same': len({r['sha256'] for r in rendered_prompts}) == 1,
+                                      'scope': 'Offline rendering with the recorded tokenizer template and current API adapters; adapter/template hashes bind the check.'}
     report['native_reasoning_effort'] = 'xhigh'
     report['all_model_calls_max_effort_and_output_budget'] = True
     report['complete'] = True
-    report['hardware'] = json.loads((a.pelican / 'hardware.json').read_text())
+    report['hardware'] = json.loads((source_root / 'hardware.json').read_text())
     report['engine_median_s'] = {arm: statistics.median(r['wall_s'] for r in report['runs'] if r['arm'] == arm)
                                for arm in ('official', 'turbo')}
     save(out / 'pelican-summary.json', report)
     save(out / 'pelican' / 'initial-request.json', first_requests[0])
-    save(out / 'pelican' / 'command.json', json.loads((a.pelican / 'command.json').read_text()))
-    print(json.dumps({'benchmark_complete': summary['complete'], 'pelican_complete': True,
-                      'pelican_medians': report['engine_median_s']}, indent=2))
+    save(out / 'pelican' / 'command.json', json.loads((source_root / 'command.json').read_text()))
+    print(json.dumps({'pelican_complete': True,
+                      'pelican_medians': report['engine_median_s'],
+                      'rendered_initial_prompts_match': report['initial_prompt_parity']['same']}, indent=2))
 
 
 if __name__ == '__main__':

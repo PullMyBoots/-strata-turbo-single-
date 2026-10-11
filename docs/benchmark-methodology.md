@@ -4,11 +4,13 @@ This report records fresh measurements of the **v0.2.2** distribution on 2026-10
 
 ## Hardware and comparator
 
-Throughput experiments use one NVIDIA L40S, GPU 0 (`0000:01:00.0`), on NUMA node 0. The host has AMD EPYC 9754 CPUs and approximately 1 TB RAM. The allocator selects 32 CPU workers and records CPU affinity, available memory, and VRAM in each configuration. Pelican experiments use a different single L40S, GPU 2, on the same host. Do not compare absolute rates across GPU placements as if they were a paired experiment.
+Throughput experiments use one NVIDIA L40S, GPU 0 (`0000:01:00.0`), on NUMA node 0. The host has AMD EPYC 9754 CPUs and approximately 1 TB RAM. The allocator selects 32 CPU workers and records CPU affinity, available memory, and VRAM in each configuration. The corrected pelican showcase also uses GPU 0. Its historical campaign used GPU 2 on the same host. Do not compare absolute rates across these campaigns as if they were paired measurements.
 
 Both arms load the same target GGUF shards, tokenizer, expert profile, and projector within each weight pair. Both retain the native 262,144-token context limit and INT8 KV storage. MTP/router assets and speculative settings are arm-specific release presets: the single-request Turbo path uses its native Q5 draft and model-matched router, while upstream uses its RT draft. Draft proposals are verified against the selected target model. Runtime residency and execution settings also follow the release's hardware-selected presets; this is a distribution comparison, not a single-kernel ablation.
 
 The upstream source is pinned to Strata commit `fb58e0dbc8399662c0e47c76578c6e878b14f6cf`. The common media reader changes input embedding handling while preserving upstream numerical kernels. The single-request Turbo binary is the optimized release binary. For multiple slots, both arms use native shared batching; the Turbo preset additionally enables batch MTP. All build hashes are in [the summary](../evidence/showcase/benchmark-summary.json) and [binary manifest](../distribution/build.json).
+
+The upstream arm in these original charts is **upstream with shared resource tuning**, not untouched upstream defaults. Both arms receive 32 CPU workers, the same slot-dependent resident-KV budget and a 1,400 MiB reserve. The separate resource ablation restores automatic worker selection, 32,768 resident KV tokens and the 700 MiB reserve, while keeping the pinned numerical engine, target weight, context limit, API/media adapter and chosen GPU/NUMA placement common. Consequently that ablation measures the distribution's resource policy as well as its execution preset; it must not be described as a new-kernel-only gain.
 
 ## Exact Claude Code animation task
 
@@ -28,13 +30,13 @@ Equal wire JSON did not imply equal rendered prompts in the original pelican cam
 
 The Turbo frontend now applies the same bounded normalization, preserving ordinary message text. Ten frontend/API regressions pass. A new GPU 0 official/Turbo/Turbo/official campaign verifies the same rendered initial-prompt SHA256 in all four runs: `252f1b8126117343ed93b7465a9b82bbbebefff8c84efe9da2d8077342564c15`. These prompts contain 1,227 tokens; the workspace and harness environment differ from the historical campaign, so absolute times across the two campaigns are not paired comparisons.
 
-The corrected campaign measures upstream 240.151/241.344 seconds and Turbo 211.526/219.990 seconds: median 240.747 versus 215.758, a 10.38% task-time reduction. It uses the unchanged incumbent numerical binary and the corrected frontend, rather than the experimental expert kernels. Output totals and tool paths differ, and two trials per engine are insufficient for a confidence interval. [Timing record](../evidence/post-publication/pelican-prompt-fixed.json) and [four prompt hashes](../evidence/post-publication/initial-prompt-parity.json) document this follow-up. Its HTML artifacts have not yet received the browser-render checks described for the historical gallery below.
+The corrected campaign measures upstream 240.151/241.344 seconds and Turbo 211.526/219.990 seconds: median 240.747 versus 215.758, a 10.38% task-time reduction. It uses the unchanged incumbent numerical binary and the corrected frontend, rather than the experimental expert kernels. Output totals and tool paths differ, and two trials per engine are insufficient for a confidence interval. [Timing record](../evidence/post-publication/pelican-prompt-fixed.json), [four prompt hashes](../evidence/post-publication/initial-prompt-parity.json) and [full corrected campaign](../evidence/pelican-corrected/pelican-summary.json) document this follow-up. The README's main showcase uses this campaign; the original gallery remains explicitly historical.
 
 Wall time starts immediately before launching Claude Code and ends at CLI exit. It includes startup, reasoning, generation, tool execution, and retries. Model loading and warm-up are excluded. Reported output-token totals are the harness's usage values across model calls; they are not independently parsed reasoning-token counts. The local API does not charge the estimated prices displayed by the harness.
 
 All four trials exit successfully and save an HTML file containing SVG. The median is calculated from two trials per arm. Original outputs are preserved byte-for-byte, with SHA256 hashes in the evidence. The ratio is task completion time, not a controlled fixed-token speed ratio. The small sample, differing output lengths, and tool paths limit generalization; no formal visual-quality ranking is inferred.
 
-Chromium renders each original at 1000×720. External requests are intercepted and recorded. The original source is not modified. The capture clock advances through the first six seconds at 20 fps, with SVG/CSS and JavaScript animation timelines controlled for capture. More than ten distinct frames confirms movement. GIFs are viewable on GitHub; HTML retains the interactive original. [Render checks](showcase/pelican/render-checks.json) record animation and dependency observations.
+Chromium renders each original at 1000×720. External requests are intercepted and recorded. The original source is not modified. The capture clock advances through the first six seconds at 20 fps, with SVG/CSS and JavaScript animation timelines controlled for capture. More than ten distinct frames confirms movement. GIFs are viewable on GitHub; HTML retains the interactive original. [Corrected-campaign render checks](showcase/pelican-corrected/render-checks.json) record animation and dependency observations; the [historical checks](showcase/pelican/render-checks.json) remain available separately.
 
 ## Decode curves
 
@@ -92,7 +94,8 @@ Install the selected models and prepare a complete asset tree first. Run on an o
 # Export only after both suites finish; rejects incomplete campaigns.
 .venv/bin/python tools/export_showcase.py \
   --benchmark runtime/readme-benchmark-reproduction \
-  --pelican runtime/pelican-reproduction
+  --pelican runtime/pelican-reproduction \
+  --pelican-output evidence/pelican-corrected
 
 # Optional chart dependencies, separate from engine dependencies.
 .venv/bin/python -m pip install -r tools/requirements-showcase.txt
@@ -100,10 +103,17 @@ Install the selected models and prepare a complete asset tree first. Run on an o
 
 # Requires Node.js/npx, Playwright CLI, and its Chromium installation.
 .venv/bin/python tools/render_pelican.py \
-  --input runtime/pelican-reproduction --output docs/showcase/pelican
+  --input runtime/pelican-reproduction --output docs/showcase/pelican-corrected \
+  --session strata-pelican-corrected
 
 # Refresh README tables only when evidence and rendered HTML hashes match.
 .venv/bin/python tools/update_showcase_docs.py
 ```
 
 Verify the asset and binary hashes before interpreting a reproduction as the same experiment. Different GPU/NUMA placement, available memory, CPU load, GPU clocks, selected presets, driver/compiler versions, and prompts can change results. Re-render and visually inspect exported charts after changing data.
+
+The default-resource three-arm figure is a separate, balanced two-slot experiment
+dated 2026-10-11. Follow [the resource reproduction instructions](resource-comparison.md)
+to replace that dataset as well. The README updater uses the corrected animation
+campaign by default and binds its rendered-prompt check to the exported API and
+template hashes. The historical animation campaign is retained separately.

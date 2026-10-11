@@ -21,13 +21,15 @@ STYLE = Path(__file__).with_name('readme.mplstyle')
 COLORS = {'official': '#9A9A94', 'turbo': '#426F69'}
 NAMES = {'iq2_xs': 'IQ2_XS', 'swift': 'Swift IQ3_XXS', 'iq3_s': 'IQ3_S'}
 TASKS = {'english': 'English prose', 'code': 'Python code', 'chinese': 'Chinese prose'}
-LEGEND = [Line2D([], [], color=COLORS['official'], marker='s', linestyle='--', label='Strata upstream'),
+LEGEND = [Line2D([], [], color=COLORS['official'], marker='s', linestyle='--', label='Upstream (shared tuning)'),
           Line2D([], [], color=COLORS['turbo'], marker='o', label='Strata-Turbo-Single')]
 
 
 def export(fig, name, entries, claim):
     fig.savefig(OUT / (name + '.png'), dpi=300, facecolor='white')
-    fig.savefig(OUT / (name + '.svg'), facecolor='white')
+    svg = OUT / (name + '.svg')
+    fig.savefig(svg, facecolor='white')
+    svg.write_text('\n'.join(line.rstrip() for line in svg.read_text().splitlines()) + '\n')
     plt.close(fig)
     entries.append({'id': name, 'source_data': str(DATA.relative_to(ROOT)),
                     'script': str(Path(__file__).relative_to(ROOT)),
@@ -76,7 +78,7 @@ def prefill(data, entries):
                        if p['background_tokens']==253952) for weight in NAMES]
         bars = axis.bar(x+(index-.5)*.32, values, width=.32, color=COLORS[arm],
                         edgecolor='white', hatch='//' if arm=='turbo' else None,
-                        label='Strata-Turbo-Single' if arm=='turbo' else 'Strata upstream')
+                        label='Strata-Turbo-Single' if arm=='turbo' else 'Upstream (shared tuning)')
         for bar, value in zip(bars, values):
             axis.text(bar.get_x()+bar.get_width()/2, value+.065, f'{value:.2f}k',
                       ha='center', va='bottom', fontsize=9, fontweight='bold' if arm=='turbo' else 'normal')

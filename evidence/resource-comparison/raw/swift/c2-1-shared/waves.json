@@ -1,0 +1,311 @@
+[
+  {
+    "wave": 0,
+    "wall_s": 4.894829214783385,
+    "requests": [
+      {
+        "family": "english",
+        "wave": 0,
+        "index": 0,
+        "request": {
+          "model": "qwen3.8-flash-swift-iq3-xxs",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Write a detailed numbered guide to organizing and reviewing a software project. Include concrete examples. Continue for at least 100 items."
+            }
+          ],
+          "max_tokens": 256,
+          "temperature": 0,
+          "reasoning_effort": "none",
+          "cache_prompt": false,
+          "seed": 20261010
+        },
+        "result": {
+          "text": "Here is a comprehensive, detailed guide to organizing and reviewing a software project. This list covers the entire lifecycle from initial setup to final deployment and maintenance, structured into logical phases for clarity.\n\n### Phase 1: Project Initialization & Governance (Items 1–15)\n\n1.  **Define the Project Charter**: Create a document outlining the project’s purpose, scope, objectives, and key stakeholders. *Example: \"Project Alpha: A mobile app for tracking local food waste, targeting users in Seattle, launching Q3 2024.\"*\n2.  **Identify Key Stakeholders**: List all individuals involved, including product owners, developers, QA, DevOps, and end-users. Assign roles (e.g., RACI matrix).\n3.  **Establish Communication Channels**: Set up dedicated Slack channels, Microsoft Teams groups, or Discord servers for real-time communication. *Example: `#proj-alpha-dev`, `#proj-alpha-design`, `#proj-alpha-standups`.*\n4.  **Select the Project Management Tool**: Choose a tool like Jira, Trello, Asana, or Linear. Configure it with appropriate workflows (e.g., To Do → In Progress → Code Review → Done).\n5.",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 39,
+            "prompt_ms": 129.7,
+            "prompt_per_token_ms": 3.326,
+            "prompt_per_second": 300.7,
+            "predicted_n": 256,
+            "predicted_ms": 4433.8,
+            "predicted_per_token_ms": 17.387,
+            "predicted_per_second": 57.5,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 39,
+            "completion_tokens": 256,
+            "total_tokens": 295,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "length",
+          "wall_s": 4.845688728848472,
+          "first_content_s": 0.154335199855268
+        },
+        "text_sha256": "a6bc7e11a382b9b68ed78e1ff9cceba4d497b4053f4daed1663a290fff73a142",
+        "equals_first_arm": false
+      },
+      {
+        "family": "code",
+        "wave": 0,
+        "index": 1,
+        "request": {
+          "model": "qwen3.8-flash-swift-iq3-xxs",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Write a complete Python asyncio task scheduler with concurrency limits, retries with exponential backoff, cancellation, structured logging, and a runnable demonstration. Explain the design after the code. Produce at least 200 lines."
+            }
+          ],
+          "max_tokens": 256,
+          "temperature": 0,
+          "reasoning_effort": "none",
+          "cache_prompt": false,
+          "seed": 20261010
+        },
+        "result": {
+          "text": "```python\n\"\"\"\nAsyncio Task Scheduler with Concurrency Limits, Retries, Cancellation, and Structured Logging.\n\nFeatures:\n- Concurrency limiting via semaphore\n- Exponential backoff retries\n- Task cancellation support\n- Structured JSON logging\n- Graceful shutdown\n- Runnable demonstration\n\"\"\"\n\nimport asyncio\nimport json\nimport logging\nimport random\nimport time\nimport uuid\nfrom dataclasses import dataclass, field\nfrom enum import Enum\nfrom typing import Any, Callable, Coroutine, Dict, List, Optional, Set\n\n\n# ---------------------------------------------------------------------------\n# Structured Logging\n# ---------------------------------------------------------------------------\n\nclass StructuredFormatter(logging.Formatter):\n    \"\"\"JSON formatter for structured logging.\"\"\"\n\n    def format(self, record: logging.LogRecord) -> str:\n        log_data = {\n            \"timestamp\": self.formatTime(record, self.datefmt),\n            \"level\": record.levelname,\n            \"logger\": record.name,\n            \"message\": record.getMessage(),\n        }\n        if record.exc_info:\n            log_data[\"exception\"] = self.formatException(record.exc_info)\n        # Include extra fields passed via `extra`\n        for key in (\"task_id\", \"attempt\", \"max_attempts\", \"",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 55,
+            "prompt_ms": 172.0,
+            "prompt_per_token_ms": 3.127,
+            "prompt_per_second": 319.8,
+            "predicted_n": 256,
+            "predicted_ms": 4155.0,
+            "predicted_per_token_ms": 16.23,
+            "predicted_per_second": 61.6,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 55,
+            "completion_tokens": 256,
+            "total_tokens": 311,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "length",
+          "wall_s": 4.893050719052553,
+          "first_content_s": 0.6221372769214213
+        },
+        "text_sha256": "58aaf0d8337d01e30deb48ce10693f57daa94749035299d9222573bae4bc7ef6",
+        "equals_first_arm": false
+      }
+    ],
+    "aggregate_e2e_tps": 104.60017654010385
+  },
+  {
+    "wave": 1,
+    "wall_s": 5.066836156183854,
+    "requests": [
+      {
+        "family": "code",
+        "wave": 1,
+        "index": 0,
+        "request": {
+          "model": "qwen3.8-flash-swift-iq3-xxs",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Write a complete Python asyncio task scheduler with concurrency limits, retries with exponential backoff, cancellation, structured logging, and a runnable demonstration. Explain the design after the code. Produce at least 200 lines."
+            }
+          ],
+          "max_tokens": 256,
+          "temperature": 0,
+          "reasoning_effort": "none",
+          "cache_prompt": false,
+          "seed": 20261010
+        },
+        "result": {
+          "text": "```python\n\"\"\"\nAsyncio Task Scheduler with Concurrency Limits, Retries, Cancellation, and Structured Logging.\n\nFeatures:\n- Concurrency limiting via semaphore\n- Exponential backoff retries\n- Task cancellation support\n- Structured JSON logging\n- Graceful shutdown\n- Runnable demonstration\n\"\"\"\n\nimport asyncio\nimport json\nimport logging\nimport random\nimport time\nimport uuid\nfrom dataclasses import dataclass, field\nfrom enum import Enum\nfrom typing import Any, Callable, Coroutine, Dict, List, Optional, Set\n\n\n# ---------------------------------------------------------------------------\n# Structured Logging\n# ---------------------------------------------------------------------------\n\nclass StructuredFormatter(logging.Formatter):\n    \"\"\"JSON formatter for structured logging.\"\"\"\n\n    def format(self, record: logging.LogRecord) -> str:\n        log_data = {\n            \"timestamp\": self.formatTime(record, self.datefmt),\n            \"level\": record.levelname,\n            \"logger\": record.name,\n            \"message\": record.getMessage(),\n        }\n        if record.exc_info:\n            log_data[\"exception\"] = self.formatException(record.exc_info)\n        # Include extra fields passed via `extra`\n        for key in (\"task_id\", \"attempt\", \"max_attempts\", \"",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 55,
+            "prompt_ms": 166.1,
+            "prompt_per_token_ms": 3.02,
+            "prompt_per_second": 331.1,
+            "predicted_n": 256,
+            "predicted_ms": 4280.0,
+            "predicted_per_token_ms": 16.719,
+            "predicted_per_second": 59.8,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 55,
+            "completion_tokens": 256,
+            "total_tokens": 311,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "length",
+          "wall_s": 5.065576412016526,
+          "first_content_s": 0.6735610708128661
+        },
+        "text_sha256": "58aaf0d8337d01e30deb48ce10693f57daa94749035299d9222573bae4bc7ef6",
+        "equals_first_arm": false
+      },
+      {
+        "family": "chinese",
+        "wave": 1,
+        "index": 1,
+        "request": {
+          "model": "qwen3.8-flash-swift-iq3-xxs",
+          "messages": [
+            {
+              "role": "user",
+              "content": "用中文详细解释大语言模型推理的内存带宽、缓存、预填充和输出生成机制，给出计算例子和优化步骤。连续撰写至少1500字。"
+            }
+          ],
+          "max_tokens": 256,
+          "temperature": 0,
+          "reasoning_effort": "none",
+          "cache_prompt": false,
+          "seed": 20261010
+        },
+        "result": {
+          "text": "大语言模型（LLM）的推理过程是一个高度依赖硬件资源，特别是内存带宽和计算能力的复杂工程问题。要深入理解这一过程，我们需要从底层硬件机制出发，剖析预填充（Prefill）与输出生成（Decode）两个核心阶段的差异，并探讨如何通过缓存机制和优化策略来提升推理效率。\n\n### 内存带宽与缓存：推理的瓶颈所在\n\n在大语言模型推理中，最大的瓶颈往往不是计算能力（FLOPS），而是内存带宽（Memory Bandwidth）。现代GPU拥有强大的并行计算能力，但LLM的推理过程本质上是“访存密集”（Memory-bound）而非“计算密集”（Compute-bound）。\n\n以参数规模为70B（700亿参数）的模型为例，假设使用FP16精度，模型权重占用约140GB显存。在推理过程中，每生成一个Token，模型都需要加载全部权重进行一次前向传播。如果GPU的内存带宽为2TB/s，理论上每秒最多只能加载140GB数据约14次。这意味着，即使GPU的计算单元闲置，推理速度也被内存读取速度严格限制。\n\n缓存机制在此扮演了关键角色。传统的Transformer架构在推理时，每一层",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 49,
+            "prompt_ms": 177.5,
+            "prompt_per_token_ms": 3.622,
+            "prompt_per_second": 276.1,
+            "predicted_n": 256,
+            "predicted_ms": 4554.6,
+            "predicted_per_token_ms": 17.861,
+            "predicted_per_second": 56.0,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 49,
+            "completion_tokens": 256,
+            "total_tokens": 305,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "length",
+          "wall_s": 5.043192526791245,
+          "first_content_s": 0.18578367796726525
+        },
+        "text_sha256": "f6736da62510f6a1e076c542ca2639fc3db640ecc05d2be1c764fb29a4ea3ee7",
+        "equals_first_arm": false
+      }
+    ],
+    "aggregate_e2e_tps": 101.04925129168154
+  },
+  {
+    "wave": 2,
+    "wall_s": 4.723866987042129,
+    "requests": [
+      {
+        "family": "chinese",
+        "wave": 2,
+        "index": 0,
+        "request": {
+          "model": "qwen3.8-flash-swift-iq3-xxs",
+          "messages": [
+            {
+              "role": "user",
+              "content": "用中文详细解释大语言模型推理的内存带宽、缓存、预填充和输出生成机制，给出计算例子和优化步骤。连续撰写至少1500字。"
+            }
+          ],
+          "max_tokens": 256,
+          "temperature": 0,
+          "reasoning_effort": "none",
+          "cache_prompt": false,
+          "seed": 20261010
+        },
+        "result": {
+          "text": "大语言模型（LLM）的推理过程是一个高度依赖硬件资源，特别是内存带宽和计算能力的复杂工程问题。要深入理解这一过程，我们需要从底层硬件机制出发，剖析预填充（Prefill）与输出生成（Decode）两个核心阶段的差异，并探讨如何通过缓存机制和优化策略来提升推理效率。\n\n### 内存带宽与计算瓶颈\n\n在LLM推理中，内存带宽往往比计算能力（FLOPS）更具决定性。这是因为LLM的核心操作——矩阵乘法，在推理阶段（尤其是生成阶段）表现为“访存密集”而非“计算密集”。\n\n以Transformer架构为例，每一层都包含大量的权重矩阵。当模型生成下一个token时，它需要加载整个模型的权重参数。假设一个70B参数的模型，使用FP16精度，其权重占用约140GB内存。在生成阶段，每生成一个token，GPU都需要从显存中读取这140GB的数据，但计算量相对较小（因为序列长度较短，矩阵乘法维度较小）。这就导致了严重的“内存墙”问题：计算单元在等待数据从显存传输到寄存器，导致GPU利用率极低。因此，提升推理速度的关键在于最大化内存带宽利用率，",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 49,
+            "prompt_ms": 177.1,
+            "prompt_per_token_ms": 3.614,
+            "prompt_per_second": 276.7,
+            "predicted_n": 256,
+            "predicted_ms": 4209.9,
+            "predicted_per_token_ms": 16.509,
+            "predicted_per_second": 60.6,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 49,
+            "completion_tokens": 256,
+            "total_tokens": 305,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "length",
+          "wall_s": 4.697986962972209,
+          "first_content_s": 0.18559039011597633
+        },
+        "text_sha256": "3606f600c49284c93dbe6ee818a0b503acd910d1601ec05171a8ccfcda66fef1",
+        "equals_first_arm": false
+      },
+      {
+        "family": "english",
+        "wave": 2,
+        "index": 1,
+        "request": {
+          "model": "qwen3.8-flash-swift-iq3-xxs",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Write a detailed numbered guide to organizing and reviewing a software project. Include concrete examples. Continue for at least 100 items."
+            }
+          ],
+          "max_tokens": 256,
+          "temperature": 0,
+          "reasoning_effort": "none",
+          "cache_prompt": false,
+          "seed": 20261010
+        },
+        "result": {
+          "text": "Here is a comprehensive, detailed guide to organizing and reviewing a software project. This list covers the entire lifecycle from initial setup to final deployment and maintenance, structured into logical phases for clarity.\n\n### Phase 1: Project Initialization & Governance\n\n1.  **Define the Project Charter**: Create a document outlining the project’s purpose, scope, objectives, and key stakeholders. *Example: \"Project Alpha: A mobile app for tracking local recycling centers, targeting users in Seattle, launching Q3 2024.\"*\n2.  **Identify Key Stakeholders**: List all individuals involved, including product owners, developers, QA, DevOps, and end-users. Assign roles (RACI matrix).\n3.  **Establish Communication Channels**: Set up dedicated Slack channels, Microsoft Teams groups, or Discord servers for real-time communication. *Example: `#proj-alpha-dev`, `#proj-alpha-design`, `#proj-alpha-standups`.*\n4.  **Select the Project Management Tool**: Choose a tool like Jira, Trello, Asana, or Linear. Configure workflows (e.g., To Do → In Progress → Code Review → QA → Done).\n5.  **Define Coding Standards**: Create a style guide for the",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 39,
+            "prompt_ms": 125.5,
+            "prompt_per_token_ms": 3.218,
+            "prompt_per_second": 310.8,
+            "predicted_n": 256,
+            "predicted_ms": 3982.1,
+            "predicted_per_token_ms": 15.555,
+            "predicted_per_second": 64.3,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 39,
+            "completion_tokens": 256,
+            "total_tokens": 295,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "length",
+          "wall_s": 4.721539078047499,
+          "first_content_s": 0.6319669319782406
+        },
+        "text_sha256": "4e54c645a095b8abdb4e9f16e755b37fe27d7eb6b4853f6e58b86d567cffc972",
+        "equals_first_arm": false
+      }
+    ],
+    "aggregate_e2e_tps": 108.38577830503037
+  }
+]

@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Claude Code pelican comparison — Strata-Turbo-Single</title>
+<style>
+body{font-family:system-ui,sans-serif;margin:0;background:#f7f8f6;color:#202a25;padding:24px}
+main{max-width:1480px;margin:auto}h1{font-size:28px}p{line-height:1.6}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+article{background:white;border:1px solid #dce2dc;border-radius:12px;padding:16px}
+iframe{width:100%;height:550px;border:0;background:#101820;border-radius:8px}
+a{color:#286859}h2{font-size:20px}small{color:#556258}
+@media(max-width:800px){.grid{grid-template-columns:1fr}body{padding:14px}}
+</style>
+<main>
+<h1>Claude Code: a pelican riding a bicycle</h1>
+<p>Corrected identical rendered initial prompts; same IQ2_XS weights, one L40S on GPU 0, highest reasoning effort. Exact prompt: “Create a self-contained HTML file with a 2D SVG animation of a pelican riding a bicycle.”</p>
+<p>Original model-written HTML is shown unchanged. Completion time includes CLI startup, thinking, generation, tools, and retries; loading and warm-up are excluded. ABBA order; two trials per engine. Different output lengths and tool paths make this a task-time comparison.</p>
+<div class="grid">
+<article><h2>Upstream · trial 1 · 240.2 s</h2><iframe src="official-1/pelican.html" title="Upstream trial 1" sandbox="allow-scripts"></iframe><p><a href="official-1/pelican.html">Open original HTML</a> · <a href="official-1/pelican.gif">GIF preview</a></p></article>
+<article><h2>Turbo · trial 1 · 211.5 s</h2><iframe src="turbo-1/pelican.html" title="Turbo trial 1" sandbox="allow-scripts"></iframe><p><a href="turbo-1/pelican.html">Open original HTML</a> · <a href="turbo-1/pelican.gif">GIF preview</a></p></article>
+<article><h2>Upstream · trial 2 · 241.3 s</h2><iframe src="official-2/pelican.html" title="Upstream trial 2" sandbox="allow-scripts"></iframe><p><a href="official-2/pelican.html">Open original HTML</a> · <a href="official-2/pelican.gif">GIF preview</a></p></article>
+<article><h2>Turbo · trial 2 · 220.0 s</h2><iframe src="turbo-2/pelican.html" title="Turbo trial 2" sandbox="allow-scripts"></iframe><p><a href="turbo-2/pelican.html">Open original HTML</a> · <a href="turbo-2/pelican.gif">GIF preview</a></p></article>
+</div>
+<p><strong>Median:</strong> upstream 240.7 s; Turbo 215.8 s (10.4% less time). Small-sample local measurements, not a decoder ratio or formal visual-quality ranking.</p>
+<small>Open the original at full size to use its controls. GIF capture: 1000×720, first six seconds, 20 fps.</small>
+</main>
+</html>

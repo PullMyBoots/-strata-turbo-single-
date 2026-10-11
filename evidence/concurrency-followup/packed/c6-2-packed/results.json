@@ -1,0 +1,1603 @@
+{
+  "rows": [
+    {
+      "wave": 0,
+      "wall_s": 10.24157375888899,
+      "requests": [
+        {
+          "family": "english",
+          "wave": 0,
+          "index": 0,
+          "request": {
+            "model": "qwen3.8-flash-iq2-xs",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Write a very detailed numbered handbook for maintaining a community garden. Cover planning, budgets, tools, seasonal tasks, volunteers, mistakes, and examples. Continue for at least 100 numbered sections."
+              }
+            ],
+            "max_tokens": 256,
+            "temperature": 0,
+            "reasoning_effort": "none",
+            "cache_prompt": false,
+            "seed": 20261011
+          },
+          "result": {
+            "text": "# The Comprehensive Community Garden Maintenance Handbook\n\n## Phase 1: Foundation and Governance\n\n1. **Define the Mission Statement**: Clearly articulate the purpose of the garden. Is it for food security, education, aesthetic beauty, or community bonding? This statement guides all future decisions.\n2. **Establish Legal Structure**: Determine if the garden operates as a non-profit, a neighborhood association, or under municipal oversight. Draft bylaws that define membership, voting rights, and liability.\n3. **Secure Land Rights**: Obtain written permission from the landowner (city, private owner, or school). Ensure the lease or agreement includes clauses for long-term stability and renewal options.\n4. **Conduct Soil Testing**: Before planting, test the soil for pH, nitrogen, phosphorus, potassium, and heavy metals (lead, arsenic). This is critical for safety, especially in urban areas.\n5. **Create a Site Map**: Draw a detailed map of the garden, including plot numbers, common areas, tool sheds, compost bins, water sources, and access paths.\n6. **Develop a Code of Conduct**: Write clear rules regarding noise, alcohol, smoking, pets, and respectful behavior. Include a dispute resolution process.\n7. **Set Up Communication Channels",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 52,
+              "prompt_ms": 155.2,
+              "prompt_per_token_ms": 2.985,
+              "prompt_per_second": 335.1,
+              "predicted_n": 256,
+              "predicted_ms": 8567.5,
+              "predicted_per_token_ms": 33.467,
+              "predicted_per_second": 29.9,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 52,
+              "completion_tokens": 256,
+              "total_tokens": 308,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 9.547746086027473,
+            "first_content_s": 0.8608313598670065
+          },
+          "text_sha256": "b9b237363666c28b34299f3407e54e214d1e2d9d1db06f6bc1a3316eb9ed55ba",
+          "equals_first_arm": false
+        },
+        {
+          "family": "code",
+          "wave": 0,
+          "index": 1,
+          "request": {
+            "model": "qwen3.8-flash-iq2-xs",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Write a complete Python file implementing a bounded producer-consumer work queue with typed dataclasses, priority ordering, deadlines, retries, safe shutdown, metrics and an extensive demonstration. Include detailed comments and at least 250 lines."
+              }
+            ],
+            "max_tokens": 256,
+            "temperature": 0,
+            "reasoning_effort": "none",
+            "cache_prompt": false,
+            "seed": 20261011
+          },
+          "result": {
+            "text": "```python\n\"\"\"\nBounded Producer-Consumer Work Queue with Priority, Deadlines, Retries,\nSafe Shutdown, Metrics, and Typed Dataclasses.\n\nThis module implements a robust work queue system that supports:\n- Typed dataclass-based tasks with priority ordering\n- Deadline-based task expiration\n- Retry logic with exponential backoff\n- Bounded queue capacity\n- Safe shutdown with graceful drain\n- Metrics collection (throughput, latency, errors, retries)\n- Multiple consumer workers\n- Extensive demonstration\n\nThe design follows producer-consumer patterns with thread safety,\npriority queues, and structured concurrency.\n\"\"\"\n\nfrom __future__ import annotations\n\nimport time\nimport threading\nimport heapq\nimport logging\nimport random\nfrom dataclasses import dataclass, field\nfrom enum import Enum\nfrom typing import Any, Callable, Optional, List, Dict\nfrom concurrent.futures import ThreadPoolExecutor\nfrom queue import Queue, Empty\n\n# Configure logging for demonstration\nlogging.basicConfig(\n    level=logging.INFO,\n    format=\"%(asctime)s [%(levelname)s] %(name)s: %(message)s\",\n    datefmt=\"%Y-%m-%d %H:%M:%S\",\n)\nlogger = logging.getLogger(\"WorkQueue\")\n\n\n",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 58,
+              "prompt_ms": 166.2,
+              "prompt_per_token_ms": 2.866,
+              "prompt_per_second": 349.0,
+              "predicted_n": 256,
+              "predicted_ms": 8513.7,
+              "predicted_per_token_ms": 33.257,
+              "predicted_per_second": 30.1,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 58,
+              "completion_tokens": 256,
+              "total_tokens": 314,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 8.833261827006936,
+            "first_content_s": 0.1946106101386249
+          },
+          "text_sha256": "5ba2ca871b0b078097457bc592cd30f7bc6e9d1040dd8e9c010c60b0a1b4ebe2",
+          "equals_first_arm": false
+        },
+        {
+          "family": "chinese",
+          "wave": 0,
+          "index": 2,
+          "request": {
+            "model": "qwen3.8-flash-iq2-xs",
+            "messages": [
+              {
+                "role": "user",
+                "content": "用中文详细介绍一座城市如何规划公共交通、步行和自行车网络，分析预算、换乘、无障碍、运营、维护与居民需求，给出具体例子，连续写至少2000字。"
+              }
+            ],
+            "max_tokens": 256,
+            "temperature": 0,
+            "reasoning_effort": "none",
+            "cache_prompt": false,
+            "seed": 20261011
+          },
+          "result": {
+            "text": "在现代城市治理的语境下，交通规划已不再仅仅是关于道路宽度的工程问题，而是一场关于社会公平、环境可持续性与生活质量的深刻变革。一座理想的城市，其交通网络应当是一个有机整体，将公共交通、步行与自行车系统无缝融合，形成一个高效、包容且充满活力的生态系统。以下将从规划理念、预算分配、换乘效率、无障碍设计、运营维护以及居民需求响应等多个维度，深入剖析这一复杂系统的构建逻辑，并以哥本哈根和东京为例进行具体阐释。\n\n### 一、 规划理念：从“以车为本”到“以人为本”\n\n传统城市规划往往优先考虑汽车通行效率，导致城市空间被道路切割，公共空间萎缩。现代规划的核心转变在于确立“以人为本”的原则，即优先保障步行者、骑行者和公共交通乘客的路权。这种转变要求规划者重新定义街道的功能：街道不仅是交通通道，更是社交场所、商业空间和文化载体。\n\n在规划初期，城市管理者需通过大数据模型模拟不同交通模式对城市形态的影响。例如，通过“15分钟生活圈”概念，确保居民在步行或骑行15分钟内即可到达学校、医院、公园和主要商业区。这种规划不仅减少了长距离通勤的需求，还",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 53,
+              "prompt_ms": 165.2,
+              "prompt_per_token_ms": 3.117,
+              "prompt_per_second": 320.8,
+              "predicted_n": 256,
+              "predicted_ms": 8915.6,
+              "predicted_per_token_ms": 34.827,
+              "predicted_per_second": 28.7,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 256,
+              "total_tokens": 309,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 10.235288209980354,
+            "first_content_s": 1.2104512799996883
+          },
+          "text_sha256": "254602e00b952a3cf03d219ae1a456f2d783156cbc613fcca3530c2ac7e472b8",
+          "equals_first_arm": false
+        },
+        {
+          "family": "english",
+          "wave": 0,
+          "index": 3,
+          "request": {
+            "model": "qwen3.8-flash-iq2-xs",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Write a very detailed numbered handbook for maintaining a community garden. Cover planning, budgets, tools, seasonal tasks, volunteers, mistakes, and examples. Continue for at least 100 numbered sections."
+              }
+            ],
+            "max_tokens": 256,
+            "temperature": 0,
+            "reasoning_effort": "none",
+            "cache_prompt": false,
+            "seed": 20261011
+          },
+          "result": {
+            "text": "# The Comprehensive Community Garden Maintenance Handbook\n\n## Phase 1: Foundation and Governance\n\n1. **Define the Mission Statement**: Clearly articulate the purpose of the garden. Is it for food security, education, aesthetic beauty, or community bonding? This statement guides all future decisions.\n2. **Establish Legal Structure**: Determine if the garden is a non-profit, a municipal park, or a private association. Register with local authorities to ensure liability protection and tax-exempt status if applicable.\n3. **Secure Land Rights**: Obtain written permission from the landowner (city, school, church, or private owner). Ensure the lease or agreement includes clauses for long-term use and maintenance responsibilities.\n4. **Conduct Site Assessment**: Evaluate soil quality, sunlight exposure (minimum 6-8 hours), water access, drainage, and proximity to public transportation.\n5. **Identify Stakeholders**: List key partners, including local government, neighborhood associations, schools, and potential donors.\n6. **Form a Steering Committee**: Create a core group of 5-10 individuals responsible for high-level decision-making, conflict resolution, and strategic planning.\n7. **Draft Bylaws**: Create a document outlining membership rules, voting procedures, officer roles, and dissolution protocols",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 52,
+              "prompt_ms": 153.5,
+              "prompt_per_token_ms": 2.952,
+              "prompt_per_second": 338.8,
+              "predicted_n": 256,
+              "predicted_ms": 8097.8,
+              "predicted_per_token_ms": 31.632,
+              "predicted_per_second": 31.6,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 52,
+              "completion_tokens": 256,
+              "total_tokens": 308,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 9.77017938089557,
+            "first_content_s": 1.549067310988903
+          },
+          "text_sha256": "21a24bed2e81d7ff4528b4b5f787ece919d57aef187a0680ae0b7671be797f7e",
+          "equals_first_arm": false
+        },
+        {
+          "family": "code",
+          "wave": 0,
+          "index": 4,
+          "request": {
+            "model": "qwen3.8-flash-iq2-xs",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Write a complete Python file implementing a bounded producer-consumer work queue with typed dataclasses, priority ordering, deadlines, retries, safe shutdown, metrics and an extensive demonstration. Include detailed comments and at least 250 lines."
+              }
+            ],
+            "max_tokens": 256,
+            "temperature": 0,
+            "reasoning_effort": "none",
+            "cache_prompt": false,
+            "seed": 20261011
+          },
+          "result": {
+            "text": "```python\n\"\"\"\nBounded Producer-Consumer Work Queue with Typed Dataclasses\n\nThis module implements a robust, bounded producer-consumer work queue system\nwith the following features:\n- Typed dataclasses for tasks and results\n- Priority ordering (higher priority tasks processed first)\n- Deadline support (tasks can expire)\n- Retry logic with exponential backoff\n- Safe shutdown mechanism\n- Metrics collection (throughput, latency, error rates)\n- Extensive demonstration\n\nThe queue is bounded to prevent unbounded memory growth. Producers block when\nthe queue is full, and consumers block when the queue is empty.\n\"\"\"\n\nimport time\nimport threading\nimport heapq\nimport random\nimport logging\nfrom dataclasses import dataclass, field\nfrom typing import Optional, Callable, List, Dict, Any\nfrom enum import Enum\nfrom concurrent.futures import ThreadPoolExecutor\nfrom collections import defaultdict\nfrom datetime import datetime, timedelta\n\n# Configure logging\nlogging.basicConfig(\n    level=logging.INFO,\n    format='%(asctime)s [%(levelname)s] %(name)s: %(message)s'\n)\nlogger = logging.getLogger(\"WorkQueue\")\n\n\nclass TaskStatus(Enum):\n    \"\"\"Enumeration of possible task statuses.\"\"\"\n    PENDING =",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 58,
+              "prompt_ms": 162.6,
+              "prompt_per_token_ms": 2.803,
+              "prompt_per_second": 356.7,
+              "predicted_n": 256,
+              "predicted_ms": 7145.3,
+              "predicted_per_token_ms": 27.911,
+              "predicted_per_second": 35.8,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 58,
+              "completion_tokens": 256,
+              "total_tokens": 314,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 9.180468678940088,
+            "first_content_s": 1.9153533619828522
+          },
+          "text_sha256": "03c05fe7f5cde126abe950192984bdcb62c56840219ec58edea2037496f910b9",
+          "equals_first_arm": false
+        },
+        {
+          "family": "chinese",
+          "wave": 0,
+          "index": 5,
+          "request": {
+            "model": "qwen3.8-flash-iq2-xs",
+            "messages": [
+              {
+                "role": "user",
+                "content": "用中文详细介绍一座城市如何规划公共交通、步行和自行车网络，分析预算、换乘、无障碍、运营、维护与居民需求，给出具体例子，连续写至少2000字。"
+              }
+            ],
+            "max_tokens": 256,
+            "temperature": 0,
+            "reasoning_effort": "none",
+            "cache_prompt": false,
+            "seed": 20261011
+          },
+          "result": {
+            "text": "在现代城市治理的语境下，交通规划已不再仅仅是关于道路宽度的工程问题，而是一场关于社会公平、环境可持续性与生活质量的深刻变革。一座理想的城市，其交通网络应当是一个有机整体，将公共交通、步行与自行车系统无缝融合，形成一个高效、包容且充满活力的生态系统。以下将从规划理念、预算分配、换乘效率、无障碍设计、运营维护以及居民需求响应等多个维度，深入剖析这一复杂系统的构建逻辑，并以哥本哈根和东京为例进行具体阐释。\n\n### 一、 规划理念：从“以车为本”到“以人为本”\n\n传统城市规划往往优先考虑汽车通行效率，导致城市空间被道路切割，公共空间萎缩。现代规划的核心转变在于确立“以人为本”的原则，即优先保障步行者、骑行者和公共交通乘客的路权。这种转变要求规划者重新定义街道的功能：街道不仅是交通通道，更是社交场所、商业空间和文化载体。\n\n在规划初期，城市管理者需通过大数据模型模拟不同交通模式的流量分布。例如，通过手机信令数据或GPS轨迹分析，识别居民的高频出行路径。基于这些数据，规划者可以确定哪些区域需要拓宽人行道，哪些路段适合建立自行车专用道，以及哪些节点需要",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 53,
+              "prompt_ms": 166.3,
+              "prompt_per_token_ms": 3.138,
+              "prompt_per_second": 318.7,
+              "predicted_n": 256,
+              "predicted_ms": 9562.7,
+              "predicted_per_token_ms": 37.354,
+              "predicted_per_second": 26.8,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 256,
+              "total_tokens": 309,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 10.200292822904885,
+            "first_content_s": 0.524984709918499
+          },
+          "text_sha256": "b71c505947ec164ac4bb4a3da7e8c5cf8d37770205ee2d7aa4d30ddb7801b887",
+          "equals_first_arm": false
+        }
+      ],
+      "aggregate_e2e_tps": 149.97695043370229
+    },
+    {
+      "wave": 1,
+      "wall_s": 9.337785705924034,
+      "requests": [
+        {
+          "family": "code",
+          "wave": 1,
+          "index": 0,
+          "request": {
+            "model": "qwen3.8-flash-iq2-xs",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Write a complete Python file implementing a bounded producer-consumer work queue with typed dataclasses, priority ordering, deadlines, retries, safe shutdown, metrics and an extensive demonstration. Include detailed comments and at least 250 lines."
+              }
+            ],
+            "max_tokens": 256,
+            "temperature": 0,
+            "reasoning_effort": "none",
+            "cache_prompt": false,
+            "seed": 20261011
+          },
+          "result": {
+            "text": "```python\n\"\"\"\nBounded Producer-Consumer Work Queue with Typed Dataclasses\n\nThis module implements a robust, bounded producer-consumer work queue system\nwith the following features:\n- Typed dataclasses for tasks and results\n- Priority ordering (higher priority tasks processed first)\n- Deadline support (tasks can expire)\n- Retry logic with exponential backoff\n- Safe shutdown mechanism\n- Metrics collection (throughput, latency, error rates)\n- Extensive demonstration\n\nThe queue is bounded to prevent unbounded memory growth. Producers block when\nthe queue is full, and consumers block when the queue is empty.\n\"\"\"\n\nimport time\nimport threading\nimport heapq\nimport random\nimport logging\nfrom dataclasses import dataclass, field\nfrom typing import Optional, Callable, List, Dict, Any\nfrom enum import Enum\nfrom concurrent.futures import ThreadPoolExecutor\n\n# Configure logging for demonstration\nlogging.basicConfig(\n    level=logging.INFO,\n    format='%(asctime)s [%(threadName)s] %(levelname)s: %(message)s'\n)\nlogger = logging.getLogger(__name__)\n\n\nclass TaskStatus(Enum):\n    \"\"\"Enumeration of possible task statuses.\"\"\"\n    PENDING = \"pending\"\n    IN_PROGRESS = \"in",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 58,
+              "prompt_ms": 163.0,
+              "prompt_per_token_ms": 2.81,
+              "prompt_per_second": 355.8,
+              "predicted_n": 256,
+              "predicted_ms": 7106.2,
+              "predicted_per_token_ms": 27.759,
+              "predicted_per_second": 36.0,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 58,
+              "completion_tokens": 256,
+              "total_tokens": 314,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 8.276658670045435,
+            "first_content_s": 1.0377898230217397
+          },
+          "text_sha256": "7433bf55ff181c779a58a7b484244f4afc2d31708aa015d949f10543254c35eb",
+          "equals_first_arm": false
+        },
+        {
+          "family": "chinese",
+          "wave": 1,
+          "index": 1,
+          "request": {
+            "model": "qwen3.8-flash-iq2-xs",
+            "messages": [
+              {
+                "role": "user",
+                "content": "用中文详细介绍一座城市如何规划公共交通、步行和自行车网络，分析预算、换乘、无障碍、运营、维护与居民需求，给出具体例子，连续写至少2000字。"
+              }
+            ],
+            "max_tokens": 256,
+            "temperature": 0,
+            "reasoning_effort": "none",
+            "cache_prompt": false,
+            "seed": 20261011
+          },
+          "result": {
+            "text": "在现代城市治理的语境下，交通规划早已超越了单纯的“道路建设”范畴，转而成为一项复杂的系统工程，旨在平衡效率、公平、可持续性与生活质量。一座理想的城市，其交通网络应当是一个多层次、多模态的生态系统，其中公共交通、步行与自行车网络并非孤立存在，而是通过精心设计的换乘节点与空间布局，形成紧密耦合的整体。以下将从规划逻辑、预算分配、无障碍设计、运营维护及居民需求响应五个维度，深入剖析这一系统的构建过程，并以哥本哈根和东京为例进行具体阐释。\n\n### 一、 规划逻辑：从“以车为本”到“以人为本”的范式转移\n\n传统城市规划往往优先考虑机动车通行效率，导致城市空间被道路切割，步行与骑行环境恶化。现代规划的核心逻辑是“层级化网络”：公共交通作为骨干，承担长距离、大运量的通勤任务；自行车网络作为“最后一公里”的接驳工具，连接居住区与交通枢纽；步行网络则作为城市毛细血管，服务于短距离出行与公共空间体验。\n\n这种层级化设计的关键在于**换乘节点的整合**。例如，在哥本哈根，规划者不仅修建了宽阔的自行车道，更在地铁站出口直接设置自行车停放区",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 53,
+              "prompt_ms": 150.8,
+              "prompt_per_token_ms": 2.845,
+              "prompt_per_second": 351.5,
+              "predicted_n": 256,
+              "predicted_ms": 7499.1,
+              "predicted_per_token_ms": 29.293,
+              "predicted_per_second": 34.1,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 256,
+              "total_tokens": 309,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 9.33463226701133,
+            "first_content_s": 1.715709277894348
+          },
+          "text_sha256": "1605a9918ac81d5ba64924a7096d42f47aa79d4994166f09dd36efc683165caa",
+          "equals_first_arm": false
+        },
+        {
+          "family": "english",
+          "wave": 1,
+          "index": 2,
+          "request": {
+            "model": "qwen3.8-flash-iq2-xs",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Write a very detailed numbered handbook for maintaining a community garden. Cover planning, budgets, tools, seasonal tasks, volunteers, mistakes, and examples. Continue for at least 100 numbered sections."
+              }
+            ],
+            "max_tokens": 256,
+            "temperature": 0,
+            "reasoning_effort": "none",
+            "cache_prompt": false,
+            "seed": 20261011
+          },
+          "result": {
+            "text": "# The Comprehensive Community Garden Maintenance Handbook\n\n## Part I: Foundation and Governance\n\n1. **Define the Mission Statement**: Clearly articulate the purpose of the garden (e.g., food security, education, biodiversity, or social cohesion) to guide all future decisions.\n2. **Establish Legal Structure**: Determine whether the garden operates as a non-profit, a cooperative, or under municipal oversight to clarify liability and funding eligibility.\n3. **Secure Land Rights**: Obtain written permission from the landowner, municipality, or private entity, ensuring the agreement covers long-term usage and renewal terms.\n4. **Create a Governance Committee**: Form a core group of 5–7 individuals responsible for decision-making, conflict resolution, and strategic planning.\n5. **Draft Bylaws**: Write clear rules regarding membership, voting rights, dues, and the removal of members who violate garden policies.\n6. **Develop a Code of Conduct**: Outline expectations for behavior, including respect for neighbors, noise levels, and adherence to safety protocols.\n7. **Assign Roles and Responsibilities**: Designate specific roles such as Treasurer, Secretary, Site Manager, and Education Coordinator to prevent role ambiguity.\n8. **Establish Communication Channels**: Create a dedicated email list, social media group, or physical",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 52,
+              "prompt_ms": 148.4,
+              "prompt_per_token_ms": 2.854,
+              "prompt_per_second": 350.4,
+              "predicted_n": 256,
+              "predicted_ms": 6877.3,
+              "predicted_per_token_ms": 26.864,
+              "predicted_per_second": 37.2,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 52,
+              "completion_tokens": 256,
+              "total_tokens": 308,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 9.061329575954005,
+            "first_content_s": 2.0703288840595633
+          },
+          "text_sha256": "17f773f5a98462b9a3c243a65c4ad67dcc920ed4838b87d7a51df566825f87c5",
+          "equals_first_arm": false
+        },
+        {
+          "family": "code",
+          "wave": 1,
+          "index": 3,
+          "request": {
+            "model": "qwen3.8-flash-iq2-xs",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Write a complete Python file implementing a bounded producer-consumer work queue with typed dataclasses, priority ordering, deadlines, retries, safe shutdown, metrics and an extensive demonstration. Include detailed comments and at least 250 lines."
+              }
+            ],
+            "max_tokens": 256,
+            "temperature": 0,
+            "reasoning_effort": "none",
+            "cache_prompt": false,
+            "seed": 20261011
+          },
+          "result": {
+            "text": "```python\n\"\"\"\nBounded Producer-Consumer Work Queue with Typed Dataclasses\n\nThis module implements a robust, bounded producer-consumer work queue system\nwith the following features:\n- Typed dataclasses for tasks and results\n- Priority ordering (higher priority tasks processed first)\n- Deadline support (tasks can expire)\n- Retry logic with exponential backoff\n- Safe shutdown mechanism\n- Metrics collection (throughput, latency, error rates)\n- Extensive demonstration\n\nThe queue is bounded to prevent memory overflow. Producers add tasks,\nconsumers process them. Multiple consumers can be spawned for parallelism.\n\"\"\"\n\nimport time\nimport threading\nimport heapq\nimport random\nimport logging\nfrom dataclasses import dataclass, field\nfrom typing import Optional, Callable, List, Dict, Any\nfrom enum import Enum\nfrom concurrent.futures import ThreadPoolExecutor\n\n# Configure logging for demonstration\nlogging.basicConfig(\n    level=logging.INFO,\n    format='%(asctime)s [%(levelname)s] %(message)s'\n)\nlogger = logging.getLogger(__name__)\n\n\nclass TaskStatus(Enum):\n    \"\"\"Enumeration of possible task states.\"\"\"\n    PENDING = \"pending\"\n    IN_PROGRESS = \"in_progress\"\n    COMPLETED",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 58,
+              "prompt_ms": 162.7,
+              "prompt_per_token_ms": 2.805,
+              "prompt_per_second": 356.5,
+              "predicted_n": 256,
+              "predicted_ms": 7444.7,
+              "predicted_per_token_ms": 29.081,
+              "predicted_per_second": 34.4,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 58,
+              "completion_tokens": 256,
+              "total_tokens": 314,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 8.273391112918034,
+            "first_content_s": 0.7022125399671495
+          },
+          "text_sha256": "5c3e9f20c6b1b7fa8417300a8b4cf13bcbd01c65421b176d6ee4868fbfb6983b",
+          "equals_first_arm": false
+        },
+        {
+          "family": "chinese",
+          "wave": 1,
+          "index": 4,
+          "request": {
+            "model": "qwen3.8-flash-iq2-xs",
+            "messages": [
+              {
+                "role": "user",
+                "content": "用中文详细介绍一座城市如何规划公共交通、步行和自行车网络，分析预算、换乘、无障碍、运营、维护与居民需求，给出具体例子，连续写至少2000字。"
+              }
+            ],
+            "max_tokens": 256,
+            "temperature": 0,
+            "reasoning_effort": "none",
+            "cache_prompt": false,
+            "seed": 20261011
+          },
+          "result": {
+            "text": "在现代城市治理的语境下，交通规划已不再仅仅是关于道路宽度的工程问题，而是一场关于社会公平、环境可持续性与生活质量的深刻变革。一座理想的城市，其交通网络应当是一个有机整体，将公共交通、步行与自行车系统无缝融合，形成一个高效、包容且充满活力的生态系统。以下将从规划理念、预算分配、换乘效率、无障碍设计、运营维护以及居民需求响应等多个维度，深入剖析这一复杂系统的构建逻辑，并以哥本哈根和东京为例进行具体阐释。\n\n### 一、 规划理念：从“以车为本”到“以人为本”\n\n传统城市规划往往优先考虑汽车通行效率，导致城市空间被道路切割，公共空间萎缩。现代规划的核心转变在于确立“以人为本”的原则，即优先保障步行者、骑行者和公共交通乘客的路权。这种转变要求规划者重新定义街道的功能：街道不仅是交通通道，更是社交场所、商业空间和文化载体。\n\n在规划初期，城市管理者需通过大数据模型模拟人口流动、就业分布与居住密度。例如，通过识别“交通走廊”，确定哪些区域需要高密度的公共交通覆盖，哪些区域适合发展慢行网络。这种规划必须具有前瞻性，预留未来人口增长和气候变化应对的空间。例如，",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 53,
+              "prompt_ms": 167.5,
+              "prompt_per_token_ms": 3.16,
+              "prompt_per_second": 316.4,
+              "predicted_n": 256,
+              "predicted_ms": 8684.5,
+              "predicted_per_token_ms": 34.326,
+              "predicted_per_second": 29.1,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 256,
+              "total_tokens": 309,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 9.175427658017725,
+            "first_content_s": 0.17542308801785111
+          },
+          "text_sha256": "bb2f3a29fc90c7e04d86080d014c62448f11e9e850a138c9cafe330572015d0b",
+          "equals_first_arm": false
+        },
+        {
+          "family": "english",
+          "wave": 1,
+          "index": 5,
+          "request": {
+            "model": "qwen3.8-flash-iq2-xs",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Write a very detailed numbered handbook for maintaining a community garden. Cover planning, budgets, tools, seasonal tasks, volunteers, mistakes, and examples. Continue for at least 100 numbered sections."
+              }
+            ],
+            "max_tokens": 256,
+            "temperature": 0,
+            "reasoning_effort": "none",
+            "cache_prompt": false,
+            "seed": 20261011
+          },
+          "result": {
+            "text": "# The Comprehensive Community Garden Maintenance Handbook\n\n## Part I: Foundation and Governance\n\n1. **Define the Mission Statement**: Clearly articulate the purpose of the garden (e.g., food security, education, biodiversity, or social cohesion) to guide all future decisions.\n2. **Establish Legal Structure**: Determine whether the garden operates as a non-profit, a cooperative, or under municipal oversight to clarify liability and funding eligibility.\n3. **Secure Land Rights**: Obtain written permission from the landowner, municipality, or private entity, ensuring the agreement covers long-term usage and renewal terms.\n4. **Create a Governance Committee**: Form a core group of 5–7 individuals responsible for decision-making, conflict resolution, and strategic planning.\n5. **Draft Bylaws**: Write clear rules regarding membership, voting rights, dues, and the removal of members who violate garden policies.\n6. **Develop a Code of Conduct**: Outline expectations for behavior, including respect for neighbors, noise levels, and adherence to safety protocols.\n7. **Set Membership Criteria**: Define who can join (residents, students, seniors) and whether there is a waitlist or priority system for local residents.\n8. **Establish Communication Channels**: Create a dedicated email list, social media",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 52,
+              "prompt_ms": 149.3,
+              "prompt_per_token_ms": 2.871,
+              "prompt_per_second": 348.3,
+              "predicted_n": 256,
+              "predicted_ms": 7357.7,
+              "predicted_per_token_ms": 28.741,
+              "predicted_per_second": 34.8,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 52,
+              "completion_tokens": 256,
+              "total_tokens": 308,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 8.853371648816392,
+            "first_content_s": 1.376670585013926
+          },
+          "text_sha256": "d50a1a70562ceecd3dd300272fbb69b50d190dd405f891842e2ade13978b9ae4",
+          "equals_first_arm": false
+        }
+      ],
+      "aggregate_e2e_tps": 164.4929588634207
+    },
+    {
+      "wave": 2,
+      "wall_s": 9.37718460499309,
+      "requests": [
+        {
+          "family": "chinese",
+          "wave": 2,
+          "index": 0,
+          "request": {
+            "model": "qwen3.8-flash-iq2-xs",
+            "messages": [
+              {
+                "role": "user",
+                "content": "用中文详细介绍一座城市如何规划公共交通、步行和自行车网络，分析预算、换乘、无障碍、运营、维护与居民需求，给出具体例子，连续写至少2000字。"
+              }
+            ],
+            "max_tokens": 256,
+            "temperature": 0,
+            "reasoning_effort": "none",
+            "cache_prompt": false,
+            "seed": 20261011
+          },
+          "result": {
+            "text": "在现代城市治理的语境下，交通规划早已超越了单纯的“道路建设”范畴，转而成为一项复杂的系统工程，旨在平衡效率、公平、可持续性与生活质量。一座理想的城市，其交通网络应当是一个多层次、多模态的生态系统，其中公共交通、步行与自行车网络并非孤立存在，而是通过无缝衔接共同构成城市的“血管系统”。以下将从规划逻辑、预算分配、换乘设计、无障碍设施、运营维护以及居民需求响应六个维度，深入剖析这一系统的构建过程，并以哥本哈根和东京为例进行具体阐释。\n\n### 一、 规划逻辑：从“以车为本”到“以人为本”\n\n传统城市规划往往优先考虑机动车通行效率，导致城市空间被道路切割，公共空间萎缩。现代规划则强调“街道作为公共空间”的理念。在规划初期，城市管理者需通过大数据模型模拟人口流动、就业分布及土地利用模式。例如，哥本哈根在规划自行车网络时，并非简单地铺设车道，而是基于“自行车高速公路”概念，连接郊区居住区与市中心就业区，确保骑行路径的连续性与安全性。这种规划逻辑要求将步行和自行车视为独立的交通模式，而非机动车的附属品。\n\n步行网络的规划核心在于“最后一公里”",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 53,
+              "prompt_ms": 185.6,
+              "prompt_per_token_ms": 3.502,
+              "prompt_per_second": 285.6,
+              "predicted_n": 256,
+              "predicted_ms": 8661.4,
+              "predicted_per_token_ms": 33.966,
+              "predicted_per_second": 29.4,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 256,
+              "total_tokens": 309,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 9.159708210965618,
+            "first_content_s": 0.17701726593077183
+          },
+          "text_sha256": "149a9fbcb329dd0b2875a4be94a75f79b349ddf008f8e7a5510a1126b955dc09",
+          "equals_first_arm": false
+        },
+        {
+          "family": "english",
+          "wave": 2,
+          "index": 1,
+          "request": {
+            "model": "qwen3.8-flash-iq2-xs",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Write a very detailed numbered handbook for maintaining a community garden. Cover planning, budgets, tools, seasonal tasks, volunteers, mistakes, and examples. Continue for at least 100 numbered sections."
+              }
+            ],
+            "max_tokens": 256,
+            "temperature": 0,
+            "reasoning_effort": "none",
+            "cache_prompt": false,
+            "seed": 20261011
+          },
+          "result": {
+            "text": "# The Comprehensive Community Garden Maintenance Handbook\n\n## Part I: Foundation and Governance\n\n1. **Define the Mission Statement**: Clearly articulate the purpose of the garden (e.g., food security, education, biodiversity, or social cohesion) to guide all future decisions.\n2. **Establish Legal Structure**: Determine whether the garden operates as a non-profit, a municipal park, a private club, or an informal group, and secure necessary liability insurance.\n3. **Secure Land Rights**: Obtain written permission from the landowner (city, school, church, or private owner) with clear terms regarding duration, access, and liability.\n4. **Create a Governance Committee**: Form a core team responsible for decision-making, conflict resolution, and financial oversight.\n5. **Draft Bylaws**: Write clear rules regarding membership, dues, plot allocation, and code of conduct to prevent ambiguity.\n6. **Develop a Code of Conduct**: Outline expectations for behavior, including respect for neighbors, noise levels, and handling of disputes.\n7. **Set Membership Criteria**: Define who can join, how many plots are available, and whether priority is given to residents, seniors, or youth.\n8. **Establish Plot Allocation Policy**: Decide if plots are assigned randomly, by lottery",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 52,
+              "prompt_ms": 152.6,
+              "prompt_per_token_ms": 2.935,
+              "prompt_per_second": 340.8,
+              "predicted_n": 256,
+              "predicted_ms": 7092.8,
+              "predicted_per_token_ms": 27.706,
+              "predicted_per_second": 36.1,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 52,
+              "completion_tokens": 256,
+              "total_tokens": 308,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 8.990697223925963,
+            "first_content_s": 1.7802171688526869
+          },
+          "text_sha256": "741ec55acdb3d4cfde26fb7a02b69297096c8b1e8fee45a856afbc2150f17505",
+          "equals_first_arm": false
+        },
+        {
+          "family": "code",
+          "wave": 2,
+          "index": 2,
+          "request": {
+            "model": "qwen3.8-flash-iq2-xs",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Write a complete Python file implementing a bounded producer-consumer work queue with typed dataclasses, priority ordering, deadlines, retries, safe shutdown, metrics and an extensive demonstration. Include detailed comments and at least 250 lines."
+              }
+            ],
+            "max_tokens": 256,
+            "temperature": 0,
+            "reasoning_effort": "none",
+            "cache_prompt": false,
+            "seed": 20261011
+          },
+          "result": {
+            "text": "```python\n\"\"\"\nBounded Producer-Consumer Work Queue with Typed Dataclasses\n\nThis module implements a robust, bounded producer-consumer work queue system\nwith the following features:\n- Typed dataclasses for tasks and results\n- Priority ordering (higher priority tasks processed first)\n- Deadline support (tasks can expire)\n- Retry logic with exponential backoff\n- Safe shutdown mechanism\n- Metrics collection (throughput, latency, error rates)\n- Extensive demonstration\n\nThe queue is bounded to prevent unbounded memory growth. Producers block when\nthe queue is full, and consumers block when the queue is empty.\n\"\"\"\n\nimport time\nimport threading\nimport heapq\nimport random\nimport logging\nfrom dataclasses import dataclass, field\nfrom typing import Optional, Callable, List, Dict, Any\nfrom enum import Enum\nfrom concurrent.futures import ThreadPoolExecutor\nfrom collections import defaultdict\nfrom datetime import datetime, timedelta\n\n# Configure logging for demonstration\nlogging.basicConfig(\n    level=logging.INFO,\n    format='%(asctime)s [%(levelname)s] %(message)s',\n    datefmt='%Y-%m-%d %H:%M:%S'\n)\nlogger = logging.getLogger(__name__)\n\n\nclass TaskStatus(Enum):",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 58,
+              "prompt_ms": 167.7,
+              "prompt_per_token_ms": 2.891,
+              "prompt_per_second": 345.9,
+              "predicted_n": 256,
+              "predicted_ms": 6506.6,
+              "predicted_per_token_ms": 25.416,
+              "predicted_per_second": 39.3,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 58,
+              "completion_tokens": 256,
+              "total_tokens": 314,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 8.060024750884622,
+            "first_content_s": 1.4288589619100094
+          },
+          "text_sha256": "261805545bdf72f67e71901de8a0737b82881511655e1ca01e260e41f4034982",
+          "equals_first_arm": false
+        },
+        {
+          "family": "chinese",
+          "wave": 2,
+          "index": 3,
+          "request": {
+            "model": "qwen3.8-flash-iq2-xs",
+            "messages": [
+              {
+                "role": "user",
+                "content": "用中文详细介绍一座城市如何规划公共交通、步行和自行车网络，分析预算、换乘、无障碍、运营、维护与居民需求，给出具体例子，连续写至少2000字。"
+              }
+            ],
+            "max_tokens": 256,
+            "temperature": 0,
+            "reasoning_effort": "none",
+            "cache_prompt": false,
+            "seed": 20261011
+          },
+          "result": {
+            "text": "在现代城市治理的语境下，交通规划已不再仅仅是关于道路宽度的工程问题，而是一场关于社会公平、环境可持续性与生活质量的深刻变革。一座理想的城市，其交通网络应当是一个有机整体，将公共交通、步行与自行车系统无缝融合，形成一个高效、包容且充满活力的生态系统。以下将从规划理念、预算分配、换乘效率、无障碍设计、运营维护以及居民需求响应等多个维度，深入剖析这一复杂系统的构建逻辑，并以哥本哈根和东京为例进行具体阐释。\n\n### 一、 规划理念：从“以车为本”到“以人为本”\n\n传统城市规划往往优先考虑汽车通行效率，导致城市空间被道路切割，公共空间萎缩。现代规划的核心转变在于确立“以人为本”的原则，即优先保障步行者、骑行者和公共交通乘客的路权与体验。这种转变要求规划者重新定义街道的功能：街道不仅是交通通道，更是社交场所、商业空间和文化载体。\n\n在规划初期，城市管理者需通过大数据模型模拟不同交通模式的流量分布。例如，通过手机信令数据或交通卡数据，分析居民的日常出行链。规划重点在于建立“多模式网络”，确保步行和自行车网络能够覆盖公共交通站点，形成“最后一公里”的有效",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 53,
+              "prompt_ms": 154.1,
+              "prompt_per_token_ms": 2.908,
+              "prompt_per_second": 343.9,
+              "predicted_n": 256,
+              "predicted_ms": 8550.1,
+              "predicted_per_token_ms": 33.399,
+              "predicted_per_second": 29.9,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 53,
+              "completion_tokens": 256,
+              "total_tokens": 309,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 9.376111739082262,
+            "first_content_s": 0.7047819630242884
+          },
+          "text_sha256": "225c6d158818defe575955ee1b83793edd2a263ade37cfbbdd2d4e8ee49b12b7",
+          "equals_first_arm": false
+        },
+        {
+          "family": "english",
+          "wave": 2,
+          "index": 4,
+          "request": {
+            "model": "qwen3.8-flash-iq2-xs",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Write a very detailed numbered handbook for maintaining a community garden. Cover planning, budgets, tools, seasonal tasks, volunteers, mistakes, and examples. Continue for at least 100 numbered sections."
+              }
+            ],
+            "max_tokens": 256,
+            "temperature": 0,
+            "reasoning_effort": "none",
+            "cache_prompt": false,
+            "seed": 20261011
+          },
+          "result": {
+            "text": "# The Comprehensive Community Garden Maintenance Handbook\n\n## Part I: Foundation and Governance\n\n1. **Define the Mission Statement**: Clearly articulate the purpose of the garden (e.g., food security, education, biodiversity, or social cohesion) to guide all future decisions.\n2. **Establish Legal Structure**: Determine whether the garden operates as a non-profit, a municipal partnership, or an informal group, ensuring liability insurance is in place.\n3. **Secure Land Rights**: Obtain written permission from the landowner, including clauses regarding lease duration, renewal options, and liability for property damage.\n4. **Create a Governance Committee**: Form a core team responsible for decision-making, conflict resolution, and financial oversight, ensuring diverse representation.\n5. **Draft a Code of Conduct**: Define acceptable behavior, including rules against harassment, theft, and unauthorized construction, with clear consequences for violations.\n6. **Develop a Membership Agreement**: Require all participants to sign a waiver acknowledging risks and agreeing to follow garden rules, including liability for personal injury.\n7. **Set Up Communication Channels**: Establish a primary method for announcements (e.g., email list, Discord, or physical bulletin board) to ensure consistent information flow.\n8. **Create a Conflict Resolution Protocol**: Outline steps for",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 52,
+              "prompt_ms": 152.8,
+              "prompt_per_token_ms": 2.938,
+              "prompt_per_second": 340.3,
+              "predicted_n": 256,
+              "predicted_ms": 6847.0,
+              "predicted_per_token_ms": 26.746,
+              "predicted_per_second": 37.4,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 52,
+              "completion_tokens": 256,
+              "total_tokens": 308,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 9.103381430031732,
+            "first_content_s": 2.1292166139464825
+          },
+          "text_sha256": "5b8ac924d4c36bf20c0ee052cb679f2b703620ad2d72e62fbd451f40d952ff7b",
+          "equals_first_arm": false
+        },
+        {
+          "family": "code",
+          "wave": 2,
+          "index": 5,
+          "request": {
+            "model": "qwen3.8-flash-iq2-xs",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Write a complete Python file implementing a bounded producer-consumer work queue with typed dataclasses, priority ordering, deadlines, retries, safe shutdown, metrics and an extensive demonstration. Include detailed comments and at least 250 lines."
+              }
+            ],
+            "max_tokens": 256,
+            "temperature": 0,
+            "reasoning_effort": "none",
+            "cache_prompt": false,
+            "seed": 20261011
+          },
+          "result": {
+            "text": "```python\n\"\"\"\nBounded Producer-Consumer Work Queue with Typed Dataclasses\n\nThis module implements a robust, bounded producer-consumer work queue system\nwith the following features:\n- Typed dataclasses for tasks and results\n- Priority ordering (higher priority tasks processed first)\n- Deadline support (tasks can expire)\n- Retry logic with exponential backoff\n- Safe shutdown mechanism\n- Metrics collection (throughput, latency, error rates)\n- Extensive demonstration\n\nThe queue is bounded to prevent memory overflow. Producers add tasks,\nconsumers process them. Multiple consumers can be spawned for parallelism.\n\"\"\"\n\nimport time\nimport threading\nimport heapq\nimport random\nimport logging\nfrom dataclasses import dataclass, field\nfrom typing import Optional, Callable, List, Dict, Any\nfrom enum import Enum\nfrom concurrent.futures import ThreadPoolExecutor\n\n# Configure logging for demonstration\nlogging.basicConfig(\n    level=logging.INFO,\n    format='%(asctime)s [%(levelname)s] %(message)s'\n)\nlogger = logging.getLogger(__name__)\n\n\nclass TaskStatus(Enum):\n    \"\"\"Enumeration of possible task states.\"\"\"\n    PENDING = \"pending\"\n    IN_PROGRESS = \"in_progress\"\n    COMPLETED",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 58,
+              "prompt_ms": 167.6,
+              "prompt_per_token_ms": 2.89,
+              "prompt_per_second": 346.1,
+              "predicted_n": 256,
+              "predicted_ms": 7124.6,
+              "predicted_per_token_ms": 27.83,
+              "predicted_per_second": 35.9,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 58,
+              "completion_tokens": 256,
+              "total_tokens": 314,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "length",
+            "wall_s": 8.317949776072055,
+            "first_content_s": 1.0639247950166464
+          },
+          "text_sha256": "5c3e9f20c6b1b7fa8417300a8b4cf13bcbd01c65421b176d6ee4868fbfb6983b",
+          "equals_first_arm": false
+        }
+      ],
+      "aggregate_e2e_tps": 163.8018301550897
+    }
+  ],
+  "checks": {
+    "isolation": {
+      "passed": true,
+      "requests": [
+        {
+          "passed": true,
+          "request": {
+            "model": "qwen3.8-flash-iq2-xs",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Repeat this exact identifier and nothing else: SESSION-0-NOVA-8191"
+              }
+            ],
+            "max_tokens": 64,
+            "temperature": 0,
+            "reasoning_effort": "none",
+            "cache_prompt": false
+          },
+          "result": {
+            "text": "SESSION-0-NOVA-8191",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 31,
+              "prompt_ms": 105.1,
+              "prompt_per_token_ms": 3.39,
+              "prompt_per_second": 295.0,
+              "predicted_n": 12,
+              "predicted_ms": 11.0,
+              "predicted_per_token_ms": 11.0,
+              "predicted_per_second": 90.9,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 31,
+              "completion_tokens": 12,
+              "total_tokens": 43,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "stop",
+            "wall_s": 0.6965845099184662,
+            "first_content_s": 0.1133175881113857
+          }
+        },
+        {
+          "passed": true,
+          "request": {
+            "model": "qwen3.8-flash-iq2-xs",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Repeat this exact identifier and nothing else: SESSION-1-NOVA-8328"
+              }
+            ],
+            "max_tokens": 64,
+            "temperature": 0,
+            "reasoning_effort": "none",
+            "cache_prompt": false
+          },
+          "result": {
+            "text": "SESSION-1-NOVA-8328",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 31,
+              "prompt_ms": 86.5,
+              "prompt_per_token_ms": 2.79,
+              "prompt_per_second": 358.4,
+              "predicted_n": 12,
+              "predicted_ms": 10.5,
+              "predicted_per_token_ms": 10.5,
+              "predicted_per_second": 95.2,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 31,
+              "completion_tokens": 12,
+              "total_tokens": 43,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "stop",
+            "wall_s": 1.9001854120288044,
+            "first_content_s": 1.070019577164203
+          }
+        },
+        {
+          "passed": true,
+          "request": {
+            "model": "qwen3.8-flash-iq2-xs",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Repeat this exact identifier and nothing else: SESSION-2-NOVA-8465"
+              }
+            ],
+            "max_tokens": 64,
+            "temperature": 0,
+            "reasoning_effort": "none",
+            "cache_prompt": false
+          },
+          "result": {
+            "text": "SESSION-2-NOVA-8465",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 31,
+              "prompt_ms": 86.5,
+              "prompt_per_token_ms": 2.79,
+              "prompt_per_second": 358.4,
+              "predicted_n": 12,
+              "predicted_ms": 11.3,
+              "predicted_per_token_ms": 11.3,
+              "predicted_per_second": 88.5,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 31,
+              "completion_tokens": 12,
+              "total_tokens": 43,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "stop",
+            "wall_s": 1.9107475390192121,
+            "first_content_s": 1.6236557220108807
+          }
+        },
+        {
+          "passed": true,
+          "request": {
+            "model": "qwen3.8-flash-iq2-xs",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Repeat this exact identifier and nothing else: SESSION-3-NOVA-8602"
+              }
+            ],
+            "max_tokens": 64,
+            "temperature": 0,
+            "reasoning_effort": "none",
+            "cache_prompt": false
+          },
+          "result": {
+            "text": "SESSION-3-NOVA-8602",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 31,
+              "prompt_ms": 86.6,
+              "prompt_per_token_ms": 2.794,
+              "prompt_per_second": 358.0,
+              "predicted_n": 12,
+              "predicted_ms": 10.5,
+              "predicted_per_token_ms": 10.5,
+              "predicted_per_second": 95.2,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 31,
+              "completion_tokens": 12,
+              "total_tokens": 43,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "stop",
+            "wall_s": 1.8873396459966898,
+            "first_content_s": 0.7880987899843603
+          }
+        },
+        {
+          "passed": true,
+          "request": {
+            "model": "qwen3.8-flash-iq2-xs",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Repeat this exact identifier and nothing else: SESSION-4-NOVA-8739"
+              }
+            ],
+            "max_tokens": 64,
+            "temperature": 0,
+            "reasoning_effort": "none",
+            "cache_prompt": false
+          },
+          "result": {
+            "text": "SESSION-4-NOVA-8739",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 31,
+              "prompt_ms": 86.5,
+              "prompt_per_token_ms": 2.79,
+              "prompt_per_second": 358.4,
+              "predicted_n": 12,
+              "predicted_ms": 10.5,
+              "predicted_per_token_ms": 10.5,
+              "predicted_per_second": 95.2,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 31,
+              "completion_tokens": 12,
+              "total_tokens": 43,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "stop",
+            "wall_s": 1.9094417640008032,
+            "first_content_s": 1.347481801873073
+          }
+        },
+        {
+          "passed": true,
+          "request": {
+            "model": "qwen3.8-flash-iq2-xs",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Repeat this exact identifier and nothing else: SESSION-5-NOVA-8876"
+              }
+            ],
+            "max_tokens": 64,
+            "temperature": 0,
+            "reasoning_effort": "none",
+            "cache_prompt": false
+          },
+          "result": {
+            "text": "SESSION-5-NOVA-8876",
+            "timings": {
+              "cache_n": 0,
+              "prompt_n": 31,
+              "prompt_ms": 87.1,
+              "prompt_per_token_ms": 2.81,
+              "prompt_per_second": 355.9,
+              "predicted_n": 12,
+              "predicted_ms": 11.3,
+              "predicted_per_token_ms": 11.3,
+              "predicted_per_second": 88.5,
+              "draft_n": 0,
+              "draft_n_accepted": 0
+            },
+            "usage": {
+              "prompt_tokens": 31,
+              "completion_tokens": 12,
+              "total_tokens": 43,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              }
+            },
+            "finish_reason": "stop",
+            "wall_s": 1.2637774469330907,
+            "first_content_s": 0.5018129390664399
+          }
+        }
+      ]
+    }
+  },
+  "aggregate_e2e_tps": 159.13501241347734,
+  "all_equal": false,
+  "screening_only": true,
+  "holdout": false,
+  "protocol": "Fresh service per count/arm; identical 64-token warm-up; three-family rotated simultaneous batches; aggregate includes prefill/admission; temperature zero; thinking/cache off.",
+  "binary_sha256": "92da29f22a05dad7ba366e809db3df8f61b8453df93ac8b7ba79a2e5a8b374e3",
+  "configuration": {
+    "exe": "/home/student_su/qwen/release/strata-single-GPU/experimental/packed-batch/strata-packed",
+    "cwd": "/home/student_su/qwen/release/strata-single-GPU",
+    "gpu": [
+      0
+    ],
+    "gpus_asked": true,
+    "layer_split": "auto",
+    "backend": "cuda",
+    "host": "127.0.0.1",
+    "port": 59195,
+    "model_name": "qwen3.8-flash-iq2-xs",
+    "aliases": [
+      "qwen3.8 flash",
+      "Qwen3.8-Flash-Next",
+      "Qwen3.8-Flash-Next-GSQ-RCO-IQ2_XS",
+      "qwen3.8-flash-next-ud-q3-k-xl"
+    ],
+    "draft_vocab": "full",
+    "sampling": {
+      "temperature": 0.3,
+      "top_p": 0.95,
+      "top_k": 20,
+      "min_p": 0.0,
+      "presence_penalty": 0.0,
+      "repetition_penalty": 1.0
+    },
+    "tokenizer": "/home/student_su/qwen/release/strata-single-GPU/assets/data/packs/iq2_xs/tokenizer",
+    "log": "/home/student_su/qwen/release/strata-single-GPU/runtime/packed-batch-calibration-iq2-20261011/c6-2-packed/engine.log",
+    "lib_dirs": [
+      "/usr/local/cuda/lib64"
+    ],
+    "parallel_workers": 1,
+    "env": {
+      "CUDA_VISIBLE_DEVICES": "GPU-c9ae835b-bc1e-8d6c-f85f-e415defc30bc",
+      "STRATA_BATCH_PACKED_MTP": "1"
+    },
+    "args": [
+      "--pack",
+      "/home/student_su/qwen/release/strata-single-GPU/assets/data/packs/iq2_xs",
+      "--native",
+      "/home/student_su/qwen/release/strata-single-GPU/assets/models/IQ2_XS/Qwen3.8-Flash-Next-GSQ-RCO-IQ2_XS-00001-of-00002.gguf",
+      "--ple-gguf",
+      "/home/student_su/qwen/release/strata-single-GPU/assets/models/IQ2_XS/Qwen3.8-Flash-Next-GSQ-RCO-IQ2_XS-00002-of-00002.gguf",
+      "--expert-profile",
+      "/home/student_su/qwen/release/strata-single-GPU/assets/data/expert-profile.bin",
+      "--expert-cache",
+      "auto",
+      "--max-context",
+      "262144",
+      "--kv",
+      "int8",
+      "--rope-scaling",
+      "none",
+      "--vision",
+      "--prefill",
+      "auto",
+      "--spec",
+      "4",
+      "--spec-min-p",
+      "0.5",
+      "--mtp",
+      "/home/student_su/qwen/release/strata-single-GPU/assets/data/mtp/rt",
+      "--batch-mtp",
+      "--pool-workers",
+      "32",
+      "--kv-resident",
+      "8192",
+      "--vram-reserve-mib",
+      "1400",
+      "--prompt-cache",
+      "0"
+    ],
+    "vision": {
+      "exe": "/home/student_su/qwen/release/strata-single-GPU/engine/distribution/strata-vision",
+      "mmproj": "/home/student_su/qwen/release/strata-single-GPU/assets/models/IQ2_XS/mmproj-Qwen3.8-Flash-Next-BF16.gguf",
+      "model": "/home/student_su/qwen/release/strata-single-GPU/assets/models/IQ2_XS/Qwen3.8-Flash-Next-GSQ-RCO-IQ2_XS-00001-of-00002.gguf",
+      "gpu": true,
+      "cuda_device": "GPU-c9ae835b-bc1e-8d6c-f85f-e415defc30bc",
+      "threads": 32,
+      "max_tokens": 0,
+      "flash_attn": "on",
+      "native_video": {
+        "fps": 8.0,
+        "timestamp_interval_ms": 5000
+      }
+    },
+    "deployment": {
+      "project": "strata-turbo-single",
+      "weights": "iq2_xs",
+      "context": 262144,
+      "physical_gpus": [
+        0
+      ],
+      "gpu_uuids": [
+        "GPU-c9ae835b-bc1e-8d6c-f85f-e415defc30bc"
+      ],
+      "max_concurrent_requests": 6,
+      "main_weights_changed": false,
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "audio_input": false,
+      "engine_selection": "turbo",
+      "numa_node": 0,
+      "resource_plan": {
+        "context": 262144,
+        "kv": "int8",
+        "workers": 32,
+        "vision_gpu": true,
+        "low_ram": false,
+        "kv_streaming": true,
+        "kv_resident": 8192,
+        "reserve_mib": 1400,
+        "large_gpu_turbo": true,
+        "concurrency": 6,
+        "full_experts": true,
+        "input_modalities": [
+          "text",
+          "image",
+          "video"
+        ],
+        "audio_input": false
+      },
+      "cpu_affinity": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        256,
+        257,
+        258,
+        259,
+        260,
+        261,
+        262,
+        263,
+        264,
+        265,
+        266,
+        267,
+        268,
+        269,
+        270,
+        271,
+        272,
+        273,
+        274,
+        275,
+        276,
+        277,
+        278,
+        279,
+        280,
+        281,
+        282,
+        283,
+        284,
+        285,
+        286,
+        287,
+        288,
+        289,
+        290,
+        291,
+        292,
+        293,
+        294,
+        295,
+        296,
+        297,
+        298,
+        299,
+        300,
+        301,
+        302,
+        303,
+        304,
+        305,
+        306,
+        307,
+        308,
+        309,
+        310,
+        311,
+        312,
+        313,
+        314,
+        315,
+        316,
+        317,
+        318,
+        319,
+        320,
+        321,
+        322,
+        323,
+        324,
+        325,
+        326,
+        327,
+        328,
+        329,
+        330,
+        331,
+        332,
+        333,
+        334,
+        335,
+        336,
+        337,
+        338,
+        339,
+        340,
+        341,
+        342,
+        343,
+        344,
+        345,
+        346,
+        347,
+        348,
+        349,
+        350,
+        351,
+        352,
+        353,
+        354,
+        355,
+        356,
+        357,
+        358,
+        359,
+        360,
+        361,
+        362,
+        363,
+        364,
+        365,
+        366,
+        367,
+        368,
+        369,
+        370,
+        371,
+        372,
+        373,
+        374,
+        375,
+        376,
+        377,
+        378,
+        379,
+        380,
+        381,
+        382,
+        383
+      ]
+    },
+    "parallel": 6,
+    "server_module": "experimental-native-api"
+  },
+  "status": {
+    "service": "strata",
+    "model": "qwen3.8-flash-iq2-xs",
+    "loaded": true,
+    "auto_load": true,
+    "structured_output": {
+      "formats": [
+        "json_object",
+        "json_schema"
+      ],
+      "method": "prompt_and_validate",
+      "constrained_decoding": false,
+      "stream_buffered": true
+    },
+    "engine": "0.1.41",
+    "started": 1791678005,
+    "uptime_s": 0,
+    "cache_max_tokens": 262144,
+    "context": {
+      "native": 262144,
+      "max_positions": 262144
+    },
+    "concurrency": {
+      "serving": 6,
+      "requested": 6
+    },
+    "dialects": [
+      "/v1/chat/completions",
+      "/v1/messages",
+      "/v1/responses"
+    ],
+    "vision": {
+      "enabled": true,
+      "available": true,
+      "error": null
+    },
+    "activity": {
+      "requests": 0,
+      "in_flight": 0,
+      "last_request_at": null
+    },
+    "last_timings": null,
+    "vram": {
+      "elastic": false
+    },
+    "machine": {
+      "at": 1791678005,
+      "gpu": null,
+      "ram": {
+        "used_gib": 128.3,
+        "total_gib": 1007.3
+      }
+    }
+  },
+  "measurement_only": true
+}

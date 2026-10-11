@@ -1,0 +1,195 @@
+--- a/generate.cpp
++++ b/generate.cpp
+@@ -1,4 +1,5 @@
+ #include "strata/core/native_media.hpp"
++#include "planner.hpp"
+ // src/program/generate.cpp - P2.S6: `strata generate`.
+ //
+ // THE DRIVER, and the first program in this project that answers a question.  Everything below it is a
+@@ -3869,6 +3870,7 @@
+     // force: when it cannot run it is said and left off (plain batching still starts); default off = exactly 0.1.39.
+     const char* batch_mtp_env = std::getenv("STRATA_BATCH_MTP");
+     bool batch_mtp = o.batch_mtp || (batch_mtp_env != nullptr && batch_mtp_env[0] != '\0' && batch_mtp_env[0] != '0');
++    const char* packed_env = std::getenv("STRATA_BATCH_PACKED_MTP");
+     if (batch_mtp) {
+         const char* why = o.batch < 2 ? "it needs --batch 2 or more" : o.mtp.empty() ? "it needs --mtp"
+                         : o.spec < 2 ? "it needs --spec T (T >= 2)" : (multi_gpu || split_same || !stages.empty())
+@@ -3878,6 +3880,8 @@
+             batch_mtp = false;
+         }
+     }
++    const bool packed_batch_mtp = batch_mtp && packed_env && packed_env[0] && packed_env[0] != '0';
++    if (packed_batch_mtp) std::fprintf(stderr, "strata generate: packed batch MTP row scheduling enabled\n");
+     std::vector<std::vector<std::unique_ptr<strata::core::SessionState>>> bslot_ss;
+     if (o.batch != 0) {
+         const int cap = strata::kernels::kVerifyMaxT;
+@@ -3997,7 +4001,7 @@
+                                  vram_free_note().c_str());
+                     return 1;
+                 }
+-                d->set_max_drafts(1);   // the first candidate verifies one proposal per slot
++                d->set_max_drafts(packed_batch_mtp ? std::clamp(8 / o.batch - 1, 1, o.spec - 1) : 1);
+                 d->set_ple_session(bslot_ss[0][(size_t) b].get());
+                 slot_mtp.push_back(std::move(d));
+             }
+@@ -8257,6 +8261,8 @@
+             int32_t x = 0;                 ///< the token the next window feeds (not yet in the slot's state)
+             std::array<int32_t, strata::kernels::kVerifyMaxT> draft{}; ///< the slot's next MTP proposal
+             bool draft_ready = false;
++            int draft_n = 0;
++            std::array<float, strata::kernels::kVerifyMaxT> draft_prob{};
+             int64_t p = 0;                 ///< its position
+             int64_t produced = 0, max_new = 0;
+             Clock::time_point t0;
+@@ -8281,6 +8287,7 @@
+         double bt_wait0 = 0, bt_pool0 = 0;
+         int64_t bt_miss0 = 0, bt_hits0 = 0, bt_pcie0 = 0;
+         int64_t bt_windows = 0, bt_rows = 0, bt_tokens = 0;
++        int64_t bt_input_rows = 0, bt_proposals = 0, bt_accepted = 0;
+         Clock::time_point bt_start = Clock::now();
+         int admit_slot = -1;               ///< the slot the request being read will continue in (BGEN)
+         long long admit_max_new = 0;
+@@ -8381,30 +8388,56 @@
+             int64_t pos[strata::kernels::kVerifyMaxT] = {};
+             int first[strata::kernels::kVerifyMaxT] = {}, active[strata::kernels::kVerifyMaxT] = {};
+             static size_t next_slot = 0;
+-            // Each MTP slot uses two rows; rotate slots when more than four are active.
+             int A = 0;
+-            for (size_t offset = 0; offset < bs.size() && S + (batch_mtp ? 2 : 1) <= strata::kernels::kVerifyMaxT; ++offset) {
+-                const int b = (int) ((next_slot + offset) % bs.size());
+-                if (bs[(size_t) b].active) {
++            int length[strata::kernels::kVerifyMaxT] = {};
++            if (packed_batch_mtp) {
++                std::vector<strata::turbo::ProposalBudget> candidates;
++                for (size_t b = 0; b < bs.size(); ++b) if (bs[b].active) {
++                    const BSlot& sl = bs[b];
++                    const int count = (int) std::max<int64_t>(0, std::min<int64_t>(sl.draft_n,
++                        std::min(sl.max_new - sl.produced - 1, o.max_context - sl.p - 2)));
++                    candidates.push_back({(int)b, {sl.draft_prob.begin(), sl.draft_prob.begin() + count}});
++                }
++                auto counts = strata::turbo::packed_rows(candidates, strata::kernels::kVerifyMaxT);
++                if (counts.size() != candidates.size()) { err = "packed batch: too many live sessions"; return false; }
++                for (size_t a = 0; a < candidates.size(); ++a) {
++                    const int b = candidates[a].slot;
++                    const BSlot& sl = bs[(size_t)b];
+                     first[A] = S;
++                    length[A] = counts[a];
+                     active[A++] = b;
+-                    rows[S] = b;
+-                    tok[S] = bs[(size_t) b].x;
+-                    pos[S] = bs[(size_t) b].p;
+-                    ++S;
+-                    if (batch_mtp) {
++                    for (int j = 0; j < counts[a]; ++j) {
+                         rows[S] = b;
+-                        if (!bs[(size_t) b].draft_ready) {
+-                            err = "batch MTP: a live slot has no draft";
+-                            return false;
++                        tok[S] = j == 0 ? sl.x : sl.draft[(size_t)j - 1];
++                        pos[S++] = sl.p + j;
++                    }
++                }
++            } else {
++                // Preserve the upstream fixed two-row scheduling when disabled.
++                for (size_t offset = 0; offset < bs.size() && S + (batch_mtp ? 2 : 1) <= strata::kernels::kVerifyMaxT; ++offset) {
++                    const int b = (int) ((next_slot + offset) % bs.size());
++                    if (bs[(size_t) b].active) {
++                        first[A] = S;
++                        length[A] = batch_mtp ? 2 : 1;
++                        active[A++] = b;
++                        rows[S] = b;
++                        tok[S] = bs[(size_t) b].x;
++                        pos[S] = bs[(size_t) b].p;
++                        ++S;
++                        if (batch_mtp) {
++                            rows[S] = b;
++                            if (!bs[(size_t) b].draft_ready) {
++                                err = "batch MTP: a live slot has no draft";
++                                return false;
++                            }
++                            tok[S] = bs[(size_t) b].draft[0];
++                            pos[S] = bs[(size_t) b].p + 1;
++                            ++S;
+                         }
+-                        tok[S] = bs[(size_t) b].draft[0];
+-                        pos[S] = bs[(size_t) b].p + 1;
+-                        ++S;
+                     }
+                 }
+-            }
+-            if (batch_mtp && A > 0) next_slot = ((size_t) active[A - 1] + 1) % bs.size();
++                if (batch_mtp && A > 0) next_slot = ((size_t) active[A - 1] + 1) % bs.size();
++            }
+             if (S == 0) return true;
+             const bool was_busy = strata::core::progress().busy.load();
+             strata::core::progress().busy.store(true);
+@@ -8428,9 +8461,17 @@
+             for (int a = 0; a < A; ++a) {
+                 const int b = active[a], i = first[a];
+                 const BSlot& sl = bs[(size_t) b];
+-                const bool eos = std::find(o.eos_ids.begin(), o.eos_ids.end(), (int64_t) outb[i]) != o.eos_ids.end();
+-                keep[b] = batch_mtp && outb[i] == tok[i + 1] && !eos && !sl.stop &&
+-                          sl.produced + 2 <= sl.max_new && sl.p + 3 <= o.max_context ? 2 : 1;
++                keep[b] = 1;
++                while (keep[b] < length[a]) {
++                    const int k = keep[b];
++                    const bool eos = std::find(o.eos_ids.begin(), o.eos_ids.end(),
++                                               (int64_t)outb[i + k - 1]) != o.eos_ids.end();
++                    if (outb[i + k - 1] != tok[i + k] || eos || sl.stop ||
++                        sl.produced + k + 1 > sl.max_new || sl.p + k + 2 > o.max_context) break;
++                    ++keep[b];
++                }
++                bt_proposals += length[a] - 1;
++                bt_accepted += keep[b] - 1;
+             }
+             if (!(batch_mtp ? ver.commit_slot_prefixes(keep.data(), err) : ver.commit_slots(err))) {
+                 std::printf("ERR %s\n", err.c_str());
+@@ -8441,6 +8482,7 @@
+             bt_run += msd(w0, w1);
+             bt_commit += msd(w1, w2);
+             ++bt_windows;
++            bt_input_rows += S;
+             for (int a = 0; a < A; ++a) bt_rows += keep[active[a]];
+             for (int t = 0; t < A; ++t) {
+                 const int b = active[t];
+@@ -8467,9 +8509,16 @@
+                     const size_t stride = (size_t) g.hc * (size_t) g.n_embd;
+                     if (cudaMemcpy(slot_mtp_rows[(size_t) b].get(),
+                                    ver.final_R_all() + (size_t) first[t] * stride,
+-                                   2 * stride * sizeof(float), cudaMemcpyDeviceToDevice) != cudaSuccess ||
+-                        !slot_mtp[(size_t) b]->draft(2, outb + first[t], pos[first[t]], keep[b] - 1,
+-                                                    sl.draft.data(), err)) {
++                                   (size_t)length[t] * stride * sizeof(float), cudaMemcpyDeviceToDevice) != cudaSuccess) {
++                        std::printf("ERR batch MTP residual staging\n");
++                        return false;
++                    }
++                    int live_slots = 0;
++                    for (const BSlot& v : bs) live_slots += v.active;
++                    slot_mtp[(size_t)b]->set_max_drafts(packed_batch_mtp ? std::clamp(8 / std::max(live_slots,1) - 1, 1, o.spec - 1) : 1);
++                    if (!slot_mtp[(size_t) b]->draft(length[t], outb + first[t], pos[first[t]], keep[b] - 1,
++                                                    sl.draft.data(), err, sl.draft_prob.data(),
++                                                    packed_batch_mtp ? (float)o.spec_min_p : 0.0f, &sl.draft_n)) {
+                         std::printf("ERR batch MTP slot %d: %s\n", b, err.c_str());
+                         return false;
+                     }
+@@ -8494,6 +8543,9 @@
+                     const std::string pr = (k == 0 ? ver : stages[k - 1]->ver).profile_report();
+                     if (!pr.empty()) std::fprintf(stderr, "strata batch GPU stages, stage %zu (ms/window):%s\n", k + 1, pr.c_str());
+                 }
++                if (packed_batch_mtp) std::fprintf(stderr, "strata packed batch: verified %lld rows, accepted %lld of %lld proposals\n",
++                    (long long)bt_input_rows, (long long)bt_accepted, (long long)bt_proposals);
++                bt_input_rows = bt_proposals = bt_accepted = 0;
+                 bt_run = bt_commit = bt_emit = 0;
+                 bt_windows = bt_rows = bt_tokens = 0;
+             }
+@@ -10993,7 +11045,9 @@
+                     sl.ids = live;
+                     if (batch_mtp) {
+                         if (!slot_mtp[(size_t) admit_slot]->draft_first(1, ver.final_R_all(), sl.x,
+-                                                                        sl.p - 1, sl.draft.data(), err)) {
++                                                                        sl.p - 1, sl.draft.data(), err,
++                                                                        sl.draft_prob.data(), packed_batch_mtp ? (float)o.spec_min_p : 0.0f,
++                                                                        &sl.draft_n)) {
+                             std::fprintf(stderr, "strata batch: MTP admission for slot %d failed: %s\n",
+                                          admit_slot, err.c_str());
+                             return 1;

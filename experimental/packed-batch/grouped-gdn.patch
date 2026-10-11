@@ -1,0 +1,72 @@
+--- a/verify.cpp
++++ b/verify.cpp
+@@ -1,5 +1,6 @@
+ // src/core/verify.cpp - see include/strata/core/verify.hpp.
+ #include "strata/core/verify.hpp"
++#include "packed_gdn.hpp"
+ #include "strata/core/remote_expert_opt.hpp"
+ #include "strata/core/dma_batch.hpp"
+ #include "strata/core/spec_prob.hpp"
+@@ -1018,6 +1019,21 @@
+                 }
+                 // the recurrence from the untouched state over tokens [0, te); outputs only for this group's
+                 if (batch_rec_) {   // each slot's recurrence over its own proposed-token group
++                    static const bool fuse_groups = [] { const char* e=std::getenv("STRATA_BATCH_GDN_FUSED"); return e && e[0]=='1'; }();
++                    if (fuse_groups) {
++                        strata::turbo::GdnGroups groups{};
++                        int count=0;
++                        for (int t=tb;t<te;) {
++                            const int first=t;
++                            while(t<te && brow_[t]==brow_[first]) ++t;
++                            SessionState& sx=slot_ss(first);
++                            groups.group[count++]={sx.gdn_state+(size_t)(gi-sx.gdn_ord0)*gdn_floats,
++                                hb+(size_t)first*C,gate+(size_t)first*HV,beta+(size_t)first*HV,
++                                z_+(size_t)first*ZV,y_+(size_t)first*ZV,nullptr,t-first};
++                        }
++                        strata::turbo::gdn_groups_run(groups,count,(int)C,(int)HK,(int)HV,
++                                                     (const float*)wnm->data,EPS,cs);
++                    } else {
+                     for (int t = tb; t < te;) {
+                         const int first = t;
+                         while (t < te && brow_[t] == brow_[first]) ++t;
+@@ -1027,6 +1043,7 @@
+                                             beta + (size_t) first * HV, z_ + (size_t) first * ZV,
+                                             (const float*) wnm->data, EPS, y_ + (size_t) first * ZV,
+                                             (int) HK, (int) HV, t - first, nullptr, cs, 0);
++                    }
+                     }
+                 } else
+                 gdn_step_norm_multi(state, hb, (int) C, gate, beta, z_, (const float*) wnm->data, EPS, y_, (int) HK,
+@@ -2403,6 +2420,9 @@
+             if (!is_qsa_layer(g, l)) {
+                 const WeightRef* wnm = need(v, "ssm_norm.weight", err);
+                 if (!wnm) { ok = false; break; }
++                static const bool fuse_groups = [] { const char* e=std::getenv("STRATA_BATCH_GDN_FUSED"); return e && e[0]=='1'; }();
++                strata::turbo::GdnGroups groups{};
++                int count=0;
+                 for (int t = 0; t < S;) {
+                     const int first = t;
+                     while (t < S && rows[t] == rows[first]) ++t;
+@@ -2412,7 +2432,12 @@
+                     float* conv = state + (uint64_t) g.ssm_state_size * g.ssm_v_heads * g.ssm_state_size;
+                     gdn_conv_commit(conv, qkv_L_ + (size_t) gdn_index * MT * C + (size_t) first * C,
+                                     (int) C, keep, cs_);
+-                    gdn_step_norm_multi(state, h_L_ + (size_t) gdn_index * MT * C + (size_t) first * C, (int) C,
++                    if(fuse_groups) groups.group[count++]={state,
++                        h_L_+(size_t)gdn_index*MT*C+(size_t)first*C,
++                        gate_L_+(size_t)gdn_index*MT*HV+(size_t)first*HV,
++                        beta_L_+(size_t)gdn_index*MT*HV+(size_t)first*HV,
++                        z_+(size_t)first*ZV,y_dummy_+(size_t)first*ZV,keep,t-first};
++                    else gdn_step_norm_multi(state, h_L_ + (size_t) gdn_index * MT * C + (size_t) first * C, (int) C,
+                                         gate_L_ + (size_t) gdn_index * MT * HV + (size_t) first * HV,
+                                         beta_L_ + (size_t) gdn_index * MT * HV + (size_t) first * HV,
+                                         z_ + (size_t) first * ZV, (const float*) wnm->data, EPS,
+@@ -2420,6 +2445,8 @@
+                                         (int) HV, t - first, keep, cs_,
+                                         t - first > 1 ? t - first : 0);   // a 1-row group keeps the 0.1.39 kernel
+                 }
++                if(fuse_groups) strata::turbo::gdn_groups_commit(groups,count,(int)C,
++                                                                 (int)g.ssm_k_heads,(int)HV,cs_);
+                 ++gdn_index;
+             } else {
+                 const WeightRef* wikn = need(v, "indexer.k_norm.weight", err);

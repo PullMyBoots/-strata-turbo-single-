@@ -1,19 +1,35 @@
 """Update README tables and the gallery from complete, rendered showcase evidence."""
+import argparse
 import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 NAMES = {'iq2_xs': 'IQ2_XS', 'swift': 'Swift IQ3_XXS', 'iq3_s': 'IQ3_S'}
-ARMS = {'official': 'Strata upstream', 'turbo': 'Strata-Turbo-Single'}
+ARMS = {'official': 'Upstream (shared tuning)', 'turbo': 'Strata-Turbo-Single'}
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--pelican-evidence', type=Path, default=ROOT / 'evidence/pelican-corrected')
+    parser.add_argument('--gallery', type=Path, default=ROOT / 'docs/showcase/pelican-corrected')
+    args = parser.parse_args()
+    gallery_dir = args.gallery.absolute()
+    gallery_link = str(gallery_dir.relative_to(ROOT))
+    evidence_link = str(args.pelican_evidence.absolute().relative_to(ROOT))
     data = json.loads((ROOT / 'evidence/showcase/benchmark-summary.json').read_text())
-    pelican = json.loads((ROOT / 'evidence/showcase/pelican-summary.json').read_text())
-    checks = json.loads((ROOT / 'docs/showcase/pelican/render-checks.json').read_text())
+    resources = json.loads((ROOT / 'evidence/resource-comparison/summary.json').read_text())
+    assert resources['complete'] and len(resources['rows']) == 3
+    assert {r['weight'] for r in resources['rows']} == set(NAMES)
+    assert all(r['count']==2 for r in resources['rows'])
+    pelican = json.loads((args.pelican_evidence / 'pelican-summary.json').read_text())
+    checks = json.loads((gallery_dir / 'render-checks.json').read_text())
     assert data['complete'] and pelican['complete'] and len(checks) == 4
     assert pelican['first_requests_match_except_metadata']
     assert pelican['effort'] == 'max' and pelican['native_reasoning_effort'] == 'xhigh'
+    parity = pelican['initial_prompt_parity']
+    assert parity['same']
+    assert {r['arm'] for r in parity['rows']} == {f"{r['index']}-{r['arm']}" for r in pelican['runs']}
+    assert len({r['sha256'] for r in parity['rows']}) == 1
     counts = {'official': 0, 'turbo': 0}
     runs = {}
     for row in pelican['runs']:
@@ -25,8 +41,7 @@ def main():
         runs[name] = row
     median = pelican['engine_median_s']
     reduction = 100 * (1 - median['turbo'] / median['official'])
-    ratio = median['official'] / median['turbo']
-    comparison = (f'{reduction:.1f}% lower ({ratio:.2f}× faster completion)' if reduction >= 0
+    comparison = (f'{reduction:.1f}% lower' if reduction >= 0
                   else f'{-reduction:.1f}% higher')
     rows = []
     for arm, label in ARMS.items():
@@ -41,20 +56,27 @@ The same **GSQ-RCO IQ2_XS** model completed this exact task through **Claude Cod
 
 Both engines used one {gpu['name']} on GPU {gpu['index']}, native context, `--effort max` (mapped to the backend's highest `xhigh` reasoning level), and **{pelican['output_limit_per_request']:,} output tokens per model call**. Thinking and final output share that budget; no separate thinking limit was imposed. Each trial started with an empty workspace and a fresh service/session.
 
-| Pinned Strata upstream — first trial | Strata-Turbo-Single — first trial |
+| Upstream (shared tuning) — first trial | Strata-Turbo-Single — first trial |
 |:---:|:---:|
-| <img src="docs/showcase/pelican/official-1/pelican.gif" width="400" alt="Upstream model-generated pelican animation"> | <img src="docs/showcase/pelican/turbo-1/pelican.gif" width="400" alt="Turbo model-generated pelican animation"> |
-| **{runs['official-1']['wall_s']:.1f} s** · [Original HTML](docs/showcase/pelican/official-1/pelican.html) | **{runs['turbo-1']['wall_s']:.1f} s** · [Original HTML](docs/showcase/pelican/turbo-1/pelican.html) |
+| <img src="{gallery_link}/official-1/pelican.gif" width="400" alt="Upstream model-generated pelican animation"> | <img src="{gallery_link}/turbo-1/pelican.gif" width="400" alt="Turbo model-generated pelican animation"> |
+| **{runs['official-1']['wall_s']:.1f} s** · [Original HTML]({gallery_link}/official-1/pelican.html) | **{runs['turbo-1']['wall_s']:.1f} s** · [Original HTML]({gallery_link}/turbo-1/pelican.html) |
 
 | Engine | Trial 1 | Trial 2 | Median completion time | Model calls, trials 1 / 2 | Reported output tokens, trials 1 / 2 |
 |---|---:|---:|---:|---:|---:|
 {chr(10).join(rows)}
 
-In this four-trial **ABBA** test, Turbo's median task time was **{comparison}**. Timing includes CLI startup, thinking, generation, tool calls, and retries through successful completion. Model loading and the identical 64-token warm-up are excluded. The first model requests match after removing session metadata.
+In this four-trial **ABBA** test, Turbo's median task time was **{comparison}**. Timing includes CLI startup, thinking, generation, tool calls, and retries through successful completion. Model loading and the identical 64-token warm-up are excluded. The initial requests and their actual rendered prompt hashes match across all four trials. [Prompt parity evidence]({evidence_link}/pelican-summary.json).
 
 These are two trials per engine. Output lengths and tool paths differ, so the completion-time ratio is not a pure decoder speedup or a model-quality score. All four original HTML files are preserved without editing. Chromium checks confirm animated SVG content and no requested external dependencies; GIFs show the first six seconds at 20 fps.
 
-View every result in the [four-trial gallery](docs/showcase/pelican/index.html), or open the second-trial originals: [upstream](docs/showcase/pelican/official-2/pelican.html), [Turbo](docs/showcase/pelican/turbo-2/pelican.html). Download HTML files and open them locally; GitHub displays their source. [Timing and API evidence](evidence/showcase/pelican-summary.json) · [Render checks](docs/showcase/pelican/render-checks.json).
+View every result in the [four-trial gallery]({gallery_link}/index.html), or open the second-trial originals: [upstream]({gallery_link}/official-2/pelican.html), [Turbo]({gallery_link}/turbo-2/pelican.html). Download HTML files and open them locally; GitHub displays their source. [Timing and API evidence]({evidence_link}/pelican-summary.json) · [Render checks]({gallery_link}/render-checks.json).
+
+<details>
+<summary>Historical campaign and subsequent input correction</summary>
+
+The earlier campaign measured 128.2 s upstream and 148.9 s Turbo. Its rendered initial prompts differed by one token (1,226 versus 1,227), despite matching HTTP request bodies. It does not isolate the engine difference. [Historical animations and all timings](docs/showcase/pelican/index.html) remain available. The corrected showcase above uses the incumbent numerical engine plus the adapter repair; it is not a new kernel result. Absolute times across these campaigns are not paired measurements.
+
+</details>
 
 '''
     path = ROOT / 'README.md'
@@ -66,7 +88,7 @@ View every result in the [four-trial gallery](docs/showcase/pelican/index.html),
                '|---|---|---:|---:|---:|---:|']
     concurrent = ['| Weight | Engine | 1 request | 2 requests | 4 requests | 6 requests | 6-slot median request decode |',
                   '|---|---|---:|---:|---:|---:|---:|']
-    decode = ['| Weight | Short upstream / Turbo | Short change | ~254k upstream / Turbo | Long change |',
+    decode = ['| Weight | Short shared-upstream / Turbo | Short change | ~254k shared-upstream / Turbo | Long change |',
               '|---|---:|---:|---:|---:|']
     for weight, name in NAMES.items():
         means = {}
@@ -82,13 +104,20 @@ View every result in the [four-trial gallery](docs/showcase/pelican/index.html),
             prefill.append(f"| {name} | {label} | " + ' | '.join(f"{cold[size]['prefill_tps']:,.0f}" for size in (8192,65536,253952)) + f" | {cold[253952]['prefill_s']:.1f} s |")
             slots = {p['count']: p for p in data['concurrency'][weight+'-'+arm]}
             concurrent.append(f"| {name} | {label} | " + ' | '.join(f"{slots[count]['aggregate_e2e_tps']:.1f}" for count in (1,2,4,6)) + f" | {slots[6]['median_request_decode_tps']:.1f} |")
-    for key, table in [('DECODE SUMMARY',decode),('PREFILL',prefill),('CONCURRENCY',concurrent)]:
+    resource_table = ['| Weight | Default resources | Shared tuning | Turbo preset | vs defaults | vs shared tuning |',
+                      '|---|---:|---:|---:|---:|---:|']
+    for row in resources['rows']:
+        rates = [row['arms'][arm]['median_e2e_tps'] for arm in ('default','shared','incumbent')]
+        resource_table.append(f"| {NAMES[row['weight']]} | " + ' | '.join(f'{v:.1f}' for v in rates) +
+                              f" | **{row['gain_vs_default_percent']:+.1f}%** | {row['gain_vs_shared_percent']:+.1f}% |")
+    for key, table in [('DECODE SUMMARY',decode),('PREFILL',prefill),('CONCURRENCY',concurrent),
+                       ('RESOURCE COMPARISON',resource_table)]:
         begin, end = f'<!-- BEGIN {key} TABLE -->', f'<!-- END {key} TABLE -->'
         left, rest = readme.split(begin,1)
         _, right = rest.split(end,1)
         readme = left + begin + '\n\n' + '\n'.join(table) + '\n\n' + end + right
     path.write_text(readme)
-    gallery = ROOT / 'docs/showcase/pelican/index.html'
+    gallery = gallery_dir / 'index.html'
     html = gallery.read_text()
     import re
     for arm, label in [('official','Upstream'),('turbo','Turbo')]:

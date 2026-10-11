@@ -1,0 +1,311 @@
+[
+  {
+    "wave": 0,
+    "wall_s": 9.94130160403438,
+    "requests": [
+      {
+        "family": "english",
+        "wave": 0,
+        "index": 0,
+        "request": {
+          "model": "qwen3.8-flash-iq3-s",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Write a detailed numbered guide to organizing and reviewing a software project. Include concrete examples. Continue for at least 100 items."
+            }
+          ],
+          "max_tokens": 256,
+          "temperature": 0,
+          "reasoning_effort": "none",
+          "cache_prompt": false,
+          "seed": 20261010
+        },
+        "result": {
+          "text": "This is a comprehensive, numbered guide to organizing, managing, and reviewing a software project. It covers the entire lifecycle from inception to maintenance, with concrete examples for each step.\n\n### Phase 1: Project Initiation & Definition\n\n1.  **Define the Problem Statement**: Clearly articulate the business problem the software solves. *Example: \"Users currently spend 15 minutes manually reconciling invoices; this tool will automate it to under 1 minute.\"*\n2.  **Identify Stakeholders**: List everyone who has an interest in the project. *Example: Product Manager, Lead Developer, QA Lead, Customer Support Manager, and the VP of Sales.*\n3.  **Establish Success Metrics (KPIs)**: Define how you will measure success. *Example: \"Reduce invoice processing time by 90% within 3 months of launch.\"*\n4.  **Conduct a Feasibility Study**: Assess technical, financial, and operational viability. *Example: Determine if the legacy database can handle the new API load without migration.*\n5.  **Create a Project Charter**: Draft a high-level document outlining scope, objectives, and constraints. *Example: A one-page PDF signed by the sponsor stating the budget cap is $",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 39,
+            "prompt_ms": 244.0,
+            "prompt_per_token_ms": 6.256,
+            "prompt_per_second": 159.8,
+            "predicted_n": 256,
+            "predicted_ms": 8671.4,
+            "predicted_per_token_ms": 33.873,
+            "predicted_per_second": 29.5,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 39,
+            "completion_tokens": 256,
+            "total_tokens": 295,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "length",
+          "wall_s": 9.940428442787379,
+          "first_content_s": 1.1497951799537987
+        },
+        "text_sha256": "873e9ec504e5ed25317ba8c17c204f794c5bd9a91be9c20a5222a9dde6844763",
+        "equals_first_arm": true
+      },
+      {
+        "family": "code",
+        "wave": 0,
+        "index": 1,
+        "request": {
+          "model": "qwen3.8-flash-iq3-s",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Write a complete Python asyncio task scheduler with concurrency limits, retries with exponential backoff, cancellation, structured logging, and a runnable demonstration. Explain the design after the code. Produce at least 200 lines."
+            }
+          ],
+          "max_tokens": 256,
+          "temperature": 0,
+          "reasoning_effort": "none",
+          "cache_prompt": false,
+          "seed": 20261010
+        },
+        "result": {
+          "text": "```python\n\"\"\"\nAsyncio Task Scheduler with Concurrency Limits, Retries, Cancellation, and Structured Logging.\n\nThis module provides a robust task scheduler that:\n- Limits concurrent execution of tasks\n- Retries failed tasks with exponential backoff\n- Supports task cancellation\n- Provides structured logging\n- Handles graceful shutdown\n\nUsage:\n    scheduler = TaskScheduler(max_concurrency=5)\n    scheduler.submit(my_task, arg1, arg2)\n    await scheduler.run()\n\"\"\"\n\nimport asyncio\nimport logging\nimport time\nimport uuid\nfrom dataclasses import dataclass, field\nfrom enum import Enum\nfrom typing import Any, Callable, Coroutine, Dict, List, Optional, Set\nfrom concurrent.futures import ThreadPoolExecutor\n\n\nclass TaskState(Enum):\n    \"\"\"Represents the state of a scheduled task.\"\"\"\n    PENDING = \"pending\"\n    RUNNING = \"running\"\n    COMPLETED = \"completed\"\n    FAILED = \"failed\"\n    CANCELLED = \"cancelled\"\n\n\n@dataclass\nclass TaskRecord:\n    \"\"\"Internal record tracking a scheduled task's metadata and state.\"\"\"\n    task_id: str\n    func: Callable[..., Coroutine]\n    args: tuple\n    kwargs",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 55,
+            "prompt_ms": 354.2,
+            "prompt_per_token_ms": 6.44,
+            "prompt_per_second": 155.3,
+            "predicted_n": 256,
+            "predicted_ms": 8892.6,
+            "predicted_per_token_ms": 35.429,
+            "predicted_per_second": 28.2,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 55,
+            "completion_tokens": 256,
+            "total_tokens": 311,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "length",
+          "wall_s": 9.755102460971102,
+          "first_content_s": 0.3511311770416796
+        },
+        "text_sha256": "2858328b5ffaaa1a4c9c5b89670fb583734678130391e39a57911d389182a705",
+        "equals_first_arm": true
+      }
+    ],
+    "aggregate_e2e_tps": 51.502310300315216
+  },
+  {
+    "wave": 1,
+    "wall_s": 10.11205524415709,
+    "requests": [
+      {
+        "family": "code",
+        "wave": 1,
+        "index": 0,
+        "request": {
+          "model": "qwen3.8-flash-iq3-s",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Write a complete Python asyncio task scheduler with concurrency limits, retries with exponential backoff, cancellation, structured logging, and a runnable demonstration. Explain the design after the code. Produce at least 200 lines."
+            }
+          ],
+          "max_tokens": 256,
+          "temperature": 0,
+          "reasoning_effort": "none",
+          "cache_prompt": false,
+          "seed": 20261010
+        },
+        "result": {
+          "text": "```python\n\"\"\"\nAsyncio Task Scheduler with Concurrency Limits, Retries, Cancellation, and Structured Logging.\n\nThis module provides a robust task scheduler that:\n- Limits concurrent execution of tasks\n- Retries failed tasks with exponential backoff\n- Supports task cancellation\n- Provides structured logging\n- Handles graceful shutdown\n\nUsage:\n    scheduler = TaskScheduler(max_concurrency=5)\n    scheduler.submit(my_task, arg1, arg2)\n    await scheduler.run()\n\"\"\"\n\nimport asyncio\nimport logging\nimport time\nimport uuid\nfrom dataclasses import dataclass, field\nfrom enum import Enum\nfrom typing import Any, Callable, Coroutine, Dict, List, Optional, Set\nfrom concurrent.futures import ThreadPoolExecutor\n\n\nclass TaskState(Enum):\n    \"\"\"Represents the state of a scheduled task.\"\"\"\n    PENDING = \"pending\"\n    RUNNING = \"running\"\n    COMPLETED = \"completed\"\n    FAILED = \"failed\"\n    CANCELLED = \"cancelled\"\n\n\n@dataclass\nclass TaskRecord:\n    \"\"\"Internal record tracking a scheduled task's metadata and state.\"\"\"\n    task_id: str\n    func: Callable[..., Coroutine]\n    args: tuple\n    kwargs",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 55,
+            "prompt_ms": 251.2,
+            "prompt_per_token_ms": 4.567,
+            "prompt_per_second": 218.9,
+            "predicted_n": 256,
+            "predicted_ms": 8833.2,
+            "predicted_per_token_ms": 34.505,
+            "predicted_per_second": 29.0,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 55,
+            "completion_tokens": 256,
+            "total_tokens": 311,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "length",
+          "wall_s": 10.111245771171525,
+          "first_content_s": 1.1617099510040134
+        },
+        "text_sha256": "2858328b5ffaaa1a4c9c5b89670fb583734678130391e39a57911d389182a705",
+        "equals_first_arm": true
+      },
+      {
+        "family": "chinese",
+        "wave": 1,
+        "index": 1,
+        "request": {
+          "model": "qwen3.8-flash-iq3-s",
+          "messages": [
+            {
+              "role": "user",
+              "content": "用中文详细解释大语言模型推理的内存带宽、缓存、预填充和输出生成机制，给出计算例子和优化步骤。连续撰写至少1500字。"
+            }
+          ],
+          "max_tokens": 256,
+          "temperature": 0,
+          "reasoning_effort": "none",
+          "cache_prompt": false,
+          "seed": 20261010
+        },
+        "result": {
+          "text": "大语言模型（LLM）的推理过程并非简单的线性计算，而是一个高度依赖硬件架构特性的复杂系统交互过程。要深入理解其性能瓶颈与优化策略，必须从内存带宽、缓存机制、预填充（Prefill）以及输出生成（Decode）这四个核心维度进行剖析。\n\n首先，我们需要明确一个核心概念：**内存带宽是LLM推理的主要瓶颈**。与训练阶段不同，推理阶段（尤其是自回归生成）通常是“访存密集型”而非“计算密集型”。这意味着GPU的计算单元（如Tensor Core）往往处于等待数据的状态，因为数据从显存（HBM）搬运到计算单元的速度跟不上计算速度。以LLaMA-70B模型为例，其参数总量约为700亿。若使用FP16精度，仅模型权重就需要约140GB显存。在生成每一个Token时，理论上需要读取所有权重一次。假设GPU的内存带宽为3TB/s，读取140GB数据需要约46毫秒。如果GPU的理论算力极高，但带宽有限，那么实际吞吐量将完全受限于这46毫秒的读取时间，而非计算时间。因此，优化推理的核心往往在于减少数据搬运量或提高数据复用",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 49,
+            "prompt_ms": 376.3,
+            "prompt_per_token_ms": 7.68,
+            "prompt_per_second": 130.2,
+            "predicted_n": 256,
+            "predicted_ms": 9056.8,
+            "predicted_per_token_ms": 36.083,
+            "predicted_per_second": 27.7,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 49,
+            "completion_tokens": 256,
+            "total_tokens": 305,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "length",
+          "wall_s": 9.939894179115072,
+          "first_content_s": 0.3334988499991596
+        },
+        "text_sha256": "798db7e2117bb2a13c1d74d44a1a2fd3c98eb587698e9dc1e0a3fd9f578dfece",
+        "equals_first_arm": true
+      }
+    ],
+    "aggregate_e2e_tps": 50.63263477479931
+  },
+  {
+    "wave": 2,
+    "wall_s": 10.052078762091696,
+    "requests": [
+      {
+        "family": "chinese",
+        "wave": 2,
+        "index": 0,
+        "request": {
+          "model": "qwen3.8-flash-iq3-s",
+          "messages": [
+            {
+              "role": "user",
+              "content": "用中文详细解释大语言模型推理的内存带宽、缓存、预填充和输出生成机制，给出计算例子和优化步骤。连续撰写至少1500字。"
+            }
+          ],
+          "max_tokens": 256,
+          "temperature": 0,
+          "reasoning_effort": "none",
+          "cache_prompt": false,
+          "seed": 20261010
+        },
+        "result": {
+          "text": "大语言模型（LLM）的推理过程并非简单的线性计算，而是一个高度依赖硬件架构特性的复杂系统交互过程。要深入理解其性能瓶颈与优化策略，必须从内存带宽、缓存机制、预填充（Prefill）以及输出生成（Decode）这四个核心维度进行剖析。\n\n首先，我们需要明确一个核心概念：**内存带宽是LLM推理的主要瓶颈**。与训练阶段不同，推理阶段（尤其是自回归生成）通常是“访存密集型”而非“计算密集型”。这意味着GPU的计算单元（如Tensor Core）往往处于等待数据的状态，因为数据从显存（HBM）搬运到片上缓存的速度跟不上计算速度。以LLaMA-70B模型为例，其参数总量约为700亿。若使用FP16精度，仅模型权重就需要约140GB显存。在生成每一个Token时，理论上需要读取所有权重一次。假设GPU的内存带宽为3TB/s，那么读取140GB数据需要约46毫秒。如果GPU的理论算力极高，但带宽有限，实际吞吐量将完全受限于这46毫秒的读取时间，而非计算时间。因此，优化推理的核心往往在于减少数据搬运量或提高数据",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 49,
+            "prompt_ms": 370.5,
+            "prompt_per_token_ms": 7.561,
+            "prompt_per_second": 132.3,
+            "predicted_n": 256,
+            "predicted_ms": 9155.0,
+            "predicted_per_token_ms": 35.902,
+            "predicted_per_second": 27.9,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 49,
+            "completion_tokens": 256,
+            "total_tokens": 305,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "length",
+          "wall_s": 10.003961825976148,
+          "first_content_s": 0.34274476091377437
+        },
+        "text_sha256": "cc823f24fb54f5ac8f58f145cadb05d61ce0788e78e4448d5a6457d638352ec3",
+        "equals_first_arm": true
+      },
+      {
+        "family": "english",
+        "wave": 2,
+        "index": 1,
+        "request": {
+          "model": "qwen3.8-flash-iq3-s",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Write a detailed numbered guide to organizing and reviewing a software project. Include concrete examples. Continue for at least 100 items."
+            }
+          ],
+          "max_tokens": 256,
+          "temperature": 0,
+          "reasoning_effort": "none",
+          "cache_prompt": false,
+          "seed": 20261010
+        },
+        "result": {
+          "text": "This is a comprehensive, numbered guide to organizing, managing, and reviewing a software project. It covers the entire lifecycle from inception to maintenance, with concrete examples for each step.\n\n### Phase 1: Project Initiation & Definition\n\n1.  **Define the Problem Statement**: Clearly articulate the business problem the software solves. *Example: \"Users currently spend 15 minutes manually reconciling invoices; this tool will reduce that to 2 minutes.\"*\n2.  **Identify Stakeholders**: List everyone who has an interest in the project. *Example: Product Manager, Lead Developer, QA Lead, Customer Support Manager, and the VP of Sales.*\n3.  **Establish Success Metrics (KPIs)**: Define how you will measure success. *Example: \"Reduce invoice processing time by 80% within 3 months of launch.\"*\n4.  **Conduct a Feasibility Study**: Assess technical, financial, and operational viability. *Example: Determine if the existing legacy database can handle the new API load without migration.*\n5.  **Create a Project Charter**: Draft a high-level document outlining scope, objectives, and constraints. *Example: A one-page PDF signed by the sponsor authorizing the project.*\n",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 39,
+            "prompt_ms": 227.3,
+            "prompt_per_token_ms": 5.828,
+            "prompt_per_second": 171.6,
+            "predicted_n": 256,
+            "predicted_ms": 8823.4,
+            "predicted_per_token_ms": 34.466,
+            "predicted_per_second": 29.0,
+            "draft_n": 0,
+            "draft_n_accepted": 0
+          },
+          "usage": {
+            "prompt_tokens": 39,
+            "completion_tokens": 256,
+            "total_tokens": 295,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "finish_reason": "length",
+          "wall_s": 10.050330044934526,
+          "first_content_s": 1.1121483789756894
+        },
+        "text_sha256": "0607fe4b0d1547a4931594b2a72ee30298b63614328c2a15307462baa8568b0a",
+        "equals_first_arm": true
+      }
+    ],
+    "aggregate_e2e_tps": 50.93473818876644
+  }
+]
