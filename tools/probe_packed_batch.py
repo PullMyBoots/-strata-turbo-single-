@@ -32,9 +32,9 @@ def main():
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--gpu', default='0')
     p.add_argument('--weights', choices=tuple(d.MODELS), default='iq2_xs')
-    p.add_argument('--counts', nargs='+', type=int, choices=range(2,7), default=[2,6])
+    p.add_argument('--counts', nargs='+', type=int, choices=range(1,7), default=[2,6])
     p.add_argument('--capacity', type=int, choices=range(2,7), help='Keep this server capacity while varying active request counts')
-    p.add_argument('--arms', nargs='+', choices=('default','shared','incumbent','legacy','no-mtp','control','packed','gdn','gdn-plain','packed-gdn','adaptive','adaptive-gdn','selective','self-commit','self-commit-control','self-commit-mtp','direct-state','direct-state-control','profile'),
+    p.add_argument('--arms', nargs='+', choices=('default','shared','incumbent','legacy','no-mtp','control','packed','gdn','gdn-plain','packed-gdn','adaptive','adaptive-gdn','selective','self-commit','self-commit-control','self-commit-mtp','direct-state','direct-state-control','latest','profile'),
                    default=['incumbent','packed','incumbent'])
     p.add_argument('--candidate-exe', type=Path)
     p.add_argument('--tokens', type=int, default=256)
@@ -43,6 +43,9 @@ def main():
     p.add_argument('--holdout', action='store_true')
     p.add_argument('--media', action='store_true')
     p.add_argument('--native-context', action='store_true')
+    p.add_argument('--continue-on-check-failure', action='store_true', help='Retain failed capability checks and finish all cells')
+    p.add_argument('--native-context-counts', nargs='+', type=int, default=[1,2,3,4,5,6])
+    p.add_argument('--reserve-mib', type=int, help='Same explicit VRAM headroom for every arm')
     a = p.parse_args()
     if a.capacity is not None and a.capacity < max(a.counts):
         p.error('--capacity must accommodate every requested count')
@@ -65,6 +68,8 @@ def main():
             d.check_config(cfg)
             cfg = copy.deepcopy(cfg)
             cfg['args'] = d.set_arg(cfg['args'],'--prompt-cache','0')
+            if a.reserve_mib is not None:
+                cfg['args'] = d.set_arg(cfg['args'], '--vram-reserve-mib', str(a.reserve_mib))
             if arm == 'default':
                 cfg['args'] = d.set_arg(cfg['args'],'--pool-workers')
                 cfg['args'] = d.set_arg(cfg['args'],'--kv-resident','32768')
@@ -91,6 +96,14 @@ def main():
                 cfg['env']['STRATA_BATCH_SELF_COMMIT'] = '1'
                 cfg['env']['STRATA_DIRECT_SLOT_STATE'] = '1' if arm == 'direct-state' else '0'
                 cfg['args'] = d.set_arg(cfg['args'],'--batch-mtp')
+            if arm == 'latest':
+                if count == 1:
+                    cfg['exe'] = str(d.ROOT/'experimental/sparse-draft-prefill/build/strata-sparse-draft-prefill')
+                    cfg['env'].update(STRATA_MTP_SPARSE_BATCH='1', STRATA_PF_FUSED='1')
+                else:
+                    cfg['exe'] = str(d.ROOT/'experimental/direct-slot-state/build/strata-direct-slot-state')
+                    cfg['env'].update(STRATA_BATCH_SELF_COMMIT='1', STRATA_DIRECT_SLOT_STATE='1')
+                    cfg['args'] = d.set_arg(cfg['args'], '--batch-mtp')
             if arm == 'profile':
                 cfg['env']['STRATA_VERIFY_PROFILE']='1'
 
@@ -148,7 +161,7 @@ def main():
                     recall,codes=q.recall_body(config['model_name']);recall.pop('ignore_eos',None)
                     result=q.request(url,recall)
                     checks['recall']=dict(passed=all(code in result['text'] for code in codes),result=result)
-                if a.native_context:
+                if a.native_context and count in a.native_context_counts:
                     request=json.loads((d.ROOT/'evidence/requests/long-256k.json').read_text())
                     body=request['request'];body.update(model=config['model_name'],seed=20261011)
                     body.pop('ignore_eos',None);result=q.request(url,body)
@@ -170,7 +183,8 @@ def main():
                         for wave in report['rows'] for r in wave['requests'] if r['family']==family)
                         for family in tasks},equal=report['all_equal'],checks=report['checks'])
             summary.append(row);d.save(out/'summary.json',summary)
-            assert all(check['passed'] for check in report['checks'].values()),report['checks']
+            if not a.continue_on_check_failure:
+                assert all(check['passed'] for check in report['checks'].values()),report['checks']
     lock.close()
     print(json.dumps([{k:v for k,v in row.items() if k!='checks'} for row in summary],indent=2),flush=True)
 

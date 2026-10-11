@@ -141,6 +141,7 @@ def main():
     p.add_argument('--assets', type=Path, required=True)
     p.add_argument('--gpu', default='0')
     p.add_argument('--output', type=Path, required=True)
+    p.add_argument('--latest', action='store_true', help='Use the sparse/fused single-request candidate and matrix headroom')
     p.add_argument('--suite', choices=('curves', 'concurrency', 'all'), default='all')
     p.add_argument('--weights', nargs='+', choices=tuple(d.MODELS), default=list(d.MODELS))
     p.add_argument('--arms', nargs='+', choices=('official', 'turbo'), default=['official', 'turbo'])
@@ -157,6 +158,12 @@ def main():
             if a.suite in ('all', 'curves'):
                 cfg = d.build_config(a.assets, hw, weight, d.resource_plan(hw, weight), arm=arm)
                 d.check_config(cfg)
+                if a.latest:
+                    if weight != 'iq2_xs':
+                        cfg['args'] = d.set_arg(cfg['args'], '--vram-reserve-mib', '2048')
+                    if arm == 'turbo':
+                        cfg['exe'] = str(d.ROOT/'experimental/sparse-draft-prefill/build/strata-sparse-draft-prefill')
+                        cfg['env'].update(STRATA_MTP_SPARSE_BATCH='1', STRATA_PF_FUSED='1')
                 measure(cfg, a.output / f'{weight}-{arm}-curves', curves)
             if a.suite in ('all', 'concurrency'):
                 for count in (1, 2, 4, 6):

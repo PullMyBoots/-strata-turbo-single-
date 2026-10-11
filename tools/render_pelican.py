@@ -56,7 +56,8 @@ def main():
             code = '''async (page) => {
  await page.setViewportSize({width:1000,height:720});
  await page.clock.install({time:new Date('2026-10-10T00:00:00Z')});
- await page.clock.pauseAt(new Date('2026-10-10T00:00:00Z'));
+ // The browser context can retain a clock from a previous tab; pause in its future.
+ await page.clock.pauseAt(await page.evaluate(() => Date.now() + 60000));
  const external=[];
  await page.route('**/*',async route=>{
   const u=route.request().url();

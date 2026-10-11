@@ -1,0 +1,95 @@
+{
+  "arm": "turbo",
+  "index": 2,
+  "wall_s": 120.20362041401677,
+  "exit_code": 0,
+  "html_svg_exists": true,
+  "claude_result": {
+    "duration_api_ms": 119596,
+    "stop_reason": "end_turn",
+    "session_id": "b67eade4-fde5-4307-ad38-f53ff09f235a",
+    "total_cost_usd": 0.5320736,
+    "usage": {
+      "input_tokens": 9597,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 126628,
+      "output_tokens": 23418,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [],
+      "speed": "standard",
+      "fallback_credit": null
+    },
+    "modelUsage": {
+      "qwen3.8-flash-iq2-xs": {
+        "inputTokens": 9597,
+        "outputTokens": 23418,
+        "cacheReadInputTokens": 126628,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.5320736,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000,
+        "thinkingTokens": 0,
+        "canonicalModel": "qwen3.8-flash-iq2-xs",
+        "provider": "firstParty",
+        "costBasis": "unknown"
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "fast_mode_disabled_reason": "sdk_opt_in_required",
+    "subagent_stats": {
+      "spawned": 0,
+      "requested": {
+        "background": 0,
+        "foreground": 0,
+        "unset": 0
+      },
+      "started_in_background": 0,
+      "max_depth": 0,
+      "spawned_by_subagents": 0,
+      "completed": 0,
+      "failed": 0,
+      "killed": {
+        "parent": 0,
+        "user": 0,
+        "system": 0
+      },
+      "refused": {
+        "depth_limit": 0,
+        "concurrency_limit": 0,
+        "budget": 0
+      },
+      "by_type": {}
+    },
+    "is_error": false,
+    "num_turns": 7,
+    "subtype": "success",
+    "api_error_status": null,
+    "result": "Saved `pelican.html` (401 lines, ~18 KB) in the current directory — a single self-contained file with no external assets.\n\n**What's in the animation**\n\n- **The pelican:** body, neck, head, long upper mandible, a throat pouch that inflates and deflates, a little fish still inside it, a blinking eye, a flapping wing, a wagging tail, and a gentle body bob timed to the pedal stroke.\n- **The legs:** solved by two-link inverse kinematics, so the feet actually stay on the pedals through the whole crank revolution (8 keyframes per leg, morphed with SMIL `values`), with a second, darker leg on the far side at 180° phase.\n- **The bicycle:** spoked wheels spinning, chainring and crank turning, chain running as a moving dash pattern, pedals orbiting the bottom bracket while staying flat, frame, fork, saddle, handlebar, bell, and a fluttering pennant.\n- **The world:** gradient sky, pulsing sun, drifting clouds, parallax hills, scrolling trees and grass tufts, and a road whose centre-line dashes slide past.\n- **Controls:** a Pause/Play button and a Slow-motion toggle, using `pauseAnimations()` / `setCurrentRate()` — the page is fully animated without any JavaScript, so the buttons are optional extras.\n\nThe motion is internally consistent: wheel circumference 282.7 px over a 0.8 s revolution gives 353 px/s, and the road dashes, trees, and tufts all cycle at exactly that speed (0.198 s, 0.566 s, 0.283 s). The SVG also parses as well-formed XML, and every path-morph keyframe set has an identical command structure so the interpolation is clean.",
+    "ttft_ms": 31418,
+    "type": "result",
+    "duration_ms": 119912,
+    "uuid": "454ee46d-21a6-432e-aa51-0e2a09b97c88",
+    "ttft_stream_ms": 57,
+    "time_to_request_ms": 42,
+    "first_content_frame_ms": 816,
+    "queued_turn_count": 0,
+    "result_index": 0
+  },
+  "api_requests": 7,
+  "binary_sha256": "c89835335d1a26ba00c404bc2e7fed95c3f8d32b21f28e0e978260da73db173c"
+}

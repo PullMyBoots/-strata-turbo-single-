@@ -1,0 +1,95 @@
+{
+  "arm": "turbo",
+  "index": 1,
+  "wall_s": 180.18051788117737,
+  "exit_code": 0,
+  "html_svg_exists": true,
+  "claude_result": {
+    "duration_api_ms": 179564,
+    "stop_reason": "end_turn",
+    "session_id": "d621978d-5f47-49a0-8678-151f11c90a26",
+    "total_cost_usd": 0.8211434,
+    "usage": {
+      "input_tokens": 12103,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 149457,
+      "output_tokens": 37142,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "",
+      "iterations": [],
+      "speed": "standard",
+      "fallback_credit": null
+    },
+    "modelUsage": {
+      "qwen3.8-flash-iq2-xs": {
+        "inputTokens": 12103,
+        "outputTokens": 37142,
+        "cacheReadInputTokens": 149457,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 0.8211434,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000,
+        "thinkingTokens": 0,
+        "canonicalModel": "qwen3.8-flash-iq2-xs",
+        "provider": "firstParty",
+        "costBasis": "unknown"
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "fast_mode_disabled_reason": "sdk_opt_in_required",
+    "subagent_stats": {
+      "spawned": 0,
+      "requested": {
+        "background": 0,
+        "foreground": 0,
+        "unset": 0
+      },
+      "started_in_background": 0,
+      "max_depth": 0,
+      "spawned_by_subagents": 0,
+      "completed": 0,
+      "failed": 0,
+      "killed": {
+        "parent": 0,
+        "user": 0,
+        "system": 0
+      },
+      "refused": {
+        "depth_limit": 0,
+        "concurrency_limit": 0,
+        "budget": 0
+      },
+      "by_type": {}
+    },
+    "is_error": false,
+    "num_turns": 7,
+    "subtype": "success",
+    "api_error_status": null,
+    "result": "Saved `pelican.html` (19 KB, self-contained — no external assets, no build step).\n\n**What's in it**\n\n- **Scene:** sky gradient, pulsing sun, drifting clouds, parallax hills, grass verge with scrolling tufts, road with a moving dashed centre line, and repeating trees — all scrolling left at a speed matched to wheel circumference (282.7 px/s ≈ 10 km/h at the drawing scale), so the animation reads as real motion rather than random movement.\n- **Bicycle:** red frame, two spoked wheels rotating in 1 s, chainring + chain with an animated dash offset, rear sprocket, saddle, handlebar.\n- **Pelican:** body, tail, flapping near wing, far wing gripping the handlebar, neck, head, long bill with a wobbling pouch (path morphing), blinking eye, and body bob synced to the pedal stroke.\n- **Pedalling:** the legs are true two-link IK keyframes (hip → knee → pedal) computed for 8 crank angles, so the knee bends naturally and the feet stay glued to the pedals; the pedals orbit the bottom bracket without rotating (as real pedals do), and the far leg/crank/pedal run 180° out of phase via negative `begin` offsets.\n- **Extras:** speed streaks, ground shadow, `<title>`/`<desc>` for accessibility, a Pause/Play button using `svg.pauseAnimations()`, and automatic pause when `prefers-reduced-motion` is set.\n\nThe SVG block was verified well-formed (185 elements, 35 animations, 9-keyframe leg loops).",
+    "ttft_ms": 31581,
+    "type": "result",
+    "duration_ms": 179852,
+    "uuid": "5a0d3420-411c-4516-a035-d1b5545d857a",
+    "ttft_stream_ms": 58,
+    "time_to_request_ms": 43,
+    "first_content_frame_ms": 824,
+    "queued_turn_count": 0,
+    "result_index": 0
+  },
+  "api_requests": 7,
+  "binary_sha256": "c89835335d1a26ba00c404bc2e7fed95c3f8d32b21f28e0e978260da73db173c"
+}
