@@ -6,7 +6,7 @@ Single-GPU inference for IQ2_XS, Swift IQ3_XXS, and IQ3_S, with text, image, vid
 
 **Measured October 11, 2026.** Local hardware: one NVIDIA L40S (48 GB), AMD EPYC 9754, approximately 1 TB RAM, 32 CPU workers. Strata and Strata-Turbo-Single use identical weights and matched resource settings, with a native 262,144-token context and INT8 KV cache. Strata is v0.1.41. These results use optimized experimental builds, not the installer-default engine; [builds and full results](evidence/all-speed-results-20261011/RESULTS.md).
 
-### Pelican animation · Claude Code
+### Initial pelican comparison · Claude Code
 
 > Create a self-contained HTML file with a 2D SVG animation of a pelican riding a bicycle.
 
@@ -23,6 +23,18 @@ Claude Code 2.1.290, `max` effort, identical task and tool permissions, two fres
 | IQ2_XS · Strata-Turbo-Single | 180.2 | 120.2 | **150.2** |
 
 IQ2_XS completed the task in **41.7% less median time** in these trials. All four outputs are self-contained, playable SVG animations. Different models generated different amounts of output; this is task completion time, not a pure engine-speed or quality score. [View all four animations](docs/showcase/pelican-comparison-20261011.html) · [DeepSeek results](evidence/deepseek-pelican-20261011/REPORT.md) · [IQ2_XS results](evidence/pelican-latest-20261011/pelican-summary.json).
+
+### New pelican rerun · all three weights
+
+One fresh trial per weight, Claude Code with `max` effort. Original animations shown below; earlier comparison trials above are retained.
+
+| | IQ2_XS | Swift IQ3_XXS | IQ3_S |
+|---|---|---|---|
+| Animation | ![GSQ-RCO IQ2_XS](docs/showcase/pelican-three-weights-20261011/iq2_xs/turbo-1/pelican.gif) | ![Swift IQ3_XXS](docs/showcase/pelican-three-weights-20261011/swift/turbo-1/pelican.gif) | ![GSQ-RCO IQ3_S](docs/showcase/pelican-three-weights-20261011/iq3_s/turbo-1/pelican.gif) |
+| Completion time | **349.7 s** | **165.6 s** | **453.3 s** |
+| Original HTML | [Open](docs/showcase/pelican-three-weights-20261011/iq2_xs/turbo-1/pelican.html) | [Open](docs/showcase/pelican-three-weights-20261011/swift/turbo-1/pelican.html) | [Open](docs/showcase/pelican-three-weights-20261011/iq3_s/turbo-1/pelican.html) |
+
+[View all three outputs](docs/showcase/pelican-three-weights-20261011/index.html) · [Test records](evidence/pelican-three-weights-20261011/REPORT.md). Single trials; output lengths differ.
 
 ### Decode · tokens/s
 

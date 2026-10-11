@@ -26,6 +26,8 @@ def main():
     p.add_argument('--gpu', default='2')
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--claude', default='claude')
+    p.add_argument('--weights', choices=tuple(d.MODELS), default='iq2_xs')
+    p.add_argument('--vram-reserve-mib', type=int)
     p.add_argument('--arms', nargs='+', choices=('official', 'turbo'),
                    default=['official', 'turbo', 'turbo', 'official'])
     p.add_argument('--turbo-exe', type=Path)
@@ -90,7 +92,9 @@ def main():
     proxy = ThreadingHTTPServer(('127.0.0.1', 0), Proxy)
     threading.Thread(target=proxy.serve_forever, daemon=True).start()
     base_url = f'http://127.0.0.1:{proxy.server_port}'
-    model = 'qwen3.8-flash-iq2-xs'
+    model = {'iq2_xs': 'qwen3.8-flash-iq2-xs',
+             'swift': 'qwen3.8-flash-swift-iq3-xxs',
+             'iq3_s': 'qwen3.8-flash-iq3-s'}[a.weights]
     env = dict(os.environ)
     for name in list(env):
         if name.startswith(('STRATA_', 'CUDA_MPS_', 'ANTHROPIC_')) or name in (
@@ -109,7 +113,7 @@ def main():
                '--disable-slash-commands', '--no-session-persistence', '--output-format', 'stream-json', '--verbose',
                '--append-system-prompt', 'Save the requested complete self-contained HTML file as pelican.html in the current directory. Finish after saving it. Do not install software, render previews, or delegate the task.']
     d.save(out / 'command.json', command)
-    report = {'task': PROMPT, 'weights': 'GSQ-RCO IQ2_XS', 'context_limit': 262144,
+    report = {'task': PROMPT, 'weights': {'iq2_xs': 'GSQ-RCO IQ2_XS', 'swift': 'Swift IQ3_XXS', 'iq3_s': 'GSQ-RCO IQ3_S'}[a.weights], 'context_limit': 262144,
               'claude_version': subprocess.check_output([a.claude, '--version'], text=True).strip(),
               'effort': 'max', 'output_limit_per_request': 65536, 'temperature': 0, 'seed': 20261010,
               'model_loading_included': False, 'cli_startup_thinking_tools_retries_included': True,
@@ -122,10 +126,12 @@ def main():
         for index, arm in enumerate(a.arms):
             folder = out / f'{index}-{arm}'
             folder.mkdir()
-            cfg = d.build_config(a.assets.absolute(), hw, 'iq2_xs', d.resource_plan(hw, 'iq2_xs'), arm=arm)
+            cfg = d.build_config(a.assets.absolute(), hw, a.weights, d.resource_plan(hw, a.weights), arm=arm)
             # Validate the released assets and binaries before optional experimental
             # overrides. Production launchers retain strict release checksum checks.
             d.check_config(cfg)
+            if a.vram_reserve_mib is not None:
+                cfg['args'] = d.set_arg(cfg['args'], '--vram-reserve-mib', str(a.vram_reserve_mib))
             if arm == 'turbo':
                 if a.turbo_exe:
                     candidate = a.turbo_exe.absolute()
